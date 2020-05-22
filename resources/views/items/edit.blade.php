@@ -98,7 +98,7 @@
                             '</div>'+
                             '<label for="price" class="col-form-label text-md-right">Precio</label>'+
                             '<div class="col-md-4">'+
-                                '<input type="text" class="form-control @error("price") is-invalid @enderror" name="price[]" required value="'+prices[index]['price']+'">'+
+                                '<input type="number" class="form-control @error("price") is-invalid @enderror" name="price[]" required value="'+prices[index]['price']+'">'+
                             '</div>'+
                         '</div>'+
                         '</div>'+

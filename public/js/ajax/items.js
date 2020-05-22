@@ -13,6 +13,7 @@ $(document).ready(function() {
             type:'get',
             dataType: 'json',
             success: function(response) {
+                $(".field_wrapper").html('<div></div>');
 
                 for (let index = 0; index < response.length; index++) {
                     $(".field_wrapper").append('<div class="form-group row">'+
@@ -24,7 +25,7 @@ $(document).ready(function() {
                             '</div>'+
                             '<label for="price" class="col-form-label text-md-right">Precio</label>'+
                             '<div class="col-md-4">'+
-                                '<input type="text" class="form-control @error("price") is-invalid @enderror" name="price[]" required>'+
+                                '<input type="number" class="form-control @error("price") is-invalid @enderror" name="price[]" required>'+
                             '</div>'+
                         '</div>'+
                         '</div>'+

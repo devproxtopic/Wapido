@@ -3,15 +3,18 @@
 
 	<head>
 		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        {{-- <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> --}}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+        <link rel="shortcut icon" type="image/ico" href="{{ asset('/favicon.ico') }}"/>
 		<title>{{ env('APP_NAME') }}</title>
 
 		<!-- Fonts -->
 		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700|Roboto+Condensed:400,700' rel='stylesheet' type='text/css'>
 		<link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet">
 
-		<!-- Styles -->
+        <!-- Styles -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 		<link href="{{ asset('css/reset.css') }}" rel="stylesheet">
 		<link href="{{ asset('css/style.css') }}" rel="stylesheet">
 		<link href="{{ asset('css/superslides.css') }}" rel="stylesheet">
@@ -32,6 +35,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 	</head>
 
@@ -39,13 +43,19 @@
         <input type="hidden" name="message" id="message"
             @if(session("message")) value="{{ session("message") }}" @endif>
         <input type="hidden" id="url_base" value="{{ url('') }}">
-		<div id="slides">
 			<header>
 			    <center>
-				<div><img src="{{ asset('img/logo.png') }}" height="62" width="300"></div></center>
-				<h1>{{ env('APP_NAME') }}</h1>
-				<p class="intro">{{ env('APP_DESCRIPTION') }}</p>
+                    <div>
+                        <img src="{{ asset('img/tratto.png') }}" width="20%">
+                        <br>
+                        <a style="width:180px;" href="{{ isset($categories[0]) ? '#'.$categories[0]->name : '#' }}" class="calc">¡Vamos!</a>
+                    </div>
+                </center>
+
+				{{-- <h1>{{ env('APP_NAME') }}</h1>
+				<p class="intro">{{ env('APP_DESCRIPTION') }}</p> --}}
 			</header>
+		<div id="slides">
 			<div class="slides-container">
                 <img src="{{ asset('img/slider_1.jpg') }}" alt="">
                 <img src="{{ asset('img/slider_2.jpg') }}" alt="">
@@ -62,7 +72,7 @@
     <form action="{{ route('orders.store') }}" method="POST">
         @csrf
         @foreach($categories as $category)
-        <section>
+        <section id="{{ $category->name }}">
 			<article>
 				<div class="article-item">
 					<div class="circle-item"><img src="{{ asset('storage/' . $category->img) }}" alt="{{ $category->name }}"></div>
@@ -86,7 +96,7 @@
                         @endphp
                         @for($i=0;$i<count($prices);$i++)
                         <div class="circle-input circles-{{ $category->id }}">
-                            <input @isset($order) disabled @endisset
+                            <input
                             maxlength="2" data-price="{{ $prices[$i]['price'] }}" type="text" data-item="{{ $item->id }}"
                             placeholder="0" class="icecream-flav" data-quantity="{{ $prices[$i]['quantity'] }}"
                             id="quantity-{{ $category->id }}-{{ $item->id }}-{{ $prices[$i]['quantity'] }}"
@@ -96,11 +106,10 @@
 					</li>
                     @endforeach
 					<li class="no--padd">
-                        <button @isset($order) style="display: none;" @endisset
-                        type="button" onclick="subtotalCalculation({{ $category->id }})" class="calc">Calcular</button>
+                        <button type="button" onclick="subtotalCalculation({{ $category->id }})" class="calc">Calcular</button>
 					</li>
 					<li>
-						<div class="box-detail icecream--box">
+						{{-- <div class="box-detail icecream--box">
 							<p><i class="fa fa-star"></i><br>
 							<span class="circle icecream star-{{ $category->id }}">0</span>
 							</p>
@@ -109,8 +118,8 @@
 							<p>{{ $category->unit->name }}<br>
 							<span class="circle total-ltr-ice quantity-{{ $category->id }}">0</span>
 							</p>
-						</div><!--
-						--><div class="box-detail icecream--box ">
+						</div><!-- --}}
+						<div class="box-detail icecream--box ">
                             <p>Costo<br>
                             <input type="hidden" name="subtotal-{{ $category->id }}" id="subtotal-{{ $category->id }}" class="subtotal">
 							<span class="price">$</span> <span class="price total-price-icecream amount-{{ $category->id }}">0</span>
@@ -124,11 +133,12 @@
 
 		<!-- FINAL -->
 		<section>
-			<h2>Pedido Final<br>
+			<h2>Pedido Final</h2><br>
 			<ul class="first-list final">
                 @foreach($categories as $category)
 				<li>
-					<img src="{{ asset('storage/' . $category->img) }}">{{ $category->name }}<span>{{ $category->unit->name }}</span>
+                    <img width="15%" src="{{ asset('storage/' . $category->img) }}">
+                    {{ $category->name }}
 					<div class="price">$ <span class="total-price-beer amount-{{ $category->id }}">0</div>
 					<div class="numbers total-ltr quantity-{{ $category->id }}" id="total-ltr">0</div>
                 </li>
@@ -142,7 +152,19 @@
 
 		<!-- Form -->
 		<section class="form">
-			<h2>Complete el formulario:</h2>
+            @if($order)
+            <h2>Datos del Cliente:</h2>
+            @else
+            <h2>Complete el formulario:</h2>
+            @endif
+
+                <fieldset>
+                <div class="some-class">
+                    <label for="delivery_1" class="check">Envío a Domicilio<input type="radio" id="delivery_1" name="apply_delivery" value="1" checked></label>
+                <label for="delivery_2" class="check">Recoger en Tienda<input type="radio" id="delivery_2" name="apply_delivery" value="0"></label>
+                </div>
+                </fieldset>
+
 				<label for="">Mail *</label>
 				<input type="text" id="email" name="email" value="{{ old('email') }}" required placeholder="Email">
 				<label for="">Nombre Completo *</label>
@@ -150,22 +172,38 @@
 				<label for="">Celular *</label>
 				<input type="text" id="phone" name="phone" value="{{ old('phone') }}" required placeholder="Celular">
 				<label for="">Dirección *</label>
-				<textarea name="address" id="address" required cols="" rows="6">{{ old('address') }}</textarea>
+                <textarea name="address" id="address" required cols="" rows="6">{{ old('address') }}</textarea>
+
 				<span>Los campos marcados con * son obligatorios.</span>
-                <button @isset($order) style="display: none;" @endisset
-                 type="submit" id="submit_button">REALIZAR PEDIDO</button>
+                <button type="submit" id="submit_button">REALIZAR PEDIDO</button>
 				<div id="result" class=""></div>
 		</section>
 	</form>
 
 		<footer>
-        <img src="{{ asset('img/logo.png') }}" height="41" width="200">
+        <center><img src="{{ asset('img/logo.png') }}" width="15%"></center> <br>
 			<h5>{{-- Blvd. Campestre 1907 <br>
 			Col. Valle del Campestre, León, Gto.<br>
 			Tel.: 477 717 64 32 <br> --}}
 			info@wapido.com</h5>
 			<!--<h6>Comparti tu experiencia en: <a href="http://www.tripadvisor.es/Restaurant_Review-g294323-d1804509-Reviews-Facal-Montevideo_Montevideo_Department.html" target="_blank"><img src="img/trip-advisor.svg" alt=""></a> <a href="https://www.facebook.com/BarFacal" target="_blank"><i class="fa fa-facebook-official"></i></a></h6>-->
         </footer>
+
+        <div class="modal fade" id="myModal" tabindex="-1″ role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1>Su pedido ha sido realizado con éxito</h1>
+                    </div>
+                    <div class="modal-body">
+                        Gracias por preferirnos.
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" data-dismiss="modal" class="btn btn-danger">Cerrar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         @if(session("message"))
     <script>
@@ -187,7 +225,8 @@
                     toastr.error("{{ session('message') }}");
                     break;
                 default:
-                    toastr.info("{{ session('message') }}");
+                    window.open("https://api.whatsapp.com/send?phone={{env('TWILIO_NUMBER_DEMO')}}&text=Se ha creado un nuevo pedido, puede verlo en la siguiente url: {{route('orders.show', session('message'))}}", '_blank');
+                    $('#myModal').modal();
                     break;
             }
     </script>

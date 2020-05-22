@@ -43,7 +43,7 @@ class SendOrderNotification extends Notification
         return (new MailMessage)
                 ->subject('Aviso de nuevo pedido')
                 ->action('Puede verlo en la siguiente dirección', route('orders.show', $this->order_id))
-                ->line('Su contraseña ha sido cambiada exitosamente.');
+                ->line('Gracias por Preferirnos.');
     }
 
     /**

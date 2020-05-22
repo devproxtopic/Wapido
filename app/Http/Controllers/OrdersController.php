@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use App\Client;
+use App\Mail\OrderClientMail;
+use App\Mail\OrderOwnerMail;
 use App\Notifications\SendOrderNotification;
 use App\Order;
 use App\OrderDetail;
@@ -11,6 +13,8 @@ use App\Status;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 use Twilio\Rest\Client as Twilio;
@@ -89,7 +93,8 @@ class OrdersController extends Controller
         $order = Order::create([
             'client_id' => $client->id,
             'total_amount' => $request->total_amount,
-            'status_id' => 1
+            'status_id' => 1,
+            'apply_delivery' => $request->apply_delivery
         ]);
 
         foreach($request->quantity as $input => $value){
@@ -112,14 +117,15 @@ class OrdersController extends Controller
         }
 
         //Enviar Whatsapp con Twilio
-        $message = $this->sendMessage('Se ha creado un nuevo pedido, puede verlo en la siguiente url: ' . route('orders.show', $order->id) , $client->phone);
+        //$message = $this->sendMessage('Se ha creado un nuevo pedido, puede verlo en la siguiente url: ' . route('orders.show', $order->id) , $client->phone);
         $user = User::find(1);
 
-        Notification::route('mail', $client->email)->notify(new SendOrderNotification($order->id));
-        Notification::route('mail', $user->email)->notify(new SendOrderNotification($order->id));
+        Mail::to($client->email)->send(new OrderClientMail($order));
+        Mail::to($user->email)->send(new OrderOwnerMail($order));
 
-        $request->session()->flash('message', 'Pedido creado exitosamente. Gracias por preferirnos.');
-        $request->session()->flash('alert-type', 'success');
+        $request->session()->flash('message', $order->id);
+
+        //Http::get("https://api.whatsapp.com/send?phone=" . env("TWILIO_NUMBER_DEMO") . "&text=Se%ha%creado%un%nuevo%pedido,%puede%verlo%en%la%siguiente%url:%" . route('orders.show', $order->id));
 
         return back();
     }
@@ -133,13 +139,10 @@ class OrdersController extends Controller
     public function show($id)
     {
         $orderDB = Order::findOrFail($id);
-        $categories = Category::all();
-        $clients = Client::all();
         $client = $orderDB->client;
 
         foreach ($orderDB->details as $detail) {
-            $order[] = [
-                'category_id' => $detail->item->category->id,
+            $order[$detail->item->category->id][] = [
                 'item_id' => $detail->item_id,
                 'quantity' => $detail->quantity,
                 'measure' => $detail->measure,
@@ -147,7 +150,7 @@ class OrdersController extends Controller
             ];
         }
 
-        return view('index', compact('categories', 'clients', 'client', 'order'));
+        return view('order', compact('client', 'order', 'orderDB'));
     }
 
     /**
@@ -229,20 +232,12 @@ class OrdersController extends Controller
 
         try {
             $client = new Twilio($account_sid, $auth_token);
-            $message = $client->messages->create($twilio_number, ['from' => $recipients, 'body' => $message]);
+            $message_send = $client->messages->create('whatsapp:'. $recipients, ['from' => 'whatsapp:+14155238886', 'body' => $message]);
         } catch (\Throwable $th) {
-            $message = null;
+            $message_send = null;
+            Log::info($th->getMessage());
         }
 
-        if (! $message ) {
-            try {
-                $client = new Twilio($account_sid, $auth_token);
-                $message = $client->messages->create($twilio_number2, ['from' => $recipients, 'body' => $message]);
-            } catch (\Throwable $th) {
-                $message = null;
-            }
-        }
-
-        return $message;
+        return $message_send;
     }
 }
