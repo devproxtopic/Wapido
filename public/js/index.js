@@ -73,7 +73,9 @@ function orderExists(order, client) {
 
 }
 
-$(document).ready(function() {
+
+
+$(document).ready(function () {
 
     var baseUrl = $('#url_base').val();
 
@@ -101,5 +103,55 @@ $(document).ready(function() {
             }
         });
     });
+
+    showSlidesPromotions();
 });
 
+let slideIndexPromotion = 0;
+
+function showSlidesPromotions() {
+    var i;
+    var slidesPromotions = document.getElementsByClassName("mySlides-promotions");
+
+    for (i = 0; i < slidesPromotions.length; i++) {
+        slidesPromotions[i].style.display = "none";
+    }
+
+    slideIndexPromotion++;
+    if (slideIndexPromotion > slidesPromotions.length) {
+        slideIndexPromotion = 1;
+    }
+
+    slidesPromotions.item([slideIndexPromotion - 1]).style.display = "block";
+    setTimeout(showSlidesPromotions, 2000); // Change image every 2 seconds
+}
+
+// Next/previous controls
+function plusSlidesPromotions(n) {
+    showSlidesPromotionsChange(slideIndexPromotion += n);
+}
+
+// Thumbnail image controls
+function currentSlidePromotions(n) {
+    showSlidesPromotionsChange(slideIndexPromotion = n);
+}
+
+function showSlidesPromotionsChange(n) {
+    var i;
+    var slidesPromotions = document.getElementsByClassName("mySlides-promotions");
+    var dots = document.getElementsByClassName("dot-promotions");
+    if (n > slidesPromotions.length) {
+        slideIndexPromotion = 1;
+    }
+    if (n < 1) {
+        slideIndexPromotion = slidesPromotions.length;
+    }
+    for (i = 0; i < slidesPromotions.length; i++) {
+        slidesPromotions[i].style.display = "none";
+    }
+    for (i = 0; i < dots.length; i++) {
+        dots[i].className = dots[i].className.replace(" active", "");
+    }
+    slidesPromotions[slideIndexPromotion - 1].style.display = "block";
+    dots[slideIndexPromotion - 1].className += " active";
+}

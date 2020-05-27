@@ -55,6 +55,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/units-delete/{id}', 'UnitController@destroy')
         ->name('units.destroy');
 
+    Route::resource('/promotions', 'PromotionController')->except('destroy');
+    Route::get('/promotions-delete/{id}', 'PromotionController@destroy')
+        ->name('promotions.destroy');
+
+    Route::post('/owners', 'OwnerController');
 
     // AJAX
 

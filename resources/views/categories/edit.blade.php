@@ -125,7 +125,7 @@
             var fieldHTML = '<div class="form-group row">'+
                     '<label for="measure" class="col-md-4 col-form-label text-md-right">Medida / Cantidad</label>'+
                     '<div class="col-md-6">'+
-                    '<input type="text" class="form-control @error("measure") is-invalid @enderror" name="measure[]" required value="' + measures[index] + '">'+
+                    '<input readonly type="text" class="form-control @error("measure") is-invalid @enderror" name="measure[]" required value="' + measures[index] + '">'+
                     '</div>'+
                     '<a href="javascript:void(0);" class="remove_button" title="Borrar"><i class="fa fa-trash"></i></div>';
 

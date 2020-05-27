@@ -18,6 +18,8 @@ class CreateOrdersTable extends Migration
             $table->bigInteger('status_id')->unsigned();
             $table->bigInteger('client_id')->unsigned();
             $table->float('total_amount');
+            $table->boolean('apply_delivery')->default(0);
+            $table->boolean('payment')->default(0);
             $table->timestamps();
         });
     }

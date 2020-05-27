@@ -11,6 +11,12 @@
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
 
+                        <div class="mb-3 text-center">
+                            <div class="card-body">
+                                <img src="{{ asset('img/wapido_logo2.png') }}" alt="" width="25%">
+                            </div>
+                        </div>
+
                         <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
 

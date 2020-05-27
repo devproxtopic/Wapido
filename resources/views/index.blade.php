@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        {{-- <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> --}}
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
         <link rel="shortcut icon" type="image/ico" href="{{ asset('/favicon.ico') }}"/>
 		<title>{{ env('APP_NAME') }}</title>
@@ -46,7 +46,7 @@
 			<header>
 			    <center>
                     <div>
-                        <img src="{{ asset('img/tratto.png') }}" width="20%">
+                        <img src="{{ isset($owner) ? asset($owner->logo) : '' }}" width="25%" class="logo-owner">
                         <br>
                         <a style="width:180px;" href="{{ isset($categories[0]) ? '#'.$categories[0]->name : '#' }}" class="calc">¡Vamos!</a>
                     </div>
@@ -54,12 +54,15 @@
 
 				{{-- <h1>{{ env('APP_NAME') }}</h1>
 				<p class="intro">{{ env('APP_DESCRIPTION') }}</p> --}}
-			</header>
+            </header>
+            @php
+                $sliders = isset($owner) ? json_decode($owner->sliders) : array();
+            @endphp
 		<div id="slides">
 			<div class="slides-container">
-                <img src="{{ asset('img/slider_1.jpg') }}" alt="">
-                <img src="{{ asset('img/slider_2.jpg') }}" alt="">
-                <img src="{{ asset('img/slider_3.jpg') }}" alt="">
+                @foreach($sliders as $slider)
+                <img src="{{ asset($slider) }}" alt="">
+                @endforeach
 			</div>
 
 			<nav class="slides-navigation">
@@ -71,6 +74,37 @@
 
     <form action="{{ route('orders.store') }}" method="POST">
         @csrf
+
+        @if(count($promotions) > 0)
+        <section>
+			<article>
+				<div class="article-item">
+					<h2>Promociones</h2>
+				</div>
+                <div class="slideshow-container-promotions">
+                    @foreach($promotions as $promotion)
+                    <div class="mySlides-promotions fade-promotions">
+                        <center>
+                            <img width="100%" src="{{ asset('storage/' . $promotion->picture) }}" alt="">
+                        </center>
+                    </div>
+                    @endforeach
+                <!-- Navigation arrows -->
+                <a class="prev-promotions" onclick="plusSlidesPromotions(-1)">&#10094;</a>
+                <a class="next-promotions" onclick="plusSlidesPromotions(1)">&#10095;</a>
+
+                </div>
+
+                <!-- The dots/circles -->
+                <div style="text-align:center">
+                    @foreach ($promotions as $promotion)
+                        <span class="dot-promotions" onclick="currentSlidePromotions({{$promotion->id}})"></span>
+                    @endforeach
+                </div>
+			</article>
+        </section>
+        @endif
+
         @foreach($categories as $category)
         <section id="{{ $category->name }}">
 			<article>
@@ -89,11 +123,13 @@
                         @endforeach
 					</li>
                     @foreach($category->items as $item)
-					<li class="list--icecream list-{{ $category->id }}">
+                    <li class="list--icecream list-{{ $category->id }}">
+                        <img class="circle-item-light" width="15%" src="{{ asset('storage/' . $item->img) }}">
                         <h3>{{ $item->name }}</h3>
                         @php
                             $prices = json_decode($item->price,true);
                         @endphp
+                        @if($prices)
                         @for($i=0;$i<count($prices);$i++)
                         <div class="circle-input circles-{{ $category->id }}">
                             <input
@@ -103,6 +139,7 @@
                             name="quantity[{{ $item->id }}-{{ $prices[$i]['quantity'] }}-{{ $prices[$i]['price'] }}]">
                         </div>
                         @endfor
+                        @endif
 					</li>
                     @endforeach
 					<li class="no--padd">
@@ -159,10 +196,14 @@
             @endif
 
                 <fieldset>
-                <div class="some-class">
-                    <label for="delivery_1" class="check">Envío a Domicilio<input type="radio" id="delivery_1" name="apply_delivery" value="1" checked></label>
-                <label for="delivery_2" class="check">Recoger en Tienda<input type="radio" id="delivery_2" name="apply_delivery" value="0"></label>
-                </div>
+                    <div class="custom-control custom-radio mb-1">
+                        <input type="radio" id="delivery_1" name="apply_delivery" class="custom-control-input" checked value="1">
+                        <label class="custom-control-label" for="delivery_1">Envío a Domicilio</label>
+                    </div>
+                    <div class="custom-control custom-radio mb-1">
+                        <input type="radio" id="delivery_2" name="apply_delivery" class="custom-control-input" value="0">
+                        <label class="custom-control-label" for="delivery_2">Recoger en Tienda</label>
+                    </div>
                 </fieldset>
 
 				<label for="">Mail *</label>
@@ -173,6 +214,17 @@
 				<input type="text" id="phone" name="phone" value="{{ old('phone') }}" required placeholder="Celular">
 				<label for="">Dirección *</label>
                 <textarea name="address" id="address" required cols="" rows="6">{{ old('address') }}</textarea>
+
+                <fieldset>
+                    <div class="custom-control custom-radio mb-1">
+                        <input type="radio" id="payment_1" name="payment" class="custom-control-input" checked value="1">
+                        <label class="custom-control-label" for="payment_1">Pagar en Efectivo</label>
+                    </div>
+                    <div class="custom-control custom-radio mb-1">
+                        <input type="radio" id="payment_2" name="payment" class="custom-control-input" value="0">
+                        <label class="custom-control-label" for="payment_2">Pagar con Tarjeta</label>
+                    </div>
+                </fieldset>
 
 				<span>Los campos marcados con * son obligatorios.</span>
                 <button type="submit" id="submit_button">REALIZAR PEDIDO</button>
@@ -225,7 +277,7 @@
                     toastr.error("{{ session('message') }}");
                     break;
                 default:
-                    window.open("https://api.whatsapp.com/send?phone={{env('TWILIO_NUMBER_DEMO')}}&text=Se ha creado un nuevo pedido, puede verlo en la siguiente url: {{route('orders.show', session('message'))}}", '_blank');
+                    window.open("https://api.whatsapp.com/send?phone={{ $owner->phone }}&text=Se ha creado un nuevo pedido, puede verlo en la siguiente url: {{route('orders.show', session('message'))}}", '_blank');
                     $('#myModal').modal();
                     break;
             }

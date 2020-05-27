@@ -6,6 +6,7 @@ use App\Category;
 use App\Item;
 use App\OrderDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
 class ItemsController extends Controller
@@ -45,14 +46,17 @@ class ItemsController extends Controller
             'name' => 'required|string',
             'description' => 'required|string',
             'price' => 'required',
-            'category_id' => 'required'
+            'category_id' => 'required',
+            'file' => 'required|mimes:jpeg,jpg,png',
         ], [
             'name.required' => 'EL nombre es requerido.',
             'name.string' => 'El nombre no tiene un formato válido.',
             'description.required' => 'La descripción es requerida.',
             'description.string' => 'La descripción no tiene un formato válido.',
             'price.required' => 'El precio es requerido',
-            'category_id.required' => 'La categoría es requerida'
+            'category_id.required' => 'La categoría es requerida',
+            'file.required' => 'El archivo de imagen es requerido.',
+            'file.mimes' => 'El archivo debe estar en fomato .jpg o .png',
         ]);
 
         if ($validator->fails()) {
@@ -75,8 +79,17 @@ class ItemsController extends Controller
             'name' => $request->name,
             'category_id' => $request->category_id,
             'description' => $request->description,
-            'price' => json_encode($prices)
+            'price' => json_encode($prices),
+            'img' => 'path'
         ]);
+
+        if ($request->hasfile('file')) {
+            $file = $request->file;
+            $file->move(public_path("storage/items"), $item->id . '.' . $file->getClientOriginalExtension());
+        }
+
+        $item->img = "items/" . $item->id . '.' . $file->getClientOriginalExtension();
+        $item->save();
 
         $request->session()->flash('message', 'Producto creado con éxito.');
         $request->session()->flash('alert-type', 'success');
@@ -124,14 +137,16 @@ class ItemsController extends Controller
             'name' => 'required|string',
             'description' => 'required|string',
             'price' => 'required',
-            'category_id' => 'required'
+            'category_id' => 'required',
+            'file' => 'mimes:jpeg,jpg,png',
         ], [
-            'name.required' => 'El nombre es requerido.',
+            'name.required' => 'EL nombre es requerido.',
             'name.string' => 'El nombre no tiene un formato válido.',
             'description.required' => 'La descripción es requerida.',
             'description.string' => 'La descripción no tiene un formato válido.',
             'price.required' => 'El precio es requerido',
-            'category_id.required' => 'La categoría es requerida'
+            'category_id.required' => 'La categoría es requerida',
+            'file.mimes' => 'El archivo debe estar en fomato .jpg o .png',
         ]);
 
         if ($validator->fails()) {
@@ -158,6 +173,21 @@ class ItemsController extends Controller
             'description' => $request->description,
             'price' => $prices
         ]);
+
+        if ($request->hasfile('file')) {
+            if ($item->img){
+                //Borrar la imagen del servidor
+                if (File::exists('storage/' . $item->img)) {
+                    unlink('storage/' . $item->img);
+                }
+            }
+
+            $file = $request->file;
+            $file->move(public_path("storage/items"), $item->id . '.' . $file->getClientOriginalExtension());
+
+            $item->img = "items/" . $item->id . '.' . $file->getClientOriginalExtension();
+            $item->save();
+        }
 
         $request->session()->flash('message', 'Producto actualizado con éxito.');
         $request->session()->flash('alert-type', 'success');

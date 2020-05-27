@@ -54,7 +54,7 @@
           </a>
           <div class="dropdown-menu dropdown-menu-small">
             <a class="dropdown-item text-danger" href="{{ route('logout') }}">
-              <i class="material-icons text-danger">&#xE879;</i> Logout </a>
+              <i class="fas fa-lock text-danger"></i> Cerrar Sesión </a>
           </div>
         </li>
       </ul>

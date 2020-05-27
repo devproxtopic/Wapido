@@ -89,7 +89,7 @@
         <br>
         <div >
              <center>
-				<div><img src="{{ asset('img/tratto.png') }}" width="30%"></div>
+				<div><img src="{{ asset($owner->logo) }}" width="30%"></div>
 				</center>
 
 
@@ -105,7 +105,9 @@
                 Celular: <strong>{{ $client->phone }}</strong> <br>
                 Estatus: <strong>{{ $orderDB->status->name }}</strong> <br>
                 Modalidad: <strong>@if($orderDB->apply_delivery == 1)Envío a Domicilio
-                    @else Recoger en Tienda @endif</strong>
+                    @else Recoger en Tienda @endif</strong><br>
+                Tipo de Pago: <strong>@if($orderDB->payment == 1)Efectivo
+                    @else Tarjeta @endif</strong>
             </p>
 
             </div>

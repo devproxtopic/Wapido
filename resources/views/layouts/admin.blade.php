@@ -15,7 +15,7 @@
     <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <link rel="stylesheet" id="main-stylesheet" data-version="1.1.0" href="{{ asset('template-admin/styles/shards-dashboards.1.1.0.min.css') }}">
+    <link rel="stylesheet" id="main-stylesheet" data-version="1.1.0" href="{{ asset('template-admin/styles/shards-dashboards.1.1.0.css') }}">
     <link rel="stylesheet" href="{{ asset('template-admin/styles/extras.1.1.0.min.css') }}">
     <script async defer src="https://buttons.github.io/buttons.js"></script>
 
@@ -32,32 +32,6 @@
     <script src="{{ asset('template-admin/scripts/shards-dashboards.1.1.0.min.js') }}"></script>
     <script src="{{ asset('template-admin/scripts/app/app-blog-overview.1.1.0.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-    @if(session("message"))
-    <script>
-            var type = "{{ session('alert-type') }}";
-            switch(type){
-                case 'info':
-                    toastr.info("{{ session('message') }}");
-                    break;
-
-                case 'warning':
-                    toastr.warning("{{ session('message') }}");
-                    break;
-
-                case 'success':
-                    toastr.success("{{ session('message') }}");
-                    break;
-
-                case 'error':
-                    toastr.error("{{ session('message') }}");
-                    break;
-                default:
-                    toastr.info("{{ session('message') }}");
-                    break;
-            }
-    </script>
-    @endif
 
     @yield('scripts')
 
@@ -99,5 +73,32 @@
 
         </div>
     </div>
+
+
+    @if(session("message"))
+    <script>
+            var type = "{{ session('alert-type') }}";
+            switch(type){
+                case 'info':
+                    toastr.info("{{ session('message') }}");
+                    break;
+
+                case 'warning':
+                    toastr.warning("{{ session('message') }}");
+                    break;
+
+                case 'success':
+                    toastr.success("{{ session('message') }}");
+                    break;
+
+                case 'error':
+                    toastr.error("{{ session('message') }}");
+                    break;
+                default:
+                    toastr.info("{{ session('message') }}");
+                    break;
+            }
+    </script>
+    @endif
 </body>
 </html>

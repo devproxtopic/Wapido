@@ -163,8 +163,8 @@
           <table style="margin:0 auto;" cellspacing="0" cellpadding="0" width="100%">
             <tr>
               <td style="text-align: center;">
-                <img src="{{ asset('img/tratto.png') }}" width="20%">
-                <a href="#" style="font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';box-sizing: border-box;color: #bbbfc3;font-size: 19px;font-weight: bold;text-decoration: none;">La Trattoria</a>
+                <img src="{{ asset(App\Owner::find(1)->logo) }}" width="20%">
+                <a href="#" style="font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';box-sizing: border-box;color: #bbbfc3;font-size: 19px;font-weight: bold;text-decoration: none;">{{ App\Owner::find(1)->name }}</a>
               </td>
             </tr>
           </table>
@@ -196,7 +196,7 @@
                     <table style="margin:0 auto;" cellspacing="0" cellpadding="0" class="force-width-80">
                         <tr>
                                 <td style="font-size:16px; font-weight: 600; color:#6f6f6f; text-align:center;" class="mobile-spacing">
-                                    Hola LA TRATTORIA, has recibido un nuevo pedido {{ $order->id }}
+                                    Hola {{ App\Owner::find(1)->name }}, has recibido un nuevo pedido {{ $order->id }}
                                     <br>
                                     de {{ $order->client->fullname }} / WhatsApp # {{ $order->client->phone }} <br>
                                     <a href="{{ route('orders.show', $order->id) }}">Haz click para aquí para ver la orden. </a>

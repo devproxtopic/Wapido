@@ -5,7 +5,7 @@
 
 @section('content')
 <div class="col-sm-12 col-md-12">
-    <form method="POST" action="{{ route('items.store') }}">
+    <form method="POST" action="{{ route('items.store') }}" enctype="multipart/form-data">
         @csrf
 
         <div class="form-group row">
@@ -62,6 +62,21 @@
 
             {{-- SE LLENA CON AJAX --}}
 
+        </div>
+
+        <div class="form-group row">
+            <label for="file" class="col-md-4 col-form-label text-md-right">Imagen</label>
+
+            <div class="col-md-6">
+                <input required id="file" type="file" class="form-control @error('file') is-invalid @enderror"
+                name="file" autofocus>
+
+                @error('file')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
         </div>
 
         <div class="form-group row mb-0">

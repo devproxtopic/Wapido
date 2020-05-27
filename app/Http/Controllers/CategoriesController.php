@@ -141,6 +141,20 @@ class CategoriesController extends Controller
             'unit_id.required' => 'La unidad es requerida'
         ]);
 
+        $measures = null;
+
+        foreach ($request->measure as $measure) {
+            if ($measure) {
+                $measures[] = $measure;
+            }
+        }
+
+        $validator->after(function ($validator) use ($measures) {
+            if (! $measures) {
+                 $validator->errors()->add('measure', 'Debe agregar al menos una medida.');
+            }
+        });
+
         if ($validator->fails()) {
 
             $request->session()->flash('message', 'Ha ocurrido un error.');
@@ -153,11 +167,27 @@ class CategoriesController extends Controller
 
         $category = Category::find($id);
 
-        foreach($request->measure as $measure){
-            if($measure){
-                $measures[] = $measure;
-            }
-        }
+        $items = $category->items;
+
+        /**
+         * Dejar los precios en los items de las cantidades que corresponden
+         */
+        $newPrices = null;
+
+         foreach($items as $item){
+             if(json_decode($item->price) != '' || json_decode($item->price) != null){
+                 foreach(json_decode($item->price,true) as $price){
+                    for ($i=0; $i < count($measures); $i++) {
+                        if($price['quantity'] == $measures[$i]){
+                            $newPrices[] = $price;
+                        }
+                    }
+                }
+
+                $item->price = json_encode($newPrices);
+                $item->save();
+             }
+         }
 
         $category->update([
             'name' => $request->name,

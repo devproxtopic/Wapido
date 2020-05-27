@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Owner;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -23,6 +24,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return redirect()->action('CategoriesController@index');
+        $owner = Owner::find(1);
+        return view('home', compact('owner'));
     }
 }

@@ -9,6 +9,7 @@ use App\Mail\OrderOwnerMail;
 use App\Notifications\SendOrderNotification;
 use App\Order;
 use App\OrderDetail;
+use App\Owner;
 use App\Status;
 use App\User;
 use Illuminate\Http\Request;
@@ -94,7 +95,8 @@ class OrdersController extends Controller
             'client_id' => $client->id,
             'total_amount' => $request->total_amount,
             'status_id' => 1,
-            'apply_delivery' => $request->apply_delivery
+            'apply_delivery' => $request->apply_delivery,
+            'payment' => $request->payment
         ]);
 
         foreach($request->quantity as $input => $value){
@@ -118,10 +120,10 @@ class OrdersController extends Controller
 
         //Enviar Whatsapp con Twilio
         //$message = $this->sendMessage('Se ha creado un nuevo pedido, puede verlo en la siguiente url: ' . route('orders.show', $order->id) , $client->phone);
-        $user = User::find(1);
+        $owner = Owner::find(1);
 
         Mail::to($client->email)->send(new OrderClientMail($order));
-        Mail::to($user->email)->send(new OrderOwnerMail($order));
+        Mail::to($owner->email)->send(new OrderOwnerMail($order));
 
         $request->session()->flash('message', $order->id);
 
@@ -150,7 +152,9 @@ class OrdersController extends Controller
             ];
         }
 
-        return view('order', compact('client', 'order', 'orderDB'));
+        $owner = Owner::find(1);
+
+        return view('order', compact('client', 'order', 'orderDB', 'owner'));
     }
 
     /**

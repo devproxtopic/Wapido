@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
 class UnsetCookies extends Command
@@ -45,6 +46,6 @@ class UnsetCookies extends Command
             Cookie::queue(Cookie::forget($key));
         }
 
-
+        Log::inf('Se borraron las cookies.');
     }
 }
