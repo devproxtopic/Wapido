@@ -15,6 +15,7 @@ class CreatePromotionsTable extends Migration
     {
         Schema::create('promotions', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('owner_id')->unsigned();
             $table->string('title', 150);
             $table->string('description', 255);
             $table->string('picture', 255);

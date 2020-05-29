@@ -163,8 +163,8 @@
           <table style="margin:0 auto;" cellspacing="0" cellpadding="0" width="100%">
             <tr>
               <td style="text-align: center;">
-                <img src="{{ asset( App\Owner::find(1)->logo) }}" width="20%">
-                <a href="#" style="font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';box-sizing: border-box;color: #bbbfc3;font-size: 19px;font-weight: bold;text-decoration: none;">{{ App\Owner::find(1)->name }}</a>
+                <img src="{{ asset($order->owner->logo) }}" width="20%">
+                <a href="#" style="font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';box-sizing: border-box;color: #bbbfc3;font-size: 19px;font-weight: bold;text-decoration: none;">{{ $order->owner->name }}</a>
               </td>
             </tr>
           </table>
@@ -196,10 +196,10 @@
                     <table style="margin:0 auto;" cellspacing="0" cellpadding="0" class="force-width-80">
                         <tr>
                                 <td style="font-size:16px; font-weight: 600; color:#6f6f6f; text-align:center;" class="mobile-spacing">
-                                    Hola {{ $order->client->fullname }}, tu pedido a {{ App\Owner::find(1)->name }} ya está encaminado.
+                                    Hola {{ $order->client->fullname }}, tu pedido a {{ $order->owner->name }} ya está encaminado.
                                     <br>
                                     Te contactaran por WhatsApp para completar el envío.<br>
-                                    <a href="{{ route('orders.show', $order->id) }}">Has click para aquí para ver la orden. </a>
+                                    <a href="{{ url($order->owner->slug . '/orders-show/' . $order->id) }}">Has click para aquí para ver la orden. </a>
                                 </td>
                         </tr>
                     </table>

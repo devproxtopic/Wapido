@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Client;
 use App\Order;
+use App\Owner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -14,11 +15,13 @@ class ClientsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($slug)
     {
-        $clients = Client::paginate(15);
+        $owner = Owner::where('slug', $slug)->first();
+        $clients = Client::where('owner_id', $owner->id)
+            ->paginate(15);
 
-        return view('clients.index', compact('clients'));
+        return view('clients.index', compact('clients', 'owner'));
     }
 
     /**
@@ -26,9 +29,10 @@ class ClientsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($slug)
     {
-        return view('clients.create');
+        $owner = Owner::where('slug', $slug)->first();
+        return view('clients.create', compact('owner'));
     }
 
     /**
@@ -62,12 +66,17 @@ class ClientsController extends Controller
                         ->withInput();
         }
 
-        Client::create($request->all());
+        $owner = Owner::where('slug', $request->slug)->first();
+
+        $client = Client::create($request->all());
+
+        $client->owner_id = $owner->id;
+        $client->save();
 
         $request->session()->flash('message', 'Cliente creado exitosamente.');
         $request->session()->flash('alert-type', 'success');
 
-        return redirect()->action('ClientsController@index');
+        return redirect('owners/' . $request->slug . '/clients');
     }
 
     /**
@@ -87,10 +96,11 @@ class ClientsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($slug, $id)
     {
+        $owner = Owner::where('slug', $slug)->first();
         $client = Client::find($id);
-        return view('clients.edit', compact('client'));
+        return view('clients.edit', compact('client', 'owner'));
     }
 
     /**
@@ -100,7 +110,7 @@ class ClientsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($slug, Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|string|email',
@@ -132,7 +142,7 @@ class ClientsController extends Controller
         $request->session()->flash('message', 'Cliente actualizado exitosamente.');
         $request->session()->flash('alert-type', 'success');
 
-        return back();
+        return redirect()->back();
     }
 
     /**
@@ -141,7 +151,7 @@ class ClientsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id, Request $request)
+    public function destroy($slug, $id, Request $request)
     {
         $orders = Order::where('client_id', $id)->first();
 
@@ -149,7 +159,7 @@ class ClientsController extends Controller
             $request->session()->flash('message', 'El cliente no se puede eliminar porque tiene registros asociados.');
             $request->session()->flash('alert-type', 'error');
 
-            return back();
+            return redirect()->back();
         }
 
         Client::destroy($id);
@@ -157,6 +167,6 @@ class ClientsController extends Controller
         $request->session()->flash('message', 'Cliente eliminado exitosamente.');
         $request->session()->flash('alert-type', 'success');
 
-        return back();
+        return redirect()->back();
     }
 }

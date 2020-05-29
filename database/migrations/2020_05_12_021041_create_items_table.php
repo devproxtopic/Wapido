@@ -15,6 +15,7 @@ class CreateItemsTable extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('owner_id')->unsigned();
             $table->bigInteger('category_id')->unsigned();
             $table->string('name', 150);
             $table->string('price', 255);

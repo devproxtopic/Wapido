@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Unidades')
-@section('route_create', route('units.create'))
+@section('route_create', url('owners/'. $owner->slug .'/units/create'))
 
 @section('content')
 
@@ -30,8 +30,8 @@
                     <td>{{ $unit->name }}</td>
                     <td>{{ $unit->symbol }}</td>
                     <td>
-                        <a href="{{ route('units.destroy', $unit->id) }}" title="Borrar"><i class="fa fa-trash"></i></a>
-                        <a href="{{ route('units.edit', $unit->id) }}" title="Editar"><i class="fa fa-edit"></i></a>
+                        <a href="{{ url('owners/'. $owner->slug . '/units-delete/' . $unit->id) }}" title="Borrar"><i class="fa fa-trash"></i></a>
+                        <a href="{{ url('owners/'. $owner->slug . '/units/' . $unit->id. '/edit') }}" title="Editar"><i class="fa fa-edit"></i></a>
                     </td>
                 </tr>
                 @endforeach

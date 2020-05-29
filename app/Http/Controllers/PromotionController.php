@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Owner;
 use App\Promotion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -14,10 +15,13 @@ class PromotionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($slug)
     {
-        $promotions = Promotion::orderBy('title')->paginate(15);
-        return view('promotions.index', compact('promotions'));
+        $owner = Owner::where('slug', $slug)->first();
+
+        $promotions = Promotion::where('owner_id', $owner->id)
+        ->orderBy('title')->paginate(15);
+        return view('promotions.index', compact('promotions', 'owner'));
     }
 
     /**
@@ -25,9 +29,10 @@ class PromotionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($slug)
     {
-        return view('promotions.create');
+        $owner = Owner::where('slug', $slug)->first();
+        return view('promotions.create', compact('owner'));
     }
 
     /**
@@ -60,11 +65,13 @@ class PromotionController extends Controller
                 ->withErrors($validator)
                 ->withInput();
         }
+        $owner = Owner::where('slug', $request->slug)->first();
 
         $promotion = Promotion::create([
             'title' => $request->title,
             'description' => $request->description,
-            'picture' => 'path'
+            'picture' => 'path',
+            'owner_id' => $owner->id
         ]);
 
         if ($request->hasfile('file')) {
@@ -78,7 +85,7 @@ class PromotionController extends Controller
         $request->session()->flash('message', 'Promoción creada con éxito.');
         $request->session()->flash('alert-type', 'success');
 
-        return redirect()->action('PromotionController@index');
+        return redirect('owners/' . $request->slug . '/promotions');
     }
 
     /**
@@ -98,11 +105,12 @@ class PromotionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($slug, $id)
     {
         $promotion = Promotion::find($id);
+        $owner = Owner::where('slug', $slug)->first();
 
-        return view('promotions.edit', compact('promotion'));
+        return view('promotions.edit', compact('promotion','owner'));
     }
 
     /**
@@ -112,7 +120,7 @@ class PromotionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($slug, Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required',
@@ -153,10 +161,10 @@ class PromotionController extends Controller
             $promotion->save();
         }
 
-        $request->session()->flash('message', 'Categoría actualizada con éxito.');
+        $request->session()->flash('message', 'Promoción actualizada con éxito.');
         $request->session()->flash('alert-type', 'success');
 
-        return back();
+        return redirect()->back();
     }
 
     /**
@@ -165,13 +173,13 @@ class PromotionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id, Request $request)
+    public function destroy($slug, $id, Request $request)
     {
         Promotion::destroy($id);
 
-        $request->session()->flash('message', 'Categoría eliminada exitosamente.');
+        $request->session()->flash('message', 'Promoción eliminada exitosamente.');
         $request->session()->flash('alert-type', 'success');
 
-        return back();
+        return redirect()->back();
     }
 }

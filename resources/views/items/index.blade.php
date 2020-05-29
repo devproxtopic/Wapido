@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Productos')
-@section('route_create', route('items.create'))
+@section('route_create', url('owners/'. $owner->slug .'/items/create'))
 
 @section('content')
 
@@ -42,8 +42,8 @@
                         @endif
                     </td>
                     <td>
-                        <a href="{{ route('items.destroy', $item->id) }}" title="Borrar"><i class="fa fa-trash"></i></a>
-                        <a href="{{ route('items.edit', $item->id) }}" title="Editar"><i class="fa fa-edit"></i></a>
+                        <a href="{{ url('owners/'. $owner->slug . '/items-delete/' . $item->id) }}" title="Borrar"><i class="fa fa-trash"></i></a>
+                        <a href="{{ url('owners/'. $owner->slug . '/items/' . $item->id. '/edit') }}" title="Editar"><i class="fa fa-edit"></i></a>
                     </td>
                 </tr>
                 @endforeach

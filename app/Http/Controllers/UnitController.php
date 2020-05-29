@@ -14,10 +14,11 @@ class UnitController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($slug)
     {
+        $owner = json_decode(session()->get('owner'));
         $units = Unit::paginate(25);
-        return view('units.index', compact('units'));
+        return view('units.index', compact('units','owner'));
     }
 
     /**
@@ -25,9 +26,10 @@ class UnitController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($slug)
     {
-        return view('units.create');
+        $owner = json_decode(session()->get('owner'));
+        return view('units.create', compact('owner'));
     }
 
     /**
@@ -80,10 +82,11 @@ class UnitController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($slug, $id)
     {
+        $owner = json_decode(session()->get('owner'));
         $unit = Unit::find($id);
-        return view('units.edit', compact('unit'));
+        return view('units.edit', compact('unit', 'owner'));
     }
 
     /**
@@ -93,7 +96,7 @@ class UnitController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($slug, Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
@@ -118,7 +121,7 @@ class UnitController extends Controller
         $request->session()->flash('message', 'Unidad actualizada con éxito.');
         $request->session()->flash('alert-type', 'success');
 
-        return back();
+        return redirect()->back();
     }
 
     /**
@@ -127,7 +130,7 @@ class UnitController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id, Request $request)
+    public function destroy($slug, $id, Request $request)
     {
         $category = Category::where('unit_id', $id)->first();
 
@@ -135,13 +138,13 @@ class UnitController extends Controller
             $request->session()->flash('message', 'La categoria no se puede eliminar porque tiene registros asociados.');
             $request->session()->flash('alert-type', 'error');
 
-            return back();
+            return redirect()->back();
         }
 
         Unit::destroy($id);
         $request->session()->flash('message', 'Unidad eliminada exitosamente.');
         $request->session()->flash('alert-type', 'success');
 
-        return back();
+        return redirect()->back();
     }
 }

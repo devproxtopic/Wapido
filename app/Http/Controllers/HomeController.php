@@ -24,7 +24,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $owner = Owner::find(1);
-        return view('home', compact('owner'));
+        $owners = Owner::all();
+        return view('home', compact('owners'));
     }
 }

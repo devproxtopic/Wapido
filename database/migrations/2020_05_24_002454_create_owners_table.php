@@ -19,6 +19,8 @@ class CreateOwnersTable extends Migration
             $table->string('logo', 255);
             $table->string('phone', 150);
             $table->string('sliders', 255);
+            $table->string('description', 255);
+            $table->string('slug', 255)->unique();
             $table->timestamps();
         });
     }

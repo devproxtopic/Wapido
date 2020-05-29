@@ -12,56 +12,52 @@
         </a>
       </nav>
     </div>
+    @if(request()->segment(1) != 'home')
     <div class="nav-wrapper">
       <ul class="nav flex-column">
-        <li class="nav-item {{ (request()->segment(1) == 'home') ? 'active' : '' }}">
-          <a class="nav-link" href="{{ url('/home') }}">
-            <i class="fa fa-cogs"></i>
-            <span>Configuración</span>
-          </a>
-        </li>
-        <li class="nav-item {{ (request()->segment(1) == 'promotions') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ url('/promotions') }}">
+        <li class="nav-item {{ (request()->segment(3) == 'promotions') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ url('owners/'.$owner->slug.'/promotions') }}">
               <i class="fa fa-star"></i>
               <span>Promociones</span>
             </a>
         </li>
-        <li class="nav-item {{ (request()->segment(1) == 'categories') ? 'active' : '' }}">
-          <a class="nav-link" href="{{ url('/categories') }}">
+        <li class="nav-item {{ (request()->segment(3) == 'categories') ? 'active' : '' }}">
+          <a class="nav-link" href="{{ url('owners/'.$owner->slug.'/categories') }}">
             <i class="fa fa-wrench"></i>
             <span>Categorías</span>
           </a>
         </li>
-        <li class="nav-item {{ (request()->segment(1) == 'items') ? 'active' : '' }}">
-          <a class="nav-link " href="{{ url('/items') }}">
+        <li class="nav-item {{ (request()->segment(3) == 'items') ? 'active' : '' }}">
+          <a class="nav-link " href="{{ url('owners/'.$owner->slug.'/items') }}">
             <i class="fa fa-wrench"></i>
             <span>Productos</span>
           </a>
         </li>
-        <li class="nav-item {{ (request()->segment(1) == 'clients') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ url('/clients') }}">
+        <li class="nav-item {{ (request()->segment(3) == 'clients') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ url('owners/'.$owner->slug.'/clients') }}">
               <i class="fa fa-users"></i>
               <span>Clientes</span>
             </a>
         </li>
-        <li class="nav-item {{ (request()->segment(1) == 'orders') ? 'active' : '' }}">
-            <a class="nav-link " href="{{ url('/orders') }}">
+        <li class="nav-item {{ (request()->segment(3) == 'orders') ? 'active' : '' }}">
+            <a class="nav-link " href="{{ url('owners/'.$owner->slug.'/orders') }}">
               <i class="fa fa-utensils"></i>
               <span>Pedidos</span>
             </a>
         </li>
-        <li class="nav-item {{ (request()->segment(1) == 'units') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ url('/units') }}">
+        <li class="nav-item {{ (request()->segment(3) == 'units') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ url('owners/'.$owner->slug.'/units') }}">
               <i class="fa fa-edit"></i>
               <span>Unidades</span>
             </a>
         </li>
-        <li class="nav-item {{ (request()->segment(1) == 'status') ? 'active' : '' }}">
-            <a class="nav-link " href="{{ url('/status') }}">
+        <li class="nav-item {{ (request()->segment(3) == 'status') ? 'active' : '' }}">
+            <a class="nav-link " href="{{ url('owners/'.$owner->slug.'/status') }}">
               <i class="fa fa-edit"></i>
               <span>Estatus</span>
             </a>
         </li>
       </ul>
     </div>
+    @endif
   </aside>

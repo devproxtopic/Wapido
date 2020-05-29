@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Categorías')
-@section('route_create', route('categories.create'))
+@section('route_create', url('owners/'. $owner->slug .'/categories/create'))
 
 @section('content')
 
@@ -40,8 +40,8 @@
                         @endfor
                     </td>
                     <td>
-                        <a href="{{ route('categories.destroy', $category->id) }}" title="Borrar"><i class="fa fa-trash"></i></a>
-                        <a href="{{ route('categories.edit', $category->id) }}" title="Editar"><i class="fa fa-edit"></i></a>
+                        <a href="{{ url('owners/'. $owner->slug . '/categories-delete/' . $category->id) }}" title="Borrar"><i class="fa fa-trash"></i></a>
+                        <a href="{{ url('owners/'. $owner->slug . '/categories/' . $category->id. '/edit') }}" title="Editar"><i class="fa fa-edit"></i></a>
                     </td>
                 </tr>
                 @endforeach

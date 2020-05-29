@@ -27,11 +27,13 @@ class OrdersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($slug)
     {
-        $orders = Order::paginate(15);
+        $owner = Owner::where('slug', $slug)->first();
+        $orders = Order::where('owner_id', $owner->id)
+        ->paginate(15);
 
-        return view('orders.index', compact('orders'));
+        return view('orders.index', compact('orders', 'owner'));
     }
 
     /**
@@ -39,12 +41,13 @@ class OrdersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($slug)
     {
+        $owner = Owner::where('slug', $slug)->first();
         $statuses = Status::orderBy('name')->get();
-        $clients = Client::orderBy('fullname')->get();
+        $clients = Client::where('owner_id', $owner->id)->orderBy('fullname')->get();
 
-        return view('orders.create', compact('statuses', 'clients'));
+        return view('orders.create', compact('statuses', 'clients', 'owner'));
     }
 
     /**
@@ -79,7 +82,7 @@ class OrdersController extends Controller
                         ->withErrors($validator)
                         ->withInput();
         }
-
+        $owner = Owner::where('slug', $request->slug)->first();
         $client = Client::where('email', $request->email)->first();
 
         if(! $client){
@@ -87,7 +90,8 @@ class OrdersController extends Controller
                 'fullname' => $request->fullname,
                 'phone' => $request->phone,
                 'email' => $request->email,
-                'address' => $request->address
+                'address' => $request->address,
+                'owner_id' => $owner->id
             ]);
         }
 
@@ -96,7 +100,8 @@ class OrdersController extends Controller
             'total_amount' => $request->total_amount,
             'status_id' => 1,
             'apply_delivery' => $request->apply_delivery,
-            'payment' => $request->payment
+            'payment' => $request->payment,
+            'owner_id' => $owner->id
         ]);
 
         foreach($request->quantity as $input => $value){
@@ -120,7 +125,6 @@ class OrdersController extends Controller
 
         //Enviar Whatsapp con Twilio
         //$message = $this->sendMessage('Se ha creado un nuevo pedido, puede verlo en la siguiente url: ' . route('orders.show', $order->id) , $client->phone);
-        $owner = Owner::find(1);
 
         Mail::to($client->email)->send(new OrderClientMail($order));
         Mail::to($owner->email)->send(new OrderOwnerMail($order));
@@ -129,7 +133,7 @@ class OrdersController extends Controller
 
         //Http::get("https://api.whatsapp.com/send?phone=" . env("TWILIO_NUMBER_DEMO") . "&text=Se%ha%creado%un%nuevo%pedido,%puede%verlo%en%la%siguiente%url:%" . route('orders.show', $order->id));
 
-        return back();
+        return redirect()->back();
     }
 
     /**
@@ -138,7 +142,7 @@ class OrdersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($slug, $id)
     {
         $orderDB = Order::findOrFail($id);
         $client = $orderDB->client;
@@ -152,7 +156,7 @@ class OrdersController extends Controller
             ];
         }
 
-        $owner = Owner::find(1);
+        $owner = Owner::where('slug', $slug)->first();
 
         return view('order', compact('client', 'order', 'orderDB', 'owner'));
     }
@@ -163,13 +167,14 @@ class OrdersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($slug, $id)
     {
+        $owner = Owner::where('slug', $slug)->first();
         $order = Order::find($id);
         $statuses = Status::orderBy('name')->get();
         $clients = Client::orderBy('fullname')->get();
 
-        return view('orders.edit', compact('statuses', 'clients', 'order'));
+        return view('orders.edit', compact('statuses', 'clients', 'order', 'owner'));
     }
 
     /**
@@ -204,7 +209,7 @@ class OrdersController extends Controller
         $request->session()->flash('message', 'Pedido actualizado exitosamente');
         $request->session()->flash('alert-type', 'success');
 
-        return back();
+        return redirect()->back();
     }
 
     /**
@@ -217,7 +222,7 @@ class OrdersController extends Controller
     {
         Order::destroy($id);
 
-        return back()->with('message', "Pedido eliminado exitosamente.");
+        return redirect()->back()->with('message', "Pedido eliminado exitosamente.");
     }
 
     /**

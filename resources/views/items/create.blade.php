@@ -5,7 +5,7 @@
 
 @section('content')
 <div class="col-sm-12 col-md-12">
-    <form method="POST" action="{{ route('items.store') }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ url('owners/'. $owner->slug .'/items') }}" enctype="multipart/form-data">
         @csrf
 
         <div class="form-group row">
@@ -84,7 +84,7 @@
                 <button type="submit" class="btn btn-primary">
                     Guardar
                 </button>
-                <a href="{{ url('/items') }}" class="btn btn-warning">
+                <a href="{{ url('owners/'. $owner->slug .'/items') }}" class="btn btn-warning">
                     Volver
                 </a>
             </div>

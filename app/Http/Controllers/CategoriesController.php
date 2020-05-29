@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use App\Item;
+use App\Owner;
 use App\Unit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -16,11 +17,14 @@ class CategoriesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($slug)
     {
-        $categories = Category::orderBy('name')->paginate(15);
+        $owner = Owner::where('slug', $slug)->first();
 
-        return view('categories.index', compact('categories'));
+        $categories = Category::where('owner_id', $owner->id)
+        ->orderBy('name')->paginate(15);
+
+        return view('categories.index', compact('categories', 'owner'));
     }
 
     /**
@@ -28,10 +32,12 @@ class CategoriesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($slug)
     {
+        $owner = Owner::where('slug', $slug)->first();
+
         $units = Unit::orderBy('name')->get();
-        return view('categories.create', compact('units'));
+        return view('categories.create', compact('units', 'owner'));
     }
 
     /**
@@ -50,7 +56,7 @@ class CategoriesController extends Controller
             'unit_id' => 'required'
         ], [
             'name.required' => 'EL nombre es requerido.',
-            'name.unique' => 'Ya existe una imagen con ese nombre.',
+            'name.unique' => 'Ya existe una categoria con ese nombre.',
             'name.string' => 'El nombre no tiene un formato válido.',
             'file.required' => 'El archivo de imagen es requerido.',
             'file.mimes' => 'El archivo debe estar en fomato .jpg o .png',
@@ -70,12 +76,15 @@ class CategoriesController extends Controller
                         ->withInput();
         }
 
+        $owner = Owner::where('slug', $request->slug)->first();
+
         $category = Category::create([
             'name' => $request->name,
             'unit_id' => $request->unit_id,
             'measure' => json_encode($request->measure),
             'description' => $request->description,
-            'img' => 'path'
+            'img' => 'path',
+            'owner_id' => $owner->id
         ]);
 
         if($request->hasfile('file')){
@@ -89,8 +98,7 @@ class CategoriesController extends Controller
         $request->session()->flash('message', 'Categoría creada con éxito.');
         $request->session()->flash('alert-type', 'success');
 
-        return redirect()->action('CategoriesController@index')
-            ->with('message', 'Categoría creada con éxito.');
+        return redirect('owners/'.$request->slug.'/categories');
     }
 
     /**
@@ -110,13 +118,15 @@ class CategoriesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($slug, $id)
     {
+        $owner = Owner::where('slug', $slug)->first();
+
         $units = Unit::orderBy('name')->get();
         $category = Category::find($id);
         $measures = json_decode($category->measure);
 
-        return view('categories.edit', compact('units', 'category', 'measures'));
+        return view('categories.edit', compact('units', 'category', 'measures', 'owner'));
     }
 
     /**
@@ -126,7 +136,7 @@ class CategoriesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($slug, Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
@@ -212,7 +222,7 @@ class CategoriesController extends Controller
         $request->session()->flash('message', 'Categoría actualizada con éxito.');
         $request->session()->flash('alert-type', 'success');
 
-        return back();
+        return redirect()->back();
     }
 
     /**
@@ -221,7 +231,7 @@ class CategoriesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id, Request $request)
+    public function destroy($slug, $id, Request $request)
     {
         $items = Item::where('category_id', $id)->first();
 
@@ -230,7 +240,7 @@ class CategoriesController extends Controller
             $request->session()->flash('message', 'La categoría no se puede eliminar porque tiene registros asociados.');
             $request->session()->flash('alert-type', 'error');
 
-            return back();
+            return redirect()->back();
         }
 
         Category::destroy($id);
@@ -238,6 +248,6 @@ class CategoriesController extends Controller
         $request->session()->flash('message', 'Categoría eliminada exitosamente.');
         $request->session()->flash('alert-type', 'success');
 
-        return back();
+        return redirect()->back();
     }
 }

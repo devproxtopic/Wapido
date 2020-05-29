@@ -24,7 +24,7 @@ class OwnerRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string',
+            'name' => 'required|string|unique:owners',
             'email' => 'required|string|email',
             'phone' => 'required',
             'logo' => 'mimes:png',
@@ -41,6 +41,7 @@ class OwnerRequest extends FormRequest
     {
         return [
             'name.required' => 'El nombre es requerido.',
+            'name.unique' => 'Ya existe un negocio con ese nombre.',
             'email.required' => 'El email es requerido.',
             'email.string' => 'El email no tiene el formato correcto.',
             'email.email' => 'El email no tiene el formato correcto.',

@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Promociones')
-@section('route_create', route('promotions.create'))
+@section('route_create', url('owners/'. $owner->slug .'/promotions/create'))
 
 @section('content')
 
@@ -29,8 +29,8 @@
                     <td>{{ $promotion->title }}</td>
                     <td>{{ $promotion->created_at->format('d/m/Y') }}</td>
                     <td>
-                        <a href="{{ route('promotions.destroy', $promotion->id) }}" title="Borrar"><i class="fa fa-trash"></i></a>
-                        <a href="{{ route('promotions.edit', $promotion->id) }}" title="Editar"><i class="fa fa-edit"></i></a>
+                        <a href="{{ url('owners/'. $owner->slug . '/promotions-delete/' . $promotion->id) }}" title="Borrar"><i class="fa fa-trash"></i></a>
+                        <a href="{{ url('owners/'. $owner->slug . '/promotions/' . $promotion->id. '/edit') }}" title="Editar"><i class="fa fa-edit"></i></a>
                     </td>
                 </tr>
                 @endforeach

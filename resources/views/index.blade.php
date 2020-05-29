@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+        {{-- <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> --}}
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
         <link rel="shortcut icon" type="image/ico" href="{{ asset('/favicon.ico') }}"/>
 		<title>{{ env('APP_NAME') }}</title>
@@ -72,7 +72,7 @@
 		</div>
         <div id="fixed-bg"></div>
 
-    <form action="{{ route('orders.store') }}" method="POST">
+    <form action="{{ route('orders.store', $owner->slug) }}" method="POST">
         @csrf
 
         @if(count($promotions) > 0)
@@ -277,7 +277,7 @@
                     toastr.error("{{ session('message') }}");
                     break;
                 default:
-                    window.open("https://api.whatsapp.com/send?phone={{ $owner->phone }}&text=Se ha creado un nuevo pedido, puede verlo en la siguiente url: {{route('orders.show', session('message'))}}", '_blank');
+                    window.open("https://api.whatsapp.com/send?phone={{ $owner->phone }}&text=Se ha creado un nuevo pedido, puede verlo en la siguiente url: {{url($owner->slug . '/orders-show/' . session('message'))}}", '_blank');
                     $('#myModal').modal();
                     break;
             }

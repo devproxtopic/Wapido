@@ -32,7 +32,7 @@
                     <td>{{ $order->status->name }}</td>
                     <td>{{ number_format($order->total_amount, 2) }}</td>
                     <td>
-                        <a href="{{ route('orders.edit', $order->id) }}" title="Editar"><i class="fa fa-edit"></i></a>
+                        <a href="{{ url('owners/'. $owner->slug . '/orders/' . $order->id. '/edit') }}" title="Editar"><i class="fa fa-edit"></i></a>
                     </td>
                 </tr>
                 @endforeach

@@ -53,6 +53,8 @@
             <span class="d-none d-md-inline-block">{{ Auth::user()->name }}</span>
           </a>
           <div class="dropdown-menu dropdown-menu-small">
+            <a class="dropdown-item text-primary" href="{{ url('home') }}">
+              <i class="fas fa-star text-primary"></i> Cambiar de Negocio </a>
             <a class="dropdown-item text-danger" href="{{ route('logout') }}">
               <i class="fas fa-lock text-danger"></i> Cerrar Sesión </a>
           </div>

@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Clientes')
-@section('route_create', route('clients.create'))
+@section('route_create', url('owners/'. $owner->slug .'/clients/create'))
 
 @section('content')
 
@@ -32,8 +32,8 @@
                     <td>{{ $client->phone }}</td>
                     <td>{{ $client->email }}</td>
                     <td>
-                        <a href="{{ route('clients.destroy', $client->id) }}" title="Borrar"><i class="fa fa-trash"></i></a>
-                        <a href="{{ route('clients.edit', $client->id) }}" title="Editar"><i class="fa fa-edit"></i></a>
+                        <a href="{{ url('owners/'. $owner->slug . '/clients-delete/' . $client->id) }}" title="Borrar"><i class="fa fa-trash"></i></a>
+                        <a href="{{ url('owners/'. $owner->slug . '/clients/' . $client->id. '/edit') }}" title="Editar"><i class="fa fa-edit"></i></a>
                     </td>
                 </tr>
                 @endforeach

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Category;
 use App\Item;
 use App\OrderDetail;
+use App\Owner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
@@ -16,11 +17,13 @@ class ItemsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($slug)
     {
-        $items = Item::orderBy('name')->paginate(15);
+        $owner = Owner::where('slug', $slug)->first();
+        $items = Item::where('owner_id', $owner->id)
+        ->orderBy('name')->paginate(15);
 
-        return view('items.index', compact('items'));
+        return view('items.index', compact('items', 'owner'));
     }
 
     /**
@@ -28,10 +31,13 @@ class ItemsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($slug)
     {
-        $categories = Category::orderBy('name')->get();
-        return view('items.create', compact('categories'));
+        $owner = Owner::where('slug', $slug)->first();
+        $categories = Category::where('owner_id', $owner->id)
+        ->orderBy('name')->get();
+
+        return view('items.create', compact('categories', 'owner'));
     }
 
     /**
@@ -75,12 +81,15 @@ class ItemsController extends Controller
             ];
         }
 
+        $owner = Owner::where('slug', $request->slug)->first();
+
         $item = Item::create([
             'name' => $request->name,
             'category_id' => $request->category_id,
             'description' => $request->description,
             'price' => json_encode($prices),
-            'img' => 'path'
+            'img' => 'path',
+            'owner_id' => $owner->id
         ]);
 
         if ($request->hasfile('file')) {
@@ -94,7 +103,7 @@ class ItemsController extends Controller
         $request->session()->flash('message', 'Producto creado con éxito.');
         $request->session()->flash('alert-type', 'success');
 
-        return redirect()->action('ItemsController@index');
+        return redirect('owners/' . $request->slug . '/items');
     }
 
     /**
@@ -114,14 +123,16 @@ class ItemsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($slug, $id)
     {
-        $categories = Category::orderBy('name')->get();
+        $owner = Owner::where('slug', $slug)->first();
+        $categories = Category::where('owner_id', $owner->id)
+        ->orderBy('name')->get();
         $item = Item::find($id);
 
         $prices = json_decode($item->price);
 
-        return view('items.edit', compact('categories', 'item', 'prices'));
+        return view('items.edit', compact('categories', 'item', 'prices', 'owner'));
     }
 
     /**
@@ -131,7 +142,7 @@ class ItemsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($slug, Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
@@ -192,7 +203,7 @@ class ItemsController extends Controller
         $request->session()->flash('message', 'Producto actualizado con éxito.');
         $request->session()->flash('alert-type', 'success');
 
-        return back();
+        return redirect()->back();
     }
 
     /**
@@ -201,7 +212,7 @@ class ItemsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id, Request $request)
+    public function destroy($slug, $id, Request $request)
     {
         $orderDetail = OrderDetail::where('item_id', $id)->first();
 
@@ -209,7 +220,7 @@ class ItemsController extends Controller
             $request->session()->flash('message', 'El producto no se puede eliminar porque tiene registros asociados.');
             $request->session()->flash('alert-type', 'error');
 
-            return back();
+            return redirect()->back();
         }
 
         Item::destroy($id);
@@ -217,6 +228,6 @@ class ItemsController extends Controller
         $request->session()->flash('message', 'Producto eliminado exitosamente. Gracias por preferirnos.');
         $request->session()->flash('alert-type', 'success');
 
-        return back();
+        return redirect()->back();
     }
 }

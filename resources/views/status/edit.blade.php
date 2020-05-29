@@ -5,7 +5,7 @@
 
 @section('content')
 <div class="col-sm-12 col-md-12">
-    <form method="POST" action="{{ route('status.update', $status->id) }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ url('owners/'. $owner->slug .'/status' . $status->id) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -28,7 +28,7 @@
                 <button type="submit" class="btn btn-primary">
                     Guardar
                 </button>
-                <a href="{{ url('/status') }}" class="btn btn-warning">
+                <a href="{{ url('owners/'. $owner->slug .'/status') }}" class="btn btn-warning">
                     Volver
                 </a>
             </div>

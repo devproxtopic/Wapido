@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Estatus')
-@section('route_create', route('status.create'))
+@section('route_create', url('owners/'. $owner->slug .'/status/create'))
 
 @section('content')
 
@@ -27,8 +27,8 @@
                     <td>{{ $stat->id }}</td>
                     <td>{{ $stat->name }}</td>
                     <td>
-                        <a href="{{ route('status.destroy', $stat->id) }}" title="Borrar"><i class="fa fa-trash"></i></a>
-                        <a href="{{ route('status.edit', $stat->id) }}" title="Editar"><i class="fa fa-edit"></i></a>
+                        <a href="{{ url('owners/'. $owner->slug . '/status-delete/' . $stat->id) }}" title="Borrar"><i class="fa fa-trash"></i></a>
+                        <a href="{{ url('owners/'. $owner->slug . '/status/' . $stat->id. '/edit') }}" title="Editar"><i class="fa fa-edit"></i></a>
                     </td>
                 </tr>
                 @endforeach

@@ -14,10 +14,11 @@ class StatusController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($slug)
     {
+        $owner = json_decode(session()->get('owner'));
         $status = Status::paginate(25);
-        return view('status.index', compact('status'));
+        return view('status.index', compact('status', 'owner'));
     }
 
     /**
@@ -25,9 +26,10 @@ class StatusController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($slug)
     {
-        return view('status.create');
+        $owner = json_decode(session()->get('owner'));
+        return view('status.create', compact('owner'));
     }
 
     /**
@@ -75,10 +77,11 @@ class StatusController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($slug, $id)
     {
+        $owner = json_decode(session()->get('owner'));
         $status = Status::find($id);
-        return view('status.edit', compact('status'));
+        return view('status.edit', compact('status', 'owner'));
     }
 
     /**
@@ -88,7 +91,7 @@ class StatusController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($slug, Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
@@ -111,7 +114,7 @@ class StatusController extends Controller
         $request->session()->flash('message', 'Estatus actualizado exitosamente.');
         $request->session()->flash('alert-type', 'success');
 
-        return back();
+        return redirect()->back();
     }
 
     /**
@@ -120,7 +123,7 @@ class StatusController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id, Request $request)
+    public function destroy($slug, $id, Request $request)
     {
         $order = Order::where('status_id', $id)->first();
 
@@ -128,13 +131,13 @@ class StatusController extends Controller
             $request->session()->flash('message', 'El estatus no se puede eliminar porque tiene registros asociados.');
             $request->session()->flash('alert-type', 'error');
 
-            return back();
+            return redirect()->back();
         }
 
         Status::destroy($id);
         $request->session()->flash('message', 'Estatus eliminada exitosamente.');
         $request->session()->flash('alert-type', 'success');
 
-        return back();
+        return redirect()->back();
     }
 }

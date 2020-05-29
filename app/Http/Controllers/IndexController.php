@@ -16,14 +16,19 @@ class IndexController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function __invoke(Request $request)
+    public function __invoke($slug, Request $request)
     {
-        $categories = Category::all();
-        $clients = Client::all();
+        $owner = Owner::where('slug', $slug)->first();
+
+        if(! $owner){
+            return abort(404);
+        }
+
+        $promotions = Promotion::where('owner_id', $owner->id)->get();
+        $categories = Category::where('owner_id', $owner->id)->get();
+        $clients = Client::where('owner_id', $owner->id)->get();
         $client = null;
         $order = null;
-        $owner = Owner::find(1);
-        $promotions = Promotion::all();
 
         return view('index', compact('categories', 'clients', 'client', 'order','owner','promotions'));
     }
