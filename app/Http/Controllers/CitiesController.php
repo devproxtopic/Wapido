@@ -89,7 +89,7 @@ class CitiesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($slug, Request $request, $id)
     {
         $city = City::find($id);
         $city->state_id = $request->state_id;
