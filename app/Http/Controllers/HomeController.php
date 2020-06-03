@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Owner;
+use App\Models\Owner;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -24,7 +25,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $owners = Owner::all();
+        $owners = Owner::where('user_id', Auth::id())->get();
         return view('home', compact('owners'));
     }
 }

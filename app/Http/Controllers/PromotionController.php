@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Owner;
-use App\Promotion;
+use App\Models\Owner;
+use App\Models\Promotion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;

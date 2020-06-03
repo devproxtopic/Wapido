@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Negocios Asociados')
-@section('route_create', route('owners.create'))
+@section('display_create', 'display:none;')
 
 @section('content')
 <div class="row">
@@ -17,6 +17,7 @@
             <div class="card-body">
                 <h5 class="card-title">
                     <a class="text-fiord-blue" href="{{ route('owners.show', $owner->id) }}">{{ $owner->name }}</a>
+                    <a class="badge badge-pill badge-dark" href="{{ route('owners.show', $owner->id) }}">Administrar</a>
                 </h5>
                 <p class="card-text d-inline-block mb-3">{{ $owner->description }}</p>
                 <span class="text-muted">{{ $owner->email }}</span><br>

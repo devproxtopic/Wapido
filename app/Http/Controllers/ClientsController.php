@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Client;
-use App\Order;
-use App\Owner;
+use App\Models\Client;
+use App\Models\Order;
+use App\Models\Owner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 

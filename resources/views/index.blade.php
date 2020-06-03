@@ -4,6 +4,7 @@
 	<head>
 		<meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         {{-- <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> --}}
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
         <link rel="shortcut icon" type="image/ico" href="{{ asset('/favicon.ico') }}"/>
@@ -22,7 +23,7 @@
 		<link href="{{ asset('css/bootstrap-datepicker.css') }}" rel="stylesheet" type="text/css"  />
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="{{ asset("js/jquery-1.11.3.min.js") }}"></script>
 		<script type="text/javascript" src="{{ asset('js/jquery.timepicker.js') }}"></script>
 		<script type="text/javascript" src="{{ asset('js/bootstrap-datepicker.js') }}"></script>
 		<script type="text/javascript" src="{{ asset('js/datepair.js') }}"></script>
@@ -45,7 +46,7 @@
         <input type="hidden" id="url_base" value="{{ url('') }}">
 			<header>
 			    <center>
-                    <div>
+                    <div style="max-width: 1000px;" >
                         <img src="{{ isset($owner) ? asset($owner->logo) : '' }}" width="25%" class="logo-owner">
                         <br>
                         <a style="width:180px;" href="{{ isset($categories[0]) ? '#'.$categories[0]->name : '#' }}" class="calc">¡Vamos!</a>
@@ -57,6 +58,10 @@
             </header>
             @php
                 $sliders = isset($owner) ? json_decode($owner->sliders) : array();
+
+                if(! $sliders){
+                    $sliders = array();
+                }
             @endphp
 		<div id="slides">
 			<div class="slides-container">
@@ -74,7 +79,7 @@
 
     <form action="{{ route('orders.store', $owner->slug) }}" method="POST">
         @csrf
-
+        <input type="hidden" id="_token" value="{{ csrf_token() }}">
         @if(count($promotions) > 0)
         <section>
 			<article>

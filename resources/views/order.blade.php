@@ -120,7 +120,7 @@
         @foreach ($order as $category_id => $item)
             <center>
                 @php
-                    $category = \App\Category::find($category_id);
+                    $category = \App\Models\Category::find($category_id);
                 @endphp
                 <h1>{{ $category->name }}</h1>
                 <br>
@@ -133,7 +133,7 @@
                     </tr>
                     @foreach ($item as $productChoose)
                     <tr>
-                        <td>{{ \App\Item::find($productChoose['item_id'])->name }}</td>
+                        <td>{{ \App\Models\Item::find($productChoose['item_id'])->name }}</td>
                         @foreach (json_decode($category->measure) as $measure)
                         <th>
                             @if($productChoose['measure'] == $measure)
@@ -162,7 +162,7 @@
                     $itemSum = 0;
                 @endphp
                 <tr>
-                    <td>{{ \App\Category::find($category_id)->name }}</td>
+                    <td>{{ \App\Models\Category::find($category_id)->name }}</td>
                     @foreach ($item as $itemChoose)
                     @php
                         $itemSum += $itemChoose['price'] * $itemChoose['quantity'];

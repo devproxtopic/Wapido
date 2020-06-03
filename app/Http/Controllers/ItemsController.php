@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Category;
-use App\Item;
-use App\OrderDetail;
-use App\Owner;
+use App\Models\Category;
+use App\Models\Item;
+use App\Models\OrderDetail;
+use App\Models\Owner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;

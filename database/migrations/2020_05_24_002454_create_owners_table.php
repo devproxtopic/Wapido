@@ -21,6 +21,7 @@ class CreateOwnersTable extends Migration
             $table->string('sliders', 255);
             $table->string('description', 255);
             $table->string('slug', 255)->unique();
+            $table->boolean('is_restaurant')->default(0);
             $table->timestamps();
         });
     }

@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Category;
-use App\Item;
-use App\Owner;
-use App\Unit;
+use App\Classes\CategoryClass;
+use App\Classes\OwnerClass;
+use App\Http\Requests\StoreCategoriesRequest;
+use App\Http\Requests\UpdateCategoriesRequest;
+use App\Models\Category;
+use App\Models\Item;
+use App\Models\Unit;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Validator;
 
 class CategoriesController extends Controller
 {
@@ -19,7 +22,10 @@ class CategoriesController extends Controller
      */
     public function index($slug)
     {
-        $owner = Owner::where('slug', $slug)->first();
+        $ownerClass = new OwnerClass();
+        $categoryClass = new CategoryClass();
+
+        $owner = $ownerClass->identityBySlug($slug);
 
         $categories = Category::where('owner_id', $owner->id)
         ->orderBy('name')->paginate(15);
@@ -34,7 +40,9 @@ class CategoriesController extends Controller
      */
     public function create($slug)
     {
-        $owner = Owner::where('slug', $slug)->first();
+        $ownerClass = new OwnerClass();
+
+        $owner = $ownerClass->identityBySlug($slug);
 
         $units = Unit::orderBy('name')->get();
         return view('categories.create', compact('units', 'owner'));
@@ -46,54 +54,27 @@ class CategoriesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreCategoriesRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|unique:categories,name',
-            'file' => 'required|mimes:jpeg,jpg,png',
-            'description' => 'required|string',
-            'measure' => 'required',
-            'unit_id' => 'required'
-        ], [
-            'name.required' => 'EL nombre es requerido.',
-            'name.unique' => 'Ya existe una categoria con ese nombre.',
-            'name.string' => 'El nombre no tiene un formato válido.',
-            'file.required' => 'El archivo de imagen es requerido.',
-            'file.mimes' => 'El archivo debe estar en fomato .jpg o .png',
-            'description.required' => 'La descripción es requerida.',
-            'description.string' => 'La descripción no tiene un formato válido.',
-            'measure.required' => 'La medida es requerida',
-            'unit_id.required' => 'La unidad es requerida'
-        ]);
+        $ownerClass = new OwnerClass();
+        $categoryClass = new CategoryClass();
 
-        if ($validator->fails()) {
+        $owner = $ownerClass->identityBySlug($request->slug);
 
-            $request->session()->flash('message', 'Ha ocurrido un error.');
-            $request->session()->flash('alert-type', 'error');
-
-            return back()
-                        ->withErrors($validator)
-                        ->withInput();
-        }
-
-        $owner = Owner::where('slug', $request->slug)->first();
-
-        $category = Category::create([
+        $dataCategory = [
             'name' => $request->name,
             'unit_id' => $request->unit_id,
             'measure' => json_encode($request->measure),
             'description' => $request->description,
             'img' => 'path',
             'owner_id' => $owner->id
-        ]);
+        ];
+
+        $category = $categoryClass->create($dataCategory);
 
         if($request->hasfile('file')){
-            $file = $request->file;
-            $file->move(public_path("storage/categories"), $category->id . '.' . $file->getClientOriginalExtension());
+            $category = $categoryClass->savePicture($category->id, $request->file);
         }
-
-        $category->img = "categories/" . $category->id . '.' . $file->getClientOriginalExtension();
-        $category->save();
 
         $request->session()->flash('message', 'Categoría creada con éxito.');
         $request->session()->flash('alert-type', 'success');
@@ -120,7 +101,9 @@ class CategoriesController extends Controller
      */
     public function edit($slug, $id)
     {
-        $owner = Owner::where('slug', $slug)->first();
+        $ownerClass = new OwnerClass();
+
+        $owner = $ownerClass->identityBySlug($slug);
 
         $units = Unit::orderBy('name')->get();
         $category = Category::find($id);
@@ -132,26 +115,16 @@ class CategoriesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\UpdateCategoriesRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update($slug, Request $request, $id)
+    public function update($slug, UpdateCategoriesRequest $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'description' => 'required|string',
-            'measure' => 'required',
-            'unit_id' => 'required'
-        ], [
-            'name.required' => 'El nombre es requerido.',
-            'description.required' => 'La descripción es requerida.',
-            'description.string' => 'La descripción no tiene un formato válido.',
-            'measure.required' => 'La medida es requerida',
-            'unit_id.required' => 'La unidad es requerida'
-        ]);
+        $ownerClass = new OwnerClass();
+        $categoryClass = new CategoryClass();
 
-        $measures = null;
+        $category = Category::find($id);
 
         foreach ($request->measure as $measure) {
             if ($measure) {
@@ -159,52 +132,15 @@ class CategoriesController extends Controller
             }
         }
 
-        $validator->after(function ($validator) use ($measures) {
-            if (! $measures) {
-                 $validator->errors()->add('measure', 'Debe agregar al menos una medida.');
-            }
-        });
-
-        if ($validator->fails()) {
-
-            $request->session()->flash('message', 'Ha ocurrido un error.');
-            $request->session()->flash('alert-type', 'error');
-
-            return back()
-                        ->withErrors($validator)
-                        ->withInput();
-        }
-
-        $category = Category::find($id);
-
-        $items = $category->items;
-
-        /**
-         * Dejar los precios en los items de las cantidades que corresponden
-         */
-        $newPrices = null;
-
-         foreach($items as $item){
-             if(json_decode($item->price) != '' || json_decode($item->price) != null){
-                 foreach(json_decode($item->price,true) as $price){
-                    for ($i=0; $i < count($measures); $i++) {
-                        if($price['quantity'] == $measures[$i]){
-                            $newPrices[] = $price;
-                        }
-                    }
-                }
-
-                $item->price = json_encode($newPrices);
-                $item->save();
-             }
-         }
-
-        $category->update([
+        $updatePricesItems = $categoryClass->updatePricesByMeasures($category->items, $measures);
+        $dataCategory = [
             'name' => $request->name,
             'unit_id' => $request->unit_id,
             'measure' => json_encode($measures),
             'description' => $request->description
-        ]);
+        ];
+
+        $categoryClass->update($id, $dataCategory);
 
         if($request->hasfile('file')){
             //Borrar la imagen del servidor
@@ -212,11 +148,7 @@ class CategoriesController extends Controller
                 unlink('storage/' . $category->img);
             }
 
-            $file = $request->file;
-            $file->move(public_path("storage/categories"), $category->id . '.' . $file->getClientOriginalExtension());
-
-            $category->img = "categories/" . $category->id . '.' . $file->getClientOriginalExtension();
-            $category->save();
+            $category = $categoryClass->savePicture($category->id, $request->file);
         }
 
         $request->session()->flash('message', 'Categoría actualizada con éxito.');

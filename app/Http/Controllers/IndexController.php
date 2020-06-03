@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Category;
-use App\Client;
-use App\Owner;
-use App\Promotion;
+use App\Models\Category;
+use App\Models\Client;
+use App\Models\Owner;
+use App\Models\Promotion;
 use Illuminate\Http\Request;
 
 class IndexController extends Controller

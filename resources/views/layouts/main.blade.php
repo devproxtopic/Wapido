@@ -33,6 +33,18 @@
             <span>Productos</span>
           </a>
         </li>
+        <li class="nav-item {{ (request()->segment(3) == 'items') ? 'active' : '' }}">
+          <a class="nav-link " href="{{ url('owners/'.$owner->slug.'/items') }}">
+            <i class="fa fa-wrench"></i>
+            <span>Comidas</span>
+          </a>
+        </li>
+        <li class="nav-item {{ (request()->segment(3) == 'items') ? 'active' : '' }}">
+          <a class="nav-link " href="{{ url('owners/'.$owner->slug.'/items') }}">
+            <i class="fa fa-wrench"></i>
+            <span>Mesas</span>
+          </a>
+        </li>
         <li class="nav-item {{ (request()->segment(3) == 'clients') ? 'active' : '' }}">
             <a class="nav-link" href="{{ url('owners/'.$owner->slug.'/clients') }}">
               <i class="fa fa-users"></i>
@@ -45,6 +57,12 @@
               <span>Pedidos</span>
             </a>
         </li>
+        <li class="nav-item {{ (request()->segment(3) == 'items') ? 'active' : '' }}">
+          <a class="nav-link " href="{{ url('owners/'.$owner->slug.'/items') }}">
+            <i class="fa fa-wrench"></i>
+            <span>Mesoneros y Cocina</span>
+          </a>
+        </li>
         <li class="nav-item {{ (request()->segment(3) == 'units') ? 'active' : '' }}">
             <a class="nav-link" href="{{ url('owners/'.$owner->slug.'/units') }}">
               <i class="fa fa-edit"></i>
@@ -55,6 +73,30 @@
             <a class="nav-link " href="{{ url('owners/'.$owner->slug.'/status') }}">
               <i class="fa fa-edit"></i>
               <span>Estatus</span>
+            </a>
+        </li>
+        <li class="nav-item {{ (request()->segment(3) == 'countries') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ url('owners/'.$owner->slug.'/countries') }}">
+              <i class="fa fa-globe"></i>
+              <span>Paises</span>
+            </a>
+        </li>
+        <li class="nav-item {{ (request()->segment(3) == 'states') ? 'active' : '' }}">
+            <a class="nav-link " href="{{ url('owners/'.$owner->slug.'/states') }}">
+              <i class="fa fa-globe"></i>
+              <span>Estados</span>
+            </a>
+        </li>
+        <li class="nav-item {{ (request()->segment(3) == 'cities') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ url('owners/'.$owner->slug.'/cities') }}">
+              <i class="fa fa-globe"></i>
+              <span>Ciudades</span>
+            </a>
+        </li>
+        <li class="nav-item {{ (request()->segment(3) == 'locations') ? 'active' : '' }}">
+            <a class="nav-link " href="{{ url('owners/'.$owner->slug.'/locations') }}">
+              <i class="fa fa-globe"></i>
+              <span>Zonas</span>
             </a>
         </li>
       </ul>

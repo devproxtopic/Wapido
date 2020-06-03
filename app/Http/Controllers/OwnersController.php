@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Category;
-use App\Client;
+use App\Models\Category;
+use App\Models\Client;
 use App\Http\Requests\OwnerRequest;
-use App\Item;
-use App\Order;
-use App\Owner;
-use App\Promotion;
+use App\Models\Item;
+use App\Models\Order;
+use App\Models\Owner;
+use App\Models\Promotion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
@@ -51,6 +52,7 @@ class OwnersController extends Controller
         $owner->logo = 'storage/logo_owner.png';
         $owner->sliders = 'path';
         $owner->slug = Str::slug($request->name);
+        $owner->user_id = Auth::id();
         $owner->save();
 
         for ($i = 1; $i <= 3; $i++) {

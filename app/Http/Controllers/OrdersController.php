@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Category;
-use App\Client;
+use App\Models\Category;
+use App\Models\Client;
 use App\Mail\OrderClientMail;
 use App\Mail\OrderOwnerMail;
 use App\Notifications\SendOrderNotification;
-use App\Order;
-use App\OrderDetail;
-use App\Owner;
-use App\Status;
+use App\Models\Order;
+use App\Models\OrderDetail;
+use App\Models\Owner;
+use App\Models\Status;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -58,6 +58,7 @@ class OrdersController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request->all());
         $validator = Validator::make($request->all(), [
             'total_amount' => 'required',
             'email' => 'required',

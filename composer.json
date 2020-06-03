@@ -16,6 +16,9 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.0",
         "laraveles/spanish": "^1.4",
+        "maatwebsite/excel": "^3.1",
+        "silber/bouncer": "v1.0.0-rc.8",
+        "simplesoftwareio/simple-qrcode": "^2.0",
         "twilio/sdk": "^6.4",
         "yoeunes/toastr": "^1.2"
     },
