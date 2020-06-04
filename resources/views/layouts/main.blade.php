@@ -33,18 +33,6 @@
             <span>Productos</span>
           </a>
         </li>
-        <li class="nav-item {{ (request()->segment(3) == 'items') ? 'active' : '' }}">
-          <a class="nav-link " href="{{ url('owners/'.$owner->slug.'/items') }}">
-            <i class="fa fa-wrench"></i>
-            <span>Comidas</span>
-          </a>
-        </li>
-        <li class="nav-item {{ (request()->segment(3) == 'items') ? 'active' : '' }}">
-          <a class="nav-link " href="{{ url('owners/'.$owner->slug.'/items') }}">
-            <i class="fa fa-wrench"></i>
-            <span>Mesas</span>
-          </a>
-        </li>
         <li class="nav-item {{ (request()->segment(3) == 'clients') ? 'active' : '' }}">
             <a class="nav-link" href="{{ url('owners/'.$owner->slug.'/clients') }}">
               <i class="fa fa-users"></i>
@@ -57,47 +45,66 @@
               <span>Pedidos</span>
             </a>
         </li>
-        <li class="nav-item {{ (request()->segment(3) == 'items') ? 'active' : '' }}">
-          <a class="nav-link " href="{{ url('owners/'.$owner->slug.'/items') }}">
-            <i class="fa fa-wrench"></i>
-            <span>Mesoneros y Cocina</span>
-          </a>
-        </li>
-        <li class="nav-item {{ (request()->segment(3) == 'units') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ url('owners/'.$owner->slug.'/units') }}">
-              <i class="fa fa-edit"></i>
-              <span>Unidades</span>
+        @if($owner->category_owner_id == 7)
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle {{ (request()->segment(3) == 'foods' || request()->segment(3) == 'tables') ? 'active' : '' }}"
+            href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Restaurante
             </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item {{ (request()->segment(3) == 'foods') ? 'active' : '' }}" href="{{ url('owners/'.$owner->slug.'/foods') }}">
+                    <i class="fa fa-utensils"></i>
+                    <span>Comidas</span>
+                </a>
+                <a class="dropdown-item {{ (request()->segment(3) == 'tables') ? 'active' : '' }}" href="{{ url('owners/'.$owner->slug.'/tables') }}">
+                    <i class="fa fa-utensils"></i>
+                    <span>Mesas</span>
+                </a>
+                <a class="dropdown-item" href="#">Mesoneros</a>
+                <a class="dropdown-item" href="#">Cocina</a>
+            </div>
         </li>
-        <li class="nav-item {{ (request()->segment(3) == 'status') ? 'active' : '' }}">
-            <a class="nav-link " href="{{ url('owners/'.$owner->slug.'/status') }}">
-              <i class="fa fa-edit"></i>
-              <span>Estatus</span>
+        @endif
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle {{ (request()->segment(3) == 'units' || request()->segment(3) == 'status') ? 'active' : '' }}"
+            href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Configuraciones
             </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item {{ (request()->segment(3) == 'units') ? 'active' : '' }}" href="{{ url('owners/'.$owner->slug.'/units') }}">
+                    <i class="fa fa-edit"></i>
+                    <span>Unidades</span>
+                </a>
+                <a class="dropdown-item {{ (request()->segment(3) == 'status') ? 'active' : '' }}" href="{{ url('owners/'.$owner->slug.'/status') }}">
+                    <i class="fa fa-edit"></i>
+                    <span>Estatus</span>
+                </a>
+            </div>
         </li>
-        <li class="nav-item {{ (request()->segment(3) == 'countries') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ url('owners/'.$owner->slug.'/countries') }}">
-              <i class="fa fa-globe"></i>
-              <span>Paises</span>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle {{ (request()->segment(3) == 'countries' || request()->segment(3) == 'states'
+            || request()->segment(3) == 'cities' || request()->segment(3) == 'locations') ? 'active' : '' }}"
+            href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Ubicación
             </a>
-        </li>
-        <li class="nav-item {{ (request()->segment(3) == 'states') ? 'active' : '' }}">
-            <a class="nav-link " href="{{ url('owners/'.$owner->slug.'/states') }}">
-              <i class="fa fa-globe"></i>
-              <span>Estados</span>
-            </a>
-        </li>
-        <li class="nav-item {{ (request()->segment(3) == 'cities') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ url('owners/'.$owner->slug.'/cities') }}">
-              <i class="fa fa-globe"></i>
-              <span>Ciudades</span>
-            </a>
-        </li>
-        <li class="nav-item {{ (request()->segment(3) == 'locations') ? 'active' : '' }}">
-            <a class="nav-link " href="{{ url('owners/'.$owner->slug.'/locations') }}">
-              <i class="fa fa-globe"></i>
-              <span>Zonas</span>
-            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item {{ (request()->segment(3) == 'countries') ? 'active' : '' }}" href="{{ url('owners/'.$owner->slug.'/countries') }}">
+                    <i class="fa fa-globe"></i>
+                    <span>Paises</span>
+                </a>
+                <a class="dropdown-item {{ (request()->segment(3) == 'states') ? 'active' : '' }}" href="{{ url('owners/'.$owner->slug.'/states') }}">
+                    <i class="fa fa-globe"></i>
+                    <span>Estados</span>
+                </a>
+                <a class="dropdown-item {{ (request()->segment(3) == 'cities') ? 'active' : '' }}" href="{{ url('owners/'.$owner->slug.'/cities') }}">
+                    <i class="fa fa-globe"></i>
+                    <span>Ciudades</span>
+                </a>
+                <a class="dropdown-item {{ (request()->segment(3) == 'locations') ? 'active' : '' }}" href="{{ url('owners/'.$owner->slug.'/locations') }}">
+                    <i class="fa fa-globe"></i>
+                    <span>Zonas</span>
+                </a>
+            </div>
         </li>
       </ul>
     </div>

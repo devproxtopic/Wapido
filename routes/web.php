@@ -88,6 +88,14 @@ Route::group(['middleware' => 'auth'], function () {
         ->name('locations.destroy');
         Route::get('/locations-massive', 'LocationsController@massive');
         Route::post('/locations-massive', 'LocationsController@massiveStore');
+
+        Route::resource('/tables', 'TableController')->except('destroy');
+        Route::get('/tables-delete/{id}', 'TableController@destroy')
+        ->name('tables.destroy');
+
+        Route::resource('/foods', 'FoodsController')->except('destroy');
+        Route::get('/foods-delete/{id}', 'FoodsController@destroy')
+        ->name('foods.destroy');
     });
 
     Route::resource('/home/owners', 'OwnersController')->except('destroy', 'show');
@@ -100,11 +108,23 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::group(['middleware' => 'web'], function () {
     Route::get('/{slug}', 'IndexController');
-    Route::get('/ajax/emails/{email}', function ($email) {
-        return response(App\Models\Client::where('email', $email)->first());
-    });
     Route::post('/{slug}/orders-store', 'OrdersController@store')
         ->name('orders.store');
     Route::get('/{slug}/orders-show/{id}', 'OrdersController@show')
         ->name('orders.show');
+
+    // AJAX
+
+    Route::get('/ajax/emails/{email}', function ($email) {
+        return response(App\Models\Client::where('email', $email)->first());
+    });
+    Route::get('/ajax/states/{country_id}', function ($country_id) {
+        return response(App\Models\State::where('country_id', $country_id)->get());
+    });
+    Route::get('/ajax/cities/{state_id}', function ($state_id) {
+        return response(App\Models\City::where('state_id', $state_id)->get());
+    });
+    Route::get('/ajax/locations/{city_id}', function ($city_id) {
+        return response(App\Models\Location::where('city_id', $city_id)->get());
+    });
 });

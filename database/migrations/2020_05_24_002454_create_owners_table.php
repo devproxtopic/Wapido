@@ -15,13 +15,14 @@ class CreateOwnersTable extends Migration
     {
         Schema::create('owners', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('category_owner_id')->unsigned();
+            $table->bigInteger('user_id')->unsigned();
             $table->string('email', 150);
             $table->string('logo', 255);
             $table->string('phone', 150);
             $table->string('sliders', 255);
             $table->string('description', 255);
             $table->string('slug', 255)->unique();
-            $table->boolean('is_restaurant')->default(0);
             $table->timestamps();
         });
     }

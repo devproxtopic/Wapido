@@ -26,7 +26,7 @@ class UpdateCategoriesRequest extends FormRequest
         return [
             'name' => 'required',
             'description' => 'required|string',
-            'measure' => 'required|present|array|size:1',
+            'measure' => 'required',
             'unit_id' => 'required'
         ];
     }
@@ -43,10 +43,7 @@ class UpdateCategoriesRequest extends FormRequest
             'description.required' => 'La descripción es requerida.',
             'description.string' => 'La descripción no tiene un formato válido.',
             'measure.required' => 'La medida es requerida.',
-            'unit_id.required' => 'La unidad es requerida.',
-            'measure.present' => 'Las medidas son requeridas.',
-            'measure.array' => 'Las medidas no tienen un formato válido.',
-            'measure.size' => 'Debe indicar al menos una medida.'
+            'unit_id.required' => 'La unidad es requerida.'
         ];
     }
 }

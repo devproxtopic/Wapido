@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Owner;
+use App\Models\Table;
 use Illuminate\Http\Request;
+
+use QrCode;
 
 class TableController extends Controller
 {
@@ -11,9 +15,12 @@ class TableController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($slug)
     {
-        //
+        $owner = Owner::where('slug', $slug)->first();
+        $tables = Table::where('owner_id', $owner->id)->paginate(15);
+
+        return view('tables.index', compact('owner', 'tables'));
     }
 
     /**
@@ -21,9 +28,11 @@ class TableController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($slug)
     {
-        //
+        $owner = Owner::where('slug', $slug)->first();
+
+        return view('tables.create', compact('owner'));
     }
 
     /**
@@ -34,7 +43,32 @@ class TableController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $owner = Owner::where('slug', $request->slug)->first();
+        $tables = Table::where('owner_id', $owner->id)->orderBy('number', 'desc')->first();
+
+        if($tables){
+            $i = $tables->number + 1;
+        } else {
+            $i = 1;
+        }
+
+        $limit = $i + $request->quantity;
+
+        for($i; $i < $limit; $i++){
+            $qr = QrCode::generate($request->slug . '?table=' . $i, public_path("storage/owners/" . $owner->id . "/tables"), $i);
+
+            $table = new Table();
+            $table->owner_id = $owner->id;
+            $table->number = $i;
+            $table->ubication = $request->ubication;
+            $table->qr = "storage/owners/" . $owner->id . "/tables/" . $i . '.png';
+            $table->save();
+        }
+
+        $request->session()->flash('message', 'Mesas creadas con éxito.');
+        $request->session()->flash('alert-type', 'success');
+
+        return redirect('owners/' . $request->slug . '/tables');
     }
 
     /**
@@ -54,9 +88,12 @@ class TableController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($slug, $id)
     {
-        //
+        $owner = Owner::where('slug', $slug)->first();
+        $table = Table::find($id);
+
+        return view('tables.edit', compact('owner', 'table'));
     }
 
     /**
@@ -68,7 +105,14 @@ class TableController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $table = Table::find($id);
+        $table->ubication = $request->ubication;
+        $table->save();
+
+        $request->session()->flash('message', 'Mesa actualizada con éxito.');
+        $request->session()->flash('alert-type', 'success');
+
+        return redirect()->back();
     }
 
     /**
@@ -79,6 +123,11 @@ class TableController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Table::destroy($id);
+
+        session()->flash('message', 'Mesa actualizada con éxito.');
+        session()->flash('alert-type', 'success');
+
+        return redirect()->back();
     }
 }
