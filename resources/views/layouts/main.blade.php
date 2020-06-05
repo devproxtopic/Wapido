@@ -47,7 +47,8 @@
         </li>
         @if($owner->category_owner_id == 7)
         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle {{ (request()->segment(3) == 'foods' || request()->segment(3) == 'tables') ? 'active' : '' }}"
+            <a class="nav-link dropdown-toggle {{ (request()->segment(3) == 'foods' ||
+            request()->segment(3) == 'tables' || request()->segment(3) == 'employees') ? 'active' : '' }}"
             href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Restaurante
             </a>
@@ -60,8 +61,10 @@
                     <i class="fa fa-utensils"></i>
                     <span>Mesas</span>
                 </a>
-                <a class="dropdown-item" href="#">Mesoneros</a>
-                <a class="dropdown-item" href="#">Cocina</a>
+                <a class="dropdown-item {{ (request()->segment(3) == 'employees') ? 'active' : '' }}" href="{{ url('owners/' . $owner->slug . '/employees') }}">
+                    <i class="fa fa-users"></i>
+                    <span>Empleados</span>
+                </a>
             </div>
         </li>
         @endif

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CategoryFood;
+use App\Models\Food;
+use App\Models\Owner;
 use Illuminate\Http\Request;
 
 class FoodsController extends Controller
@@ -11,9 +14,12 @@ class FoodsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($slug)
     {
-        //
+        $owner = Owner::where('slug', $slug)->first();
+        $foods = Food::where('owner_id', $owner->id)->paginate(15);
+
+        return view('foods.index', compact('owner', 'foods'));
     }
 
     /**
@@ -21,9 +27,12 @@ class FoodsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($slug)
     {
-        //
+        $owner = Owner::where('slug', $slug)->first();
+        $categoryFoods = CategoryFood::orderBy('name')->get();
+
+        return view('foods.create', compact('owner', 'categoryFoods'));
     }
 
     /**
@@ -34,7 +43,19 @@ class FoodsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $owner = Owner::where('slug', $request->slug)->first();
+
+        $food = new Food();
+        $food->owner_id = $owner->id;
+        $food->category_food_id = $request->category_food_id;
+        $food->name = $request->name;
+        $food->price = $request->price;
+        $food->save();
+
+        $request->session()->flash('message', 'Comida creada con éxito.');
+        $request->session()->flash('alert-type', 'success');
+
+        return redirect('owners/' . $request->slug . '/foods');
     }
 
     /**
@@ -54,9 +75,13 @@ class FoodsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($slug, $id)
     {
-        //
+        $owner = Owner::where('slug', $slug)->first();
+        $food = Food::find($id);
+        $categoryFoods = CategoryFood::orderBy('name')->get();
+
+        return view('foods.edit', compact('owner', 'food', 'categoryFoods'));
     }
 
     /**
@@ -66,9 +91,18 @@ class FoodsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($slug, Request $request, $id)
     {
-        //
+        $food = Food::find($id);
+        $food->name = $request->name;
+        $food->category_food_id = $request->category_food_id;
+        $food->price = $request->price;
+        $food->save();
+
+        $request->session()->flash('message', 'Comida actualizada con éxito.');
+        $request->session()->flash('alert-type', 'success');
+
+        return redirect()->back();
     }
 
     /**
@@ -77,8 +111,13 @@ class FoodsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($slug, $id)
     {
-        //
+        Food::destroy($id);
+
+        session()->flash('message', 'Comida eliminada con éxito.');
+        session()->flash('alert-type', 'success');
+
+        return redirect()->back();
     }
 }

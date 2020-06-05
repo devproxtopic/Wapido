@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Client;
 use App\Http\Requests\OwnerRequest;
+use App\Models\CategoryOwner;
 use App\Models\Item;
 use App\Models\Order;
 use App\Models\Owner;
@@ -33,7 +34,9 @@ class OwnersController extends Controller
      */
     public function create()
     {
-        return view('owners.create');
+        $categoriesOwner = CategoryOwner::orderBy('name')->get();
+
+        return view('owners.create', compact('categoriesOwner'));
     }
 
     /**

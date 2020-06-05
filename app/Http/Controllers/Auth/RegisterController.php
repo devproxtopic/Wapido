@@ -74,6 +74,11 @@ class RegisterController extends Controller
 
         $owner = Owner::create([
             'user_id' => $user->id,
+            'country_id' => $data['country_id'],
+            'state_id' => $data['state_id'],
+            'city_id' => $data['city_id'],
+            'location_id' => $data['location_id'],
+            'category_owner_id' => $data['category_owner_id'],
             'name' => $data['username'],
             'email' => $data['email'],
             'slug' => \Str::slug($data['username'])

@@ -55,7 +55,7 @@ class TableController extends Controller
         $limit = $i + $request->quantity;
 
         for($i; $i < $limit; $i++){
-            $qr = QrCode::generate($request->slug . '?table=' . $i, public_path("storage/owners/" . $owner->id . "/tables"), $i);
+            // $qr = QrCode::generate($request->slug . '?table=' . $i, public_path("storage/owners/" . $owner->id . "/tables"), $i);
 
             $table = new Table();
             $table->owner_id = $owner->id;
@@ -121,11 +121,11 @@ class TableController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($slug, $id)
     {
-        Table::destroy($id);
+        Table::find($id);
 
-        session()->flash('message', 'Mesa actualizada con éxito.');
+        session()->flash('message', 'Mesa eliminada con éxito.');
         session()->flash('alert-type', 'success');
 
         return redirect()->back();

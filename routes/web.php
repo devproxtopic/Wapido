@@ -96,6 +96,10 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('/foods', 'FoodsController')->except('destroy');
         Route::get('/foods-delete/{id}', 'FoodsController@destroy')
         ->name('foods.destroy');
+
+        Route::resource('/employees', 'EmployeeController')->except('destroy');
+        Route::get('/employees-delete/{id}', 'EmployeeController@destroy')
+        ->name('employees.destroy');
     });
 
     Route::resource('/home/owners', 'OwnersController')->except('destroy', 'show');
