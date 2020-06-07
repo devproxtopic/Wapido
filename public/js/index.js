@@ -122,8 +122,12 @@ function showSlidesPromotions() {
         slideIndexPromotion = 1;
     }
 
-    slidesPromotions.item([slideIndexPromotion - 1]).style.display = "block";
-    setTimeout(showSlidesPromotions, 2000); // Change image every 2 seconds
+    var itemSlides = slidesPromotions.item([slideIndexPromotion - 1]);
+
+    if(itemSlides) {
+        itemSlides.style.display = "block";
+        setTimeout(showSlidesPromotions, 2000); // Change image every 2 seconds
+    }
 }
 
 // Next/previous controls

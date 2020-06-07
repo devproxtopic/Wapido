@@ -9,19 +9,19 @@
         @csrf
 
         <div class="form-group row">
-            <label for="role_id" class="col-md-4 col-form-label text-md-right">Rol</label>
+            <label for="rol_id" class="col-md-4 col-form-label text-md-right">Rol</label>
 
             <div class="col-md-6">
-                <select required class="form-control @error('role_id') is-invalid @enderror" name="role_id" id="role_id">
+                <select required class="form-control @error('rol_id') is-invalid @enderror" name="rol_id" id="rol_id">
                     <option value="0">Seleccione una opción</option>
                     @foreach($roles as $rol)
-                    <option @if(old('role_id') == $rol->id) selected @endif value="{{ $rol->id }}">
+                    <option @if(old('rol_id') == $rol->id) selected @endif value="{{ $rol->id }}">
                     {{ $rol->name }}
                     </option>
                     @endforeach
                 </select>
 
-                @error('role_id')
+                @error('rol_id')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>

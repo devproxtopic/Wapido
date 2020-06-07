@@ -9,6 +9,9 @@
         @csrf
         @method('PUT')
 
+        <input type="hidden" name="reqCity" id="reqCity" value="{{ $location->city->id }}">
+        <input type="hidden" name="reqState" id="reqState" value="{{ $location->city->state->id }}">
+
         <div class="form-group row">
             <label for="country_id" class="col-md-4 col-form-label text-md-right">País</label>
 

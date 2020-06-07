@@ -1017,18 +1017,40 @@ article {
             animation-duration: 1.5s;
         }
 
+        /* Para restaurantes */
+        .filters_restaurants {
+            display: flex;
+            width: 100%;
+            justify-content: space-evenly;
+            padding: 10px 20px;
+        }
+
+        .select_filters_restaurants{
+            width: 30%;
+        }
 
 @media screen and (max-width: 500px) {
-  article .item-list li h3 {
-    font-size: 50%; }
+    article .item-list li h3 {
+        font-size: 50%;
+    }
 
-  article .item-list li p {
-    font-size: 36%; }
+    article .item-list li p {
+        font-size: 36%;
+    }
 
     .logo-owner{
         width: 50%;
     }
+
+    .filters_restaurants {
+        flex-direction: column;
+    }
+
+    .select_filters_restaurants {
+        width: 100%;
+    }
 }
+
 @media screen and (max-width: 400px) {
   .flash-error {
     width: 290px;
@@ -1037,6 +1059,14 @@ article {
     .logo-owner {
         width: 40%;
     }
+
+    .filters_restaurants {
+        flex-direction: column;
+    }
+
+    .select_filters_restaurants {
+        width: 100%;
+    }
 }
 @media screen and (max-width: 380px) {
   article .item-list li.list--icecream h3 {
@@ -1044,6 +1074,14 @@ article {
 
     .logo-owner {
         width: 30%;
+    }
+
+    .filters_restaurants {
+        flex-direction: column;
+    }
+
+    .select_filters_restaurants {
+        width: 100%;
     }
 }
 @media screen and (max-width: 360px) {
@@ -1055,12 +1093,28 @@ article {
     .logo-owner {
         width: 25%;
     }
+
+    .filters_restaurants {
+        flex-direction: column;
+    }
+
+    .select_filters_restaurants {
+        width: 100%;
+    }
 }
 @media screen and (max-width: 330px) {
   article .item-list li.list--icecream h3 {
     font-size: 36%; }
 
-.logo-owner {
-    width: 20%;
-}
+    .logo-owner {
+        width: 20%;
+    }
+
+    .filters_restaurants {
+        flex-direction: column;
+    }
+
+    .select_filters_restaurants {
+        width: 100%;
+    }
 }

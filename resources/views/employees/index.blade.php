@@ -28,9 +28,9 @@
 
                 <tr>
                     <td>{{ $employee->id }}</td>
-                    <td>{{ $employee->name }}</td>
-                    <td>{{ $employee->email }}</td>
-                    <td>{{ $employee->rol->name }}</td>
+                    <td>{{ $employee->user->name }}</td>
+                    <td>{{ $employee->user->email }}</td>
+                    <td>{{ $employee->user->rol->name }}</td>
                     <td>
                         <a href="{{ url('owners/'. $owner->slug . '/employees-delete/' . $employee->id) }}" title="Borrar"><i class="fa fa-trash"></i></a>
                         <a href="{{ url('owners/'. $owner->slug . '/employees/' . $employee->id. '/edit') }}" title="Editar"><i class="fa fa-edit"></i></a>

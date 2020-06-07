@@ -11,14 +11,18 @@ class EmployeePassword extends Notification
 {
     use Queueable;
 
+    private $user = '';
+    private $password = '';
+
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($user, $password)
     {
-        //
+        $this->user = $user;
+        $this->password = $password;
     }
 
     /**
@@ -41,9 +45,9 @@ class EmployeePassword extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+                    ->line('Usted ha sido registrado en Wapido.com como ' . $this->user->rol->name)
+                    ->action('Puede ingresar al sistema usando el siguiente enlace', url('/'))
+                    ->line('Su contraseña de acceso es: ' . $this->password);
     }
 
     /**

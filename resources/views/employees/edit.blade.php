@@ -10,19 +10,19 @@
         @method('PUT')
 
         <div class="form-group row">
-            <label for="role_id" class="col-md-4 col-form-label text-md-right">Rol</label>
+            <label for="rol_id" class="col-md-4 col-form-label text-md-right">Rol</label>
 
             <div class="col-md-6">
-                <select required class="form-control @error('role_id') is-invalid @enderror" name="role_id" id="role_id">
+                <select required class="form-control @error('rol_id') is-invalid @enderror" name="rol_id" id="rol_id">
                     <option value="0">Seleccione una opción</option>
                     @foreach($roles as $rol)
-                    <option @if($employee->role_id == $rol->id) selected @endif value="{{ $rol->id }}">
+                    <option @if($employee->user->rol_id == $rol->id) selected @endif value="{{ $rol->id }}">
                     {{ $rol->name }}
                     </option>
                     @endforeach
                 </select>
 
-                @error('role_id')
+                @error('rol_id')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -34,7 +34,7 @@
             <label for="name" class="col-md-4 col-form-label text-md-right">Nombre</label>
 
             <div class="col-md-6">
-                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ $employee->name }}" required autocomplete="name" autofocus>
+                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ $employee->user->name }}" required autocomplete="name" autofocus>
 
                 @error('name')
                     <span class="invalid-feedback" role="alert">
@@ -48,7 +48,7 @@
             <label for="email" class="col-md-4 col-form-label text-md-right">Email</label>
 
             <div class="col-md-6">
-                <input id="email" type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ $employee->email }}" required autocomplete="email" autofocus>
+                <input id="email" type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ $employee->user->email }}" required autocomplete="email" autofocus>
 
                 @error('email')
                     <span class="invalid-feedback" role="alert">

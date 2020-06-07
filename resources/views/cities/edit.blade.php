@@ -5,9 +5,11 @@
 
 @section('content')
 <div class="col-sm-12 col-md-12">
-    <form method="POST" action="{{ url('owners/'. $owner->slug .'/locations/' . $location->id) }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ url('owners/'. $owner->slug .'/citiess/' . $city->id) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
+
+        <input type="hidden" name="reqState" id="reqState" value="{{ $city->state->id }}">
 
         <div class="form-group row">
             <label for="country_id" class="col-md-4 col-form-label text-md-right">País</label>
@@ -16,7 +18,7 @@
                 <select required class="form-control @error('country_id') is-invalid @enderror" name="country_id" id="country_id">
                     <option value="0">Seleccione una opción</option>
                     @foreach($countries as $country)
-                    <option @if($location->city->state->country->id == $country->id) selected @endif value="{{ $country->id }}">
+                    <option @if($city->state->country->id == $country->id) selected @endif value="{{ $country->id }}">
                     {{ $country->name }}
                     </option>
                     @endforeach
@@ -66,7 +68,7 @@
             <label for="name" class="col-md-4 col-form-label text-md-right">Nombre</label>
 
             <div class="col-md-6">
-                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ $location->name }}" required autocomplete="name" autofocus>
+                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ $city->name }}" required autocomplete="name" autofocus>
 
                 @error('name')
                     <span class="invalid-feedback" role="alert">
@@ -81,7 +83,7 @@
                 <button type="submit" class="btn btn-primary">
                     Guardar
                 </button>
-                <a href="{{ url('owners/'. $owner->slug .'/locations') }}" class="btn btn-warning">
+                <a href="{{ url('owners/'. $owner->slug .'/citiess') }}" class="btn btn-warning">
                     Volver
                 </a>
             </div>
@@ -91,5 +93,5 @@
 @stop
 
 @section('scripts')
-<script src="{{ asset('js/ajax/locations.js') }}"></script>
+<script src="{{ asset('js/ajax/citiess.js') }}"></script>
 @stop

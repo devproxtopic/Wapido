@@ -111,6 +111,8 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 Route::group(['middleware' => 'web'], function () {
+    Route::match(['GET', 'POST'], '/restaurants', 'RestaurantsController@index');
+
     Route::get('/{slug}', 'IndexController');
     Route::post('/{slug}/orders-store', 'OrdersController@store')
         ->name('orders.store');

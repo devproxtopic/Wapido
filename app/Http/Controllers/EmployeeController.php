@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use App\Models\Owner;
+use App\Notifications\EmployeePassword;
 use App\Rol;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 
 class EmployeeController extends Controller
@@ -72,6 +74,8 @@ class EmployeeController extends Controller
 
         $request->session()->flash('message', 'Empleado creado con éxito.');
         $request->session()->flash('alert-type', 'success');
+
+        $user->notify(new EmployeePassword($user, $password));
 
         return redirect('owners/' . $request->slug . '/employees');
     }

@@ -173,6 +173,50 @@
         </section>
         @endforeach
 
+        {{-- @foreach($owner->foods->groupBy('category_food_id') as $arrayFood)
+        <section id="{{ $arrayFood[0]->category->name }}">
+			<article>
+				<div class="article-item">
+					<div class="circle-item"><img src="{{ asset('storage/' .  $arrayFood[0]->category->picture) }}" alt="{{ $arrayFood[0]->category->name }}"></div>
+                    <h2>{{ $arrayFood[0]->category->name }}</h2>
+				</div>
+				<div class="pre-info">
+					<span><i class="fa fa-star"></i></span>
+					<p>{{ $arrayFood[0]->category->description }}</p>
+				</div>
+				<ul class="item-list">
+					<li class="labels-containers">
+                        <label for="">Cantidad</label>
+					</li>
+                    @foreach($arrayFood as $item)
+                    <li class="list--icecream list-food-{{ $item->id }}">
+                        <img class="circle-item-light" width="15%" src="{{ asset('storage/' . $item->img) }}">
+                        <h3>{{ $item->name }}</h3>
+                        <div class="circle-input circles-food-{{ $arrayFood[0]->category->id }}">
+                            <input
+                            maxlength="2" data-price="{{ $item->price }}" type="text" data-item="{{ $item->id }}"
+                            placeholder="0" class="icecream-flav" data-quantity="1"
+                            id="quantity-{{ $arrayFood[0]->category->id }}-{{ $item->id }}"
+                            name="quantity[{{ $item->id }}]">
+                        </div>
+					</li>
+                    @endforeach
+					<li class="no--padd">
+                        <button type="button" onclick="subtotalCalculationFood({{ $arrayFood[0]->category->id }})" class="calc">Calcular</button>
+					</li>
+					<li>
+						<div class="box-detail icecream--box ">
+                            <p>Costo<br>
+                            <input type="hidden" name="subtotal-food-{{ $arrayFood[0]->category->id }}" id="subtotal-food-{{ $arrayFood[0]->category->id }}" class="subtotal">
+							<span class="price">$</span> <span class="price total-price-icecream amount-food-{{ $arrayFood[0]->category->id }}">0</span>
+							</p>
+						</div>
+					</li>
+				</ul>
+			</article>
+        </section>
+        @endforeach --}}
+
 		<!-- FINAL -->
 		<section>
 			<h2>Pedido Final</h2><br>

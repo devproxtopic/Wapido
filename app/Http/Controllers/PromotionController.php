@@ -8,16 +8,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
-class PromotionController extends Controller
+class PromotionController extends WebController
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($slug)
+    public function index()
     {
-        $owner = Owner::where('slug', $slug)->first();
+        $owner = Owner::where('slug', $this->slug)->first();
 
         $promotions = Promotion::where('owner_id', $owner->id)
         ->orderBy('title')->paginate(15);
@@ -29,9 +29,9 @@ class PromotionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($slug)
+    public function create()
     {
-        $owner = Owner::where('slug', $slug)->first();
+        $owner = Owner::where('slug', $this->slug)->first();
         return view('promotions.create', compact('owner'));
     }
 
@@ -105,10 +105,10 @@ class PromotionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($slug, $id)
+    public function edit(Request $request)
     {
-        $promotion = Promotion::find($id);
-        $owner = Owner::where('slug', $slug)->first();
+        $promotion = Promotion::find($request->promotion);
+        $owner = Owner::where('slug', $this->slug)->first();
 
         return view('promotions.edit', compact('promotion','owner'));
     }
@@ -120,7 +120,7 @@ class PromotionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update($slug, Request $request, $id)
+    public function update(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required',
@@ -141,7 +141,7 @@ class PromotionController extends Controller
                 ->withInput();
         }
 
-        $promotion = Promotion::find($id);
+        $promotion = Promotion::find($request->id);
 
         $promotion->update([
             'title' => $request->title,
@@ -173,9 +173,9 @@ class PromotionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($slug, $id, Request $request)
+    public function destroy(Request $request)
     {
-        Promotion::destroy($id);
+        Promotion::destroy($request->id);
 
         $request->session()->flash('message', 'Promoción eliminada exitosamente.');
         $request->session()->flash('alert-type', 'success');
