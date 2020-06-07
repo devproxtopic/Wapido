@@ -925,7 +925,23 @@ article {
       article .pre-info p {
         float: none;
         text-align: center;
-        margin: 0; } }
+        margin: 0; }
+    }
+
+    select {
+        width: 268px;
+        padding: 5px;
+        font-size: 16px;
+        line-height: 1;
+        border: 0;
+        border-radius: 5px;
+        height: 34px;
+        background: url("http://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/br_down.png") white no-repeat 98.5% !important;
+        /* !important used for overriding all other customisations */
+        -webkit-appearance: none;
+        -webkit-appearance: none;
+        background-position-x: 244px;
+    }
 
         /* Slideshow container */
         .slideshow-container-promotions {
@@ -1023,11 +1039,32 @@ article {
             width: 100%;
             justify-content: space-evenly;
             padding: 10px 20px;
+
+            color: #FF5733;
+            text-transform: uppercase;
+            position: relative;
+        }
+
+        .filters_restaurants select {
+
+            border-radius: 36px;
+
+            overflow: hidden;
+            border: 1px solid #cccccc;
+
         }
 
         .select_filters_restaurants{
             width: 30%;
+            background: rgba(255, 255, 255, 0.87);
+            color: #FF5733;
+            text-shadow: 0 1px 0 rgba(230, 200, 200, 0.4);
+
+            border: 0px;
+            outline: none;
+            padding: 5px 25px;
         }
+
 
 @media screen and (max-width: 500px) {
     article .item-list li h3 {
@@ -1046,8 +1083,11 @@ article {
         flex-direction: column;
     }
 
-    .select_filters_restaurants {
+    .filters_restaurants select {
+
         width: 100%;
+        margin: 5px;
+
     }
 }
 
@@ -1064,8 +1104,11 @@ article {
         flex-direction: column;
     }
 
-    .select_filters_restaurants {
+    .filters_restaurants select {
+
         width: 100%;
+        margin: 5px;
+
     }
 }
 @media screen and (max-width: 380px) {
@@ -1080,8 +1123,11 @@ article {
         flex-direction: column;
     }
 
-    .select_filters_restaurants {
+    .filters_restaurants select {
+
         width: 100%;
+        margin: 5px;
+
     }
 }
 @media screen and (max-width: 360px) {
@@ -1098,8 +1144,11 @@ article {
         flex-direction: column;
     }
 
-    .select_filters_restaurants {
+    .filters_restaurants select {
+
         width: 100%;
+        margin: 5px;
+
     }
 }
 @media screen and (max-width: 330px) {
@@ -1114,7 +1163,10 @@ article {
         flex-direction: column;
     }
 
-    .select_filters_restaurants {
+    .filters_restaurants select {
+
         width: 100%;
+        margin: 5px;
+
     }
 }

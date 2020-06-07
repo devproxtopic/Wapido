@@ -20,7 +20,7 @@
 		<link href="{{ asset('css/style.css') }}" rel="stylesheet">
 		<link href="{{ asset('css/superslides.css') }}" rel="stylesheet">
 		<link href="{{ asset('css/jquery.timepicker.css') }}" rel="stylesheet" type="text/css" />
-		<link href="{{ asset('css/bootstrap-datepicker.css') }}" rel="stylesheet" type="text/css"  />
+        <link href="{{ asset('css/bootstrap-datepicker.css') }}" rel="stylesheet" type="text/css"  />
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
         <script src="{{ asset("js/jquery-1.11.3.min.js") }}"></script>
@@ -37,39 +37,22 @@
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
-	</head>
+        <script type="text/javascript" src="{{ asset('js/restaurants.js') }}"></script>
+    </head>
 
 	<body>
         <input type="hidden" name="message" id="message"
             @if(session("message")) value="{{ session("message") }}" @endif>
         <input type="hidden" id="url_base" value="{{ url('') }}">
-			<header>
-			    <center>
-                    <div style="max-width: 1000px;" >
-                        <img src="{{ asset('img/wapido_logo2.png') }}" width="25%" class="logo-owner">
-                        <br>
-                        <a style="width:180px;" href="#" class="calc">Lista de Restaurantes</a>
-                    </div>
-                </center>
-
-				{{-- <h1>{{ env('APP_NAME') }}</h1>
-				<p class="intro">{{ env('APP_DESCRIPTION') }}</p> --}}
-            </header>
-
-        <div id="slides">
-			<div class="slides-container">
-                <img src="{{ asset('img/4.jpg') }}" alt="">
-                <img src="{{ asset('img/5.jpg') }}" alt="">
-                <img src="{{ asset('img/6.jpg') }}" alt="">
-			</div>
-
-			<nav class="slides-navigation">
-				<a href="#" class="next"><i class="fa fa-angle-right"></i></a>
-				<a href="#" class="prev"><i class="fa fa-angle-left"></i></a>
-			</nav>
-		</div>
         <div id="fixed-bg"></div>
+        <br>
+        <div >
+            <center>
+				<div>
+                    <img src="{{ asset('img/wapido_logo2.png') }}" width="30%">
+                </div>
+            </center>
+        </div>
 
     <form action="{{ url('/restaurants') }}" method="POST">
         @csrf
@@ -79,13 +62,13 @@
             <input type="hidden" name="reqState" id="reqState" value="{{ $state_id }}">
             <input type="hidden" name="reqLocation" id="reqLocation" value="{{ $location_id }}">
 
-            <select class="form-control select_filters_restaurants" name="country_id" id="country_id">
+            <select style="border: 2px solid #FB2D01;" class="select_filters_restaurants" name="country_id" id="country_id">
                 <option value="">Seleccione un País</option>
                 @foreach ($countries as $country)
                 <option @if($country_id == $country->id) selected @endif value="{{ $country->id }}">{{ $country->name }}</option>
                 @endforeach
             </select>
-            <select disabled class="form-control select_filters_restaurants" name="state_id" id="state_id">
+            <select style="border: 2px solid #FB2D01;" disabled class="select_filters_restaurants" name="state_id" id="state_id">
                 <option value="">Seleccione un Estado</option>
                 @if($country_id)
                 @foreach (\App\Models\Country::find($country_id)->states as $state)
@@ -97,7 +80,7 @@
         </div>
 
         <div class="filters_restaurants">
-            <select disabled class="form-control select_filters_restaurants" name="city_id" id="city_id">
+            <select style="border: 2px solid #FB2D01;" disabled class="select_filters_restaurants" name="city_id" id="city_id">
                 <option value="">Seleccione una Ciudad</option>
                 @if($city_id)
                 @foreach (\App\Models\City::find($city_id)->state->cities as $city)
@@ -106,7 +89,7 @@
                 @endif
                 {{-- SE LLENA CON AJAX --}}
             </select>
-            <select disabled class="form-control select_filters_restaurants" name="location_id" id="location_id">
+            <select style="border: 2px solid #FB2D01;" disabled class="select_filters_restaurants" name="location_id" id="location_id">
                 <option value="">Seleccione una Localidad</option>
                 @if($location_id)
                 @foreach (\App\Models\Location::find($location_id)->city->locations as $location)
@@ -118,7 +101,7 @@
         </div>
 
         <div class="filters_restaurants">
-            <select class="form-control select_filters_restaurants" name="category_food_id" id="category_food_id">
+            <select style="border: 2px solid #000;" class="form-control select_filters_restaurants" name="category_food_id" id="category_food_id">
                 <option value="">Seleccione un Tipo de Comida</option>
                 @foreach ($categories_food as $category_food)
                 <option @if($category_food_id == $category_food->id) selected @endif value="{{ $category_food->id }}">{{ $category_food->name }}</option>
@@ -127,9 +110,10 @@
         </div>
 
         <section class="form">
-
+            <div id="result" class="">
             <button type="submit" id="submit_button">REALIZAR BUSQUEDA</button>
-            <div id="result" class=""></div>
+            <button onclick="location.href=location.href" type="reset" id="reset_button">RESETEAR BUSQUEDA</button>
+            </div>
 		</section>
 
         @foreach($restaurants as $restaurant)
@@ -161,7 +145,7 @@
                         </p>
                     </li>
 					<li class="no--padd">
-                        <a href="" class="calc">Ir al restaurante</a>
+                        <a href="{{ url('/' . $restaurant->slug) }}" class="calc">Ir al restaurante</a>
 					</li>
 					<li>
 						<div class="box-detail icecream--box ">
