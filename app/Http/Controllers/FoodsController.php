@@ -6,6 +6,7 @@ use App\Models\CategoryFood;
 use App\Models\Food;
 use App\Models\Owner;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class FoodsController extends Controller
 {
@@ -50,6 +51,15 @@ class FoodsController extends Controller
         $food->category_food_id = $request->category_food_id;
         $food->name = $request->name;
         $food->price = $request->price;
+        $food->picture = 'path';
+        $food->save();
+
+        if ($request->hasfile('file')) {
+            $file = $request->file;
+            $file->move(public_path("storage/foods"), $food->id . '.' . $file->getClientOriginalExtension());
+        }
+
+        $food->picture = "foods/" . $food->id . '.' . $file->getClientOriginalExtension();
         $food->save();
 
         $request->session()->flash('message', 'Comida creada con éxito.');
@@ -98,6 +108,22 @@ class FoodsController extends Controller
         $food->category_food_id = $request->category_food_id;
         $food->price = $request->price;
         $food->save();
+
+        if ($request->hasfile('file')) {
+
+            if($food->picture){
+                //Borrar la imagen del servidor
+                if (File::exists('storage/' . $food->picture)) {
+                    unlink('storage/' . $food->picture);
+                }
+            }
+
+            $file = $request->file;
+            $file->move(public_path("storage/foods"), $food->id . '.' . $file->getClientOriginalExtension());
+
+            $food->picture = "foods/" . $food->id . '.' . $file->getClientOriginalExtension();
+            $food->save();
+        }
 
         $request->session()->flash('message', 'Comida actualizada con éxito.');
         $request->session()->flash('alert-type', 'success');

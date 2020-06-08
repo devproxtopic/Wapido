@@ -47,7 +47,7 @@
         </li>
         @if($owner->category_owner_id == 7)
         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle {{ (request()->segment(3) == 'foods' ||
+            <a class="nav-link dropdown-toggle {{ (request()->segment(3) == 'foods' || request()->segment(3) == 'categories-food' ||
             request()->segment(3) == 'tables' || request()->segment(3) == 'employees') ? 'active' : '' }}"
             href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Restaurante
@@ -65,11 +65,15 @@
                     <i class="fa fa-users"></i>
                     <span>Empleados</span>
                 </a>
+                <a class="dropdown-item {{ (request()->segment(3) == 'categories-food') ? 'active' : '' }}" href="{{ url('owners/'.$owner->slug.'/categories-food') }}">
+                    <i class="fa fa-edit"></i>
+                    <span>Categorias de Comida</span>
+                </a>
             </div>
         </li>
         @endif
         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle {{ (request()->segment(3) == 'units' || request()->segment(3) == 'status') ? 'active' : '' }}"
+            <a class="nav-link dropdown-toggle {{ (request()->segment(3) == 'units' || request()->segment(3) == 'status' || request()->segment(3) == 'categories-owner') ? 'active' : '' }}"
             href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Configuraciones
             </a>
@@ -81,6 +85,10 @@
                 <a class="dropdown-item {{ (request()->segment(3) == 'status') ? 'active' : '' }}" href="{{ url('owners/'.$owner->slug.'/status') }}">
                     <i class="fa fa-edit"></i>
                     <span>Estatus</span>
+                </a>
+                <a class="dropdown-item {{ (request()->segment(3) == 'categories-owner') ? 'active' : '' }}" href="{{ url('owners/'.$owner->slug.'/categories-owner') }}">
+                    <i class="fa fa-edit"></i>
+                    <span>Categorias de Negocio</span>
                 </a>
             </div>
         </li>

@@ -100,6 +100,14 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('/employees', 'EmployeeController')->except('destroy');
         Route::get('/employees-delete/{id}', 'EmployeeController@destroy')
         ->name('employees.destroy');
+
+        Route::resource('/categories-owner', 'CategoryOwnerController')->except('destroy');
+        Route::get('/categories-owner-delete/{id}', 'CategoryOwnerController@destroy')
+        ->name('categories-owner.destroy');
+
+        Route::resource('/categories-food', 'CategoryFoodController')->except('destroy');
+        Route::get('/categories-food-delete/{id}', 'CategoryFoodController@destroy')
+        ->name('categories-food.destroy');
     });
 
     Route::resource('/home/owners', 'OwnersController')->except('destroy', 'show');

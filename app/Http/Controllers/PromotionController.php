@@ -141,7 +141,7 @@ class PromotionController extends WebController
                 ->withInput();
         }
 
-        $promotion = Promotion::find($request->id);
+        $promotion = Promotion::find($request->promotion);
 
         $promotion->update([
             'title' => $request->title,

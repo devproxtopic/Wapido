@@ -190,7 +190,7 @@
 					</li>
                     @foreach($arrayFood as $item)
                     <li class="list--icecream list-food-{{ $arrayFood[0]->category->id }}">
-                        <img class="circle-item-light" width="15%" src="{{ asset('storage/' . $item->img) }}">
+                        <img class="circle-item-light" width="15%" src="{{ asset('storage/' . $item->picture) }}">
                         <h3>{{ $item->name }}</h3>
                         <div class="circle-input circles-food-{{ $arrayFood[0]->category->id }}">
                             <input
@@ -217,6 +217,7 @@
         </section>
         @endforeach
 
+        @if($owner->category->id != 7)
 		<!-- FINAL -->
 		<section>
 			<h2>Pedido Final</h2><br>
@@ -231,7 +232,7 @@
                 @endforeach
                 @foreach($owner->foods->groupBy('category_food_id') as $category_food)
 				<li>
-                    <img width="15%" src="{{ asset('storage/' . $category_food[0]->category->img) }}">
+                    <img width="15%" src="{{ asset('storage/' . $category_food[0]->category->picture) }}">
                     {{ $category_food[0]->category->name }}
 					<div class="price">$ <span class="total-price-beer amount-food-{{ $category_food[0]->category->id }}">0</div>
 					<div class="numbers total-ltr quantity-{{ $category_food[0]->category->id }}" id="total-ltr">0</div>
@@ -246,11 +247,7 @@
 
 		<!-- Form -->
 		<section class="form">
-            @if($order)
-            <h2>Datos del Cliente:</h2>
-            @else
             <h2>Complete el formulario:</h2>
-            @endif
 
                 <fieldset>
                     <div class="custom-control custom-radio mb-1">
@@ -286,7 +283,12 @@
 				<span>Los campos marcados con * son obligatorios.</span>
                 <button type="submit" id="submit_button">REALIZAR PEDIDO</button>
 				<div id="result" class=""></div>
-		</section>
+        </section>
+        @else
+        <section class="form">
+            <button type="button" id="submit_button">REALIZAR RESERVACIÓN</button>
+        </section>
+        @endif
 	</form>
 
 		<footer>
