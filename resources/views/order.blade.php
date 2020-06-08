@@ -121,29 +121,47 @@
             <center>
                 @php
                     $category = \App\Models\Category::find($category_id);
+
+                    if($item[0]['item'] == 0){
+                        $category = \App\Models\CategoryFood::find($category_id);
+                    }
                 @endphp
                 <h1>{{ $category->name }}</h1>
                 <br>
                 <table>
+                    @php
+                        $array_measures = json_decode($category->measure);
+                    @endphp
                     <tr>
                         <th>Producto</th>
-                        @foreach (json_decode($category->measure) as $measure)
-                        <th>{{ $measure . ' ' . $category->unit->name }}</th>
-                        @endforeach
+                        @if($array_measures)
+                            @foreach ($array_measures as $measure)
+                            <th>{{ $measure . ' ' . $category->unit->name }}</th>
+                            @endforeach
+                        @else
+                            <th>Cantidad</th>
+                        @endif
                     </tr>
                     @foreach ($item as $productChoose)
+                    @if(isset($productChoose['item_id']))
                     <tr>
-                        <td>{{ \App\Models\Item::find($productChoose['item_id'])->name }}</td>
-                        @foreach (json_decode($category->measure) as $measure)
-                        <th>
+                        <td>{{ $item = \App\Models\Item::find($productChoose['item_id'])->name }}</td>
+                        @foreach ($array_measures as $measure)
+                        <td>
                             @if($productChoose['measure'] == $measure)
                             {{ $productChoose['quantity'] }}
                             @else
                             0
                             @endif
-                        </th>
+                        </td>
                         @endforeach
                     </tr>
+                    @else
+                    <tr>
+                        <td>{{ $item = \App\Models\Food::find($productChoose['food_id'])->name }}</td>
+                        <td>{{ $productChoose['quantity'] }}</td>
+                    </tr>
+                    @endif
                     @endforeach
                 </table>
 
@@ -159,10 +177,16 @@
                 </tr>
                 @foreach ($order as $category_id => $item)
                 @php
+                    $category = \App\Models\Category::find($category_id);
+
+                    if(! $category){
+                        $category = \App\Models\CategoryFood::find($category_id);
+                    }
+
                     $itemSum = 0;
                 @endphp
                 <tr>
-                    <td>{{ \App\Models\Category::find($category_id)->name }}</td>
+                    <td>{{ $category->name }}</td>
                     @foreach ($item as $itemChoose)
                     @php
                         $itemSum += $itemChoose['price'] * $itemChoose['quantity'];

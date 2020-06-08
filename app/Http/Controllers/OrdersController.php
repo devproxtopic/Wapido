@@ -58,7 +58,6 @@ class OrdersController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
         $validator = Validator::make($request->all(), [
             'total_amount' => 'required',
             'email' => 'required',
@@ -83,6 +82,7 @@ class OrdersController extends Controller
                         ->withErrors($validator)
                         ->withInput();
         }
+
         $owner = Owner::where('slug', $request->slug)->first();
         $client = Client::where('email', $request->email)->first();
 
@@ -124,6 +124,23 @@ class OrdersController extends Controller
             }
         }
 
+        foreach($request->quantity_food as $input => $value){
+            /**
+             * Para armar el arreglo, el name($input) esta compuesto por
+             * item_id-price_measure
+             */
+
+            $array_values = explode('-', $input);
+
+            $orderDetail = OrderDetail::create([
+                'order_id' => $order->id,
+                'food_id' => $array_values[0],
+                'quantity' => $value,
+                'unit_price' => $array_values[1],
+                'measure' => 1
+            ]);
+        }
+
         //Enviar Whatsapp con Twilio
         //$message = $this->sendMessage('Se ha creado un nuevo pedido, puede verlo en la siguiente url: ' . route('orders.show', $order->id) , $client->phone);
 
@@ -149,12 +166,25 @@ class OrdersController extends Controller
         $client = $orderDB->client;
 
         foreach ($orderDB->details as $detail) {
-            $order[$detail->item->category->id][] = [
-                'item_id' => $detail->item_id,
-                'quantity' => $detail->quantity,
-                'measure' => $detail->measure,
-                'price' => $detail->unit_price
-            ];
+            if($detail->item){
+                $order[$detail->item->category->id][] = [
+                    'item_id' => $detail->item_id,
+                    'quantity' => $detail->quantity,
+                    'measure' => $detail->measure,
+                    'price' => $detail->unit_price,
+                    'item' => 1
+                ];
+            }
+
+            if($detail->food){
+                $order[$detail->food->category->id][] = [
+                    'food_id' => $detail->food_id,
+                    'quantity' => $detail->quantity,
+                    'measure' => $detail->measure,
+                    'price' => $detail->unit_price,
+                    'item' => 0
+                ];
+            }
         }
 
         $owner = Owner::where('slug', $slug)->first();

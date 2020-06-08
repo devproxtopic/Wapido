@@ -11,14 +11,16 @@ class NotifyWaitersOrder extends Notification
 {
     use Queueable;
 
+    private $order;
+
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($order)
     {
-        //
+        $this->order = $order;
     }
 
     /**
@@ -41,9 +43,9 @@ class NotifyWaitersOrder extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+            ->line('Ha recibido un nuevo pedido.')
+            ->action('Puede verlo en el siguiente enlace', url('/' . $this->order->slug))
+            ->line('Gracias por su atención');
     }
 
     /**

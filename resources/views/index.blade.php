@@ -173,7 +173,7 @@
         </section>
         @endforeach
 
-        {{-- @foreach($owner->foods->groupBy('category_food_id') as $arrayFood)
+        @foreach($owner->foods->groupBy('category_food_id') as $arrayFood)
         <section id="{{ $arrayFood[0]->category->name }}">
 			<article>
 				<div class="article-item">
@@ -189,15 +189,15 @@
                         <label for="">Cantidad</label>
 					</li>
                     @foreach($arrayFood as $item)
-                    <li class="list--icecream list-food-{{ $item->id }}">
+                    <li class="list--icecream list-food-{{ $arrayFood[0]->category->id }}">
                         <img class="circle-item-light" width="15%" src="{{ asset('storage/' . $item->img) }}">
                         <h3>{{ $item->name }}</h3>
                         <div class="circle-input circles-food-{{ $arrayFood[0]->category->id }}">
                             <input
                             maxlength="2" data-price="{{ $item->price }}" type="text" data-item="{{ $item->id }}"
                             placeholder="0" class="icecream-flav" data-quantity="1"
-                            id="quantity-{{ $arrayFood[0]->category->id }}-{{ $item->id }}"
-                            name="quantity[{{ $item->id }}]">
+                            id="quantity-food-{{ $arrayFood[0]->category->id }}-{{ $item->id }}-1"
+                            name="quantity_food[{{ $item->id }}-{{ $item->price }}]">
                         </div>
 					</li>
                     @endforeach
@@ -215,7 +215,7 @@
 				</ul>
 			</article>
         </section>
-        @endforeach --}}
+        @endforeach
 
 		<!-- FINAL -->
 		<section>
@@ -227,6 +227,14 @@
                     {{ $category->name }}
 					<div class="price">$ <span class="total-price-beer amount-{{ $category->id }}">0</div>
 					<div class="numbers total-ltr quantity-{{ $category->id }}" id="total-ltr">0</div>
+                </li>
+                @endforeach
+                @foreach($owner->foods->groupBy('category_food_id') as $category_food)
+				<li>
+                    <img width="15%" src="{{ asset('storage/' . $category_food[0]->category->img) }}">
+                    {{ $category_food[0]->category->name }}
+					<div class="price">$ <span class="total-price-beer amount-food-{{ $category_food[0]->category->id }}">0</div>
+					<div class="numbers total-ltr quantity-{{ $category_food[0]->category->id }}" id="total-ltr">0</div>
                 </li>
                 @endforeach
             </ul>

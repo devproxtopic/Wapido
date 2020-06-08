@@ -1,13 +1,25 @@
+function totalAmountOrder() {
+    var subtotales = 0;
+    var total = $('.total-price');
+
+    $('.subtotal').each(function () {
+        if (parseFloat($(this).val()) > 0) {
+            subtotales += parseFloat($(this).val());
+        }
+    });
+
+    total.text(subtotales);
+    $('#total_amount').val(subtotales);
+}
+
 function subtotalCalculation(category_id){
     var list = $('.list-' + category_id + ' div');
     var star = $('.star-' + category_id);
     var quantity = $('.quantity-' + category_id);
     var amount = $('.amount-' + category_id);
-    var total = $('.total-price');
-    let total_star = 0;
-    let subtotal_amount = 0;
-    let total_quantity = 0;
-    var subtotales = 0;
+    var total_star = 0;
+    var subtotal_amount = 0;
+    var total_quantity = 0;
 
     var inputs = [];
 
@@ -43,17 +55,10 @@ function subtotalCalculation(category_id){
         amount.text(subtotal_amount);
 
         $('#subtotal-' + category_id).val(subtotal_amount);
+
     }
 
-    $('.subtotal').each(function() {
-        if(parseFloat($(this).val()) > 0){
-            subtotales += parseFloat($(this).val());
-        }
-    });
-
-    total.text(subtotales);
-    $('#total_amount').val(subtotales);
-
+    totalAmountOrder();
 }
 
 function orderExists(order, client) {
@@ -72,8 +77,6 @@ function orderExists(order, client) {
     });
 
 }
-
-
 
 $(document).ready(function () {
 
@@ -105,9 +108,11 @@ $(document).ready(function () {
     });
 
     showSlidesPromotions();
+
+    totalAmountOrder();
 });
 
-let slideIndexPromotion = 0;
+var slideIndexPromotion = 0;
 
 function showSlidesPromotions() {
     var i;
@@ -158,4 +163,54 @@ function showSlidesPromotionsChange(n) {
     }
     slidesPromotions[slideIndexPromotion - 1].style.display = "block";
     dots[slideIndexPromotion - 1].className += " active";
+}
+
+function subtotalCalculationFood(category_id){
+    var list = $('.list-food-' + category_id + ' div');
+    var star = $('.star-food-' + category_id);
+    var quantity = $('.quantity-food-' + category_id);
+    var amount = $('.amount-food-' + category_id);
+    var total = $('.total-price-food');
+    var total_star = 0;
+    var subtotal_amount = 0;
+    var total_quantity = 0;
+
+    var inputs = [];
+
+    $(list).find('input, select, button').each(function () {
+        if (parseFloat($(this).val()) > 0) {
+
+            var objectInput = new Object;
+            objectInput.price = $(this).data('price');
+            objectInput.quantity = $(this).val();
+            objectInput.identity = $(this).attr('id');
+            objectInput.quantity_db = $(this).data('quantity');
+
+            inputs.push(objectInput);
+
+        }
+    });
+
+    star.text(0);
+    quantity.text(0);
+    amount.text(0);
+    $('#subtotal-food-' + category_id).val(0);
+
+    if (inputs.length > 0) {
+        $(inputs).each(function (key, item) {
+            subtotal_amount += parseFloat(item.price * item.quantity);
+            total_quantity += parseFloat(parseFloat(item.quantity_db) * item.quantity);
+        });
+
+        total_star = inputs.length;
+
+        star.text(total_star);
+        quantity.text(total_quantity);
+        amount.text(subtotal_amount);
+
+        $('#subtotal-food-' + category_id).val(subtotal_amount);
+
+    }
+
+    totalAmountOrder();
 }
