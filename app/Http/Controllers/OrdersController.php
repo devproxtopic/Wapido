@@ -63,15 +63,13 @@ class OrdersController extends Controller
             'email' => 'required',
             'fullname' => 'required',
             'phone' => 'required',
-            'address' => 'required',
-            'quantity' => 'required'
+            'address' => 'required'
         ], [
             'total_amount.required' => 'Debe comprar algo para realizar el pedido.',
             'email.required' => 'El email es requerido.',
             'fullname.required' => 'El nombre completo es requerido.',
             'phone.required' => 'El teléfono es requerido.',
-            'address.required' => 'La dirección es requerido.',
-            'quantity.required' => 'La cantidad es requerida.',
+            'address.required' => 'La dirección es requerido.'
         ]);
 
         if ($validator->fails()) {
@@ -105,40 +103,44 @@ class OrdersController extends Controller
             'owner_id' => $owner->id
         ]);
 
-        foreach($request->quantity as $input => $value){
-            if(is_numeric($value)){
+        if($request->quantity) {
+            foreach ($request->quantity as $input => $value) {
+                if (is_numeric($value)) {
+                    /**
+                     * Para armar el arreglo, el name($input) esta compuesto por
+                     * item_id-measure_category-price_measure
+                     */
+
+                    $array_values = explode('-', $input);
+
+                    $orderDetail = OrderDetail::create([
+                        'order_id' => $order->id,
+                        'item_id' => $array_values[0],
+                        'quantity' => $value,
+                        'unit_price' => $array_values[2],
+                        'measure' => $array_values[1]
+                    ]);
+                }
+            }
+        }
+
+        if ($request->quantity_food) {
+            foreach($request->quantity_food as $input => $value){
                 /**
                  * Para armar el arreglo, el name($input) esta compuesto por
-                 * item_id-measure_category-price_measure
+                 * item_id-price_measure
                  */
 
                 $array_values = explode('-', $input);
 
                 $orderDetail = OrderDetail::create([
                     'order_id' => $order->id,
-                    'item_id' => $array_values[0],
+                    'food_id' => $array_values[0],
                     'quantity' => $value,
-                    'unit_price' => $array_values[2],
-                    'measure' => $array_values[1]
+                    'unit_price' => $array_values[1],
+                    'measure' => 1
                 ]);
             }
-        }
-
-        foreach($request->quantity_food as $input => $value){
-            /**
-             * Para armar el arreglo, el name($input) esta compuesto por
-             * item_id-price_measure
-             */
-
-            $array_values = explode('-', $input);
-
-            $orderDetail = OrderDetail::create([
-                'order_id' => $order->id,
-                'food_id' => $array_values[0],
-                'quantity' => $value,
-                'unit_price' => $array_values[1],
-                'measure' => 1
-            ]);
         }
 
         //Enviar Whatsapp con Twilio

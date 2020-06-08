@@ -179,7 +179,7 @@
                 @php
                     $category = \App\Models\Category::find($category_id);
 
-                    if(! $category){
+                    if($item[0]['item'] == 0){
                         $category = \App\Models\CategoryFood::find($category_id);
                     }
 
