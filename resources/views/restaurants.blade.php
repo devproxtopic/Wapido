@@ -145,8 +145,16 @@
                         </p>
                     </li>
 					<li class="no--padd">
-                        <a href="{{ url('/' . $restaurant->slug) }}" class="calc">Ir al restaurante</a>
-					</li>
+                    @isset($restaurant->reservations_enabled)
+                    <button onclick="window.open('{{ url('/' . $restaurant->slug . '/reservations/create') }}', 'reservations');" class="calc" type="button" id="reservation_button">RESERVACIONES</button>
+                    @endisset
+                    @isset($restaurant->main_digital_enabled)
+                    <button onclick="window.open('{{ url('/' . $restaurant->slug . '/main_digital') }}', 'main_digital');" class="calc" type="button" id="main_digital_button">MENU DIGITAL</button>
+                    @endisset
+                    @isset($restaurant->order_enabled)
+                    <button onclick="window.open('{{ url('/' . $restaurant->slug) }}', 'orders');" class="calc" type="button" id="order_button">PEDIDOS</button>
+                    @endisset
+                    </li>
 					<li>
 						<div class="box-detail icecream--box ">
                             <p>Tipos de Comida<br>

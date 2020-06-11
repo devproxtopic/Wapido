@@ -54,7 +54,9 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'username' => ['required', 'string', 'unique:owners,name']
+            'username' => ['required', 'string', 'unique:owners,name'],
+            'category_owner_id' => ['required'],
+            'location_id' => ['required']
         ]);
     }
 
@@ -81,8 +83,15 @@ class RegisterController extends Controller
             'category_owner_id' => $data['category_owner_id'],
             'name' => $data['username'],
             'email' => $data['email'],
-            'slug' => \Str::slug($data['username'])
+            'slug' => \Str::slug($data['username']),
         ]);
+
+        if(isset($data['opening_hours'])){
+            $owner->update([
+                'opening_hours' => $data['opening_hours'],
+                'closing_hours' => $data['closing_hours']
+            ]);
+        }
 
         return $user;
     }

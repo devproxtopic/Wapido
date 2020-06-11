@@ -217,7 +217,6 @@
         </section>
         @endforeach
 
-        @if($owner->category->id != 7)
 		<!-- FINAL -->
 		<section>
 			<h2>Pedido Final</h2><br>
@@ -284,12 +283,8 @@
                 <button type="submit" id="submit_button">REALIZAR PEDIDO</button>
 				<div id="result" class=""></div>
         </section>
-        @else
-        <section class="form">
-            <button type="button" id="submit_button">REALIZAR RESERVACIÓN</button>
-        </section>
-        @endif
-	</form>
+    </form>
+
 
 		<footer>
         <center><img src="{{ asset('img/logo.png') }}" width="15%"></center> <br>
@@ -314,6 +309,20 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div id="floatMenu">
+            <ul class="menu1">
+               <li><a href="{{ url('/' . $owner->slug . '/reservations/create') }}">RESERVACIONES</a></li>
+            </ul>
+
+            <ul class="menu2">
+                <li><a href="{{ url('/' . $owner->slug . '/main_digital') }}">MENU DIGITAL</a></li>
+            </ul>
+            {{--
+            <ul class="menu3">
+                <li><a href="#" onclick="return false;"> Home </a></li>
+            </ul> --}}
         </div>
 
         @if(session("message"))
@@ -344,15 +353,24 @@
     @endif
 
         <script>
-            $(document).ready(function() {
+        var name = "#floatMenu";
+        var menuYloc = null;
 
-                var client = @json($client);
-                var order = @json($order);
-
-                if(client && order){
-                    orderExists(order, client);
-                }
+        $(document).ready(function(){
+            menuYloc = parseInt($(name).css("top").substring(0,$(name).css("top").indexOf("px")));
+            $(window).scroll(function () {
+                var offset = menuYloc+$(document).scrollTop()+"px";
+                $(name).animate({top:offset},{duration:500,queue:false});
             });
+
+
+            var client = @json($client);
+            var order = @json($order);
+
+            if(client && order){
+                orderExists(order, client);
+            }
+        });
         </script>
 
 	</body>

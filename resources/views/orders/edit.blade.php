@@ -5,7 +5,7 @@
 
 @section('content')
 <div class="col-sm-12 col-md-12">
-    <form method="POST" action="{{ url('owners/'. $owner->slug .'/orders' . $order->id) }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ url('owners/'. $owner->slug .'/orders/' . $order->id) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 

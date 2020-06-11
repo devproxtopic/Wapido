@@ -29,6 +29,11 @@ Route::get('/clear-cache', function () {
     return "Cache is cleared";
 });
 
+Route::get('/updateapp', function () {
+    exec('composer dump-autoload');
+    return 'composer dump-autoload complete';
+});
+
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/home', 'HomeController@index');
 
@@ -108,6 +113,10 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('/categories-food', 'CategoryFoodController')->except('destroy');
         Route::get('/categories-food-delete/{id}', 'CategoryFoodController@destroy')
         ->name('categories-food.destroy');
+
+        Route::resource('/reservations', 'ReservationController')->except('destroy','create','store');
+        Route::get('/reservations-delete/{id}', 'ReservationController@destroy')
+        ->name('reservations.destroy');
     });
 
     Route::resource('/home/owners', 'OwnersController')->except('destroy', 'show');
@@ -126,6 +135,10 @@ Route::group(['middleware' => 'web'], function () {
         ->name('orders.store');
     Route::get('/{slug}/orders-show/{id}', 'OrdersController@show')
         ->name('orders.show');
+    Route::get('/{slug}/reservations/create', 'ReservationController@create')
+    ->name('reservations.create');
+    Route::post('/{slug}/reservations', 'ReservationController@store')
+    ->name('reservations.store');
 
     // AJAX
 

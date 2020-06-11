@@ -1065,6 +1065,39 @@ article {
             padding: 5px 25px;
         }
 
+        #floatMenu {
+            position: absolute;
+            top: 150px;
+            left: 50%;
+            margin-left: 400px;
+            width: 200px;
+        }
+
+        #floatMenu ul {
+            margin-bottom: 20px;
+        }
+
+        #floatMenu ul li a {
+            display: block;
+            border: 1px solid #a82929;
+            background-color: #fad884fd;
+            border-left: 6px solid #a82929;
+            text-decoration: none;
+            color: #f27709;
+            padding: 10px;
+            margin: 10px;
+            font-size: 20px;
+            font-family: "Open Sans", sans-serif;
+        }
+
+        #floatMenu ul.menu1 li a:hover {
+            border-color: #f27609c5;
+        }
+
+        #floatMenu ul.menu2 li a:hover {
+            border-color: #f27609c5;
+        }
+
 
 @media screen and (max-width: 500px) {
     article .item-list li h3 {

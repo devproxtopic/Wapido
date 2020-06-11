@@ -55,7 +55,6 @@ class TableController extends Controller
         $limit = $i + $request->quantity;
 
         for($i; $i < $limit; $i++){
-            // $qr = QrCode::generate($request->slug . '?table=' . $i, public_path("storage/owners/" . $owner->id . "/tables"), $i);
 
             $table = new Table();
             $table->owner_id = $owner->id;

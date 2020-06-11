@@ -98,7 +98,7 @@
 
                     <div class="wrap-input100" data-validate="El tipo de empresa es requerido">
                         <span class="label-input100">Tipo de Empresa</span>
-                        <select required class="input100" name="category_owner_id" id="category_owner_id">
+                        <select required class="form-control" name="category_owner_id" id="category_owner_id">
                             <option value="0">Seleccione una opción</option>
                             @foreach(App\Models\CategoryOwner::all() as $co)
                             <option @if( old('category_owner_id') == $co->id) selected @endif value="{{ $co->id }}">
@@ -108,6 +108,30 @@
                         </select>
 
                         @error('category_owner_id')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+
+                    <div class="wrap-input100 hours_owner" style="display: none;">
+						<span class="label-input100">Horario de Apertura</span>
+						<input class="input100" type="time" name="opening_hours" id="opening_hours">
+                        <span class="focus-input100"></span>
+
+                        @error('opening_hours')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+
+                    <div class="wrap-input100 hours_owner" style="display: none;">
+						<span class="label-input100">Horario de Cierre</span>
+						<input class="input100" type="time" name="closing_hours" id="closing_hours">
+                        <span class="focus-input100"></span>
+
+                        @error('closing_hours')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
@@ -257,6 +281,13 @@
   });
 
   $('div.setup-panel div a.btn-primary').trigger('click');
+
+  $('#category_owner_id').change(function(){
+        $('.hours_owner').css('display', 'none');
+      if($(this).val() == 7){
+        $('.hours_owner').css('display', 'block');
+      }
+  });
 });
 </script>
 @stop

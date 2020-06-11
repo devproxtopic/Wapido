@@ -28,7 +28,7 @@
                 <tr>
                     <td>{{ $table->number }}</td>
                     <td>{{ $table->ubication }}</td>
-                    <td><img width="30%" src="{{ asset($table->qr) }}" alt=""></td>
+                    <td>{!! \QrCode::size(300)->generate(url($owner->slug . '?table=' . $table->number)) !!}</td>
                     <td>
                         <a href="{{ url('owners/'. $owner->slug . '/tables-delete/' . $table->id) }}" title="Borrar"><i class="fa fa-trash"></i></a>
                         <a href="{{ url('owners/'. $owner->slug . '/tables/' . $table->id. '/edit') }}" title="Editar"><i class="fa fa-edit"></i></a>
