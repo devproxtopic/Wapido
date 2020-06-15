@@ -31,7 +31,7 @@ class NotifyWaitersOrder extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail','database'];
     }
 
     /**
@@ -54,10 +54,10 @@ class NotifyWaitersOrder extends Notification
      * @param  mixed  $notifiable
      * @return array
      */
-    public function toArray($notifiable)
+    public function toDatabase($notifiable)
     {
         return [
-            //
+            'order_id' => $this->order['id']
         ];
     }
 }

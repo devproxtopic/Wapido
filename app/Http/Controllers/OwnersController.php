@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Client;
 use App\Http\Requests\OwnerRequest;
 use App\Models\CategoryOwner;
+use App\Models\Country;
 use App\Models\Item;
 use App\Models\Order;
 use App\Models\Owner;
@@ -101,7 +102,10 @@ class OwnersController extends Controller
     public function edit($id)
     {
         $owner = Owner::find($id);
-        return view('owners.edit', compact('owner'));
+        $countries = Country::orderBy('name')->get();
+        $categories = CategoryOwner::orderBy('name')->get();
+
+        return view('owners.edit', compact('owner', 'countries', 'categories'));
     }
 
     /**
@@ -130,9 +134,42 @@ class OwnersController extends Controller
             $owner->logo = 'storage/owners/' . $owner->id . '/logo.' . $logo->getClientOriginalExtension();
         }
 
+        $owner->update($request->all());
+
+        $request->session()->flash('message', 'Negocio actualizado exitosamente.');
+        $request->session()->flash('alert-type', 'success');
+
+        return redirect()->back()->with('owner', $owner);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id, Request $request)
+    {
+        Category::where('owner_id', $id)->delete();
+        Client::where('owner_id', $id)->delete();
+        Item::where('owner_id', $id)->delete();
+        Order::where('owner_id', $id)->delete();
+        Promotion::where('owner_id', $id)->delete();
+        Owner::destroy($id);
+
+        $request->session()->flash('message', 'Negocio eliminado exitosamente.');
+        $request->session()->flash('alert-type', 'success');
+
+        return redirect()->back();
+    }
+
+    public function updateSliders(Request $request)
+    {
+        $owner = Owner::find($request->id);
+
         $slidersDB = json_decode($owner->sliders, true);
 
-        if($request->hasFile('slider_1')){
+        if ($request->hasFile('slider_1')) {
             //Borrar la imagen del servidor
             if (File::exists($slidersDB[0])) {
                 unlink($slidersDB[0]);
@@ -173,36 +210,59 @@ class OwnersController extends Controller
         } else {
             $sliders[2] = $slidersDB[2];
         }
-
-        $owner->email = $request->email;
-        $owner->name = $request->name;
-        $owner->slug = Str::slug($request->name);
-        $owner->phone = $request->phone;
         $owner->sliders = json_encode($sliders);
+
         $owner->save();
 
-        $request->session()->flash('message', 'Negocio actualizado exitosamente.');
+        $request->session()->flash('message', 'Sliders del negocio actualizados exitosamente.');
         $request->session()->flash('alert-type', 'success');
 
-        return redirect()->back()->with('owner', $owner);
+        return redirect()->back();
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id, Request $request)
+    public function ubications(Request $request)
     {
-        Category::where('owner_id', $id)->delete();
-        Client::where('owner_id', $id)->delete();
-        Item::where('owner_id', $id)->delete();
-        Order::where('owner_id', $id)->delete();
-        Promotion::where('owner_id', $id)->delete();
-        Owner::destroy($id);
+        $owner = Owner::find($request->id);
 
-        $request->session()->flash('message', 'Negocio eliminado exitosamente.');
+        $owner->update($request->all());
+
+        $request->session()->flash('message', 'Ubicación del negocio actualizado exitosamente.');
+        $request->session()->flash('alert-type', 'success');
+
+        return redirect()->back();
+    }
+
+    public function enableOrders(Request $request)
+    {
+        $owner = Owner::find($request->id);
+        $owner->order_enabled = ($owner->order_enabled == 1) ? null : 1;
+        $owner->save();
+
+        $request->session()->flash('message', 'Permisos cambiados exitosamente.');
+        $request->session()->flash('alert-type', 'success');
+
+        return redirect()->back();
+    }
+
+    public function enableReservation(Request $request)
+    {
+        $owner = Owner::find($request->id);
+        $owner->reservations_enabled = ($owner->reservations_enabled == 1) ? null : 1;
+        $owner->save();
+
+        $request->session()->flash('message', 'Permisos cambiados exitosamente.');
+        $request->session()->flash('alert-type', 'success');
+
+        return redirect()->back();
+    }
+
+    public function enableMainDigital(Request $request)
+    {
+        $owner = Owner::find($request->id);
+        $owner->main_digital_enabled = ($owner->main_digital_enabled == 1) ? null : 1;
+        $owner->save();
+
+        $request->session()->flash('message', 'Permisos cambiados exitosamente.');
         $request->session()->flash('alert-type', 'success');
 
         return redirect()->back();

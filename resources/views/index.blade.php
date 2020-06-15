@@ -11,7 +11,7 @@
 		<title>{{ env('APP_NAME') }}</title>
 
 		<!-- Fonts -->
-		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700|Roboto+Condensed:400,700' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700|Roboto+Condensed:400,700' rel='stylesheet' type='text/css'>
 		<link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet">
 
         <!-- Styles -->
@@ -38,7 +38,8 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
-	</head>
+        <script type="text/javascript" src="{{ asset('js/instascan.min.js') }}"></script>
+    </head>
 
 	<body>
         <input type="hidden" name="message" id="message"
@@ -80,6 +81,7 @@
     <form action="{{ route('orders.store', $owner->slug) }}" method="POST">
         @csrf
         <input type="hidden" id="_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="number_table" value="{{ $number_table }}">
         @if(count($promotions) > 0)
         <section>
 			<article>
@@ -248,6 +250,7 @@
 		<section class="form">
             <h2>Complete el formulario:</h2>
 
+            @if(! $number_table)
                 <fieldset>
                     <div class="custom-control custom-radio mb-1">
                         <input type="radio" id="delivery_1" name="apply_delivery" class="custom-control-input" checked value="1">
@@ -258,6 +261,7 @@
                         <label class="custom-control-label" for="delivery_2">Recoger en Tienda</label>
                     </div>
                 </fieldset>
+            @endif
 
 				<label for="">Mail *</label>
 				<input type="text" id="email" name="email" value="{{ old('email') }}" required placeholder="Email">
@@ -265,6 +269,8 @@
                 <input type="text" id="fullname" name="fullname" value="{{ old('fullname') }}" required placeholder="Nombre">
 				<label for="">Celular *</label>
 				<input type="text" id="phone" name="phone" value="{{ old('phone') }}" required placeholder="Celular">
+
+            @if(! $number_table)
 				<label for="">Dirección *</label>
                 <textarea name="address" id="address" required cols="" rows="6">{{ old('address') }}</textarea>
 
@@ -278,6 +284,7 @@
                         <label class="custom-control-label" for="payment_2">Pagar con Tarjeta</label>
                     </div>
                 </fieldset>
+            @endif
 
 				<span>Los campos marcados con * son obligatorios.</span>
                 <button type="submit" id="submit_button">REALIZAR PEDIDO</button>
@@ -295,8 +302,8 @@
 			<!--<h6>Comparti tu experiencia en: <a href="http://www.tripadvisor.es/Restaurant_Review-g294323-d1804509-Reviews-Facal-Montevideo_Montevideo_Department.html" target="_blank"><img src="img/trip-advisor.svg" alt=""></a> <a href="https://www.facebook.com/BarFacal" target="_blank"><i class="fa fa-facebook-official"></i></a></h6>-->
         </footer>
 
-        <div class="modal fade" id="myModal" tabindex="-1″ role="dialog" aria-labelledby="basicModal" aria-hidden="true">
-            <div class="modal-dialog">
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+            <div class="modal-dialog modal-success">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1>Su pedido ha sido realizado con éxito</h1>
@@ -311,14 +318,33 @@
             </div>
         </div>
 
+        <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+            <div class="modal-dialog modal-notify modal-danger">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1>Su pedido no puede realizarse</h1>
+                    </div>
+                    <div class="modal-body">
+                        <p>Debe seleccionar un producto para realizar un pedido.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" data-dismiss="modal" class="btn btn-danger">Cerrar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="floatMenu">
+            @isset($owner->reservations_enabled)
             <ul class="menu1">
                <li><a href="{{ url('/' . $owner->slug . '/reservations/create') }}">RESERVACIONES</a></li>
             </ul>
-
+            @endisset
+            @isset($owner->main_digital_enabled)
             <ul class="menu2">
-                <li><a href="{{ url('/' . $owner->slug . '/main_digital') }}">MENU DIGITAL</a></li>
+                <li><a id="mainDigital" href="{{ url('/' . $owner->slug . '/main_digital') }}">MENU DIGITAL</a></li>
             </ul>
+            @endisset
             {{--
             <ul class="menu3">
                 <li><a href="#" onclick="return false;"> Home </a></li>
@@ -342,10 +368,13 @@
                     break;
 
                 case 'error':
-                    toastr.error("{{ session('message') }}");
+                    $('#errorModal').modal();
+                    //toastr.error("{{ session('message') }}");
                     break;
                 default:
+                @if(! $number_table)
                     window.open("https://api.whatsapp.com/send?phone={{ $owner->phone }}&text=Se ha creado un nuevo pedido, puede verlo en la siguiente url: {{url($owner->slug . '/orders-show/' . session('message'))}}", '_blank');
+                @endif
                     $('#myModal').modal();
                     break;
             }
@@ -355,14 +384,19 @@
         <script>
         var name = "#floatMenu";
         var menuYloc = null;
+        $(name).css('display', 'none');
 
         $(document).ready(function(){
             menuYloc = parseInt($(name).css("top").substring(0,$(name).css("top").indexOf("px")));
             $(window).scroll(function () {
                 var offset = menuYloc+$(document).scrollTop()+"px";
-                $(name).animate({top:offset},{duration:500,queue:false});
+                if(menuYloc+$(document).scrollTop() > 413){
+                    $(name).animate({top:offset},{duration:500,queue:false});
+                    $(name).css('display', 'block');
+                } else {
+                    $(name).css('display', 'none');
+                }
             });
-
 
             var client = @json($client);
             var order = @json($order);
@@ -371,6 +405,22 @@
                 orderExists(order, client);
             }
         });
+        </script>
+
+        <script type="text/javascript">
+            let scanner = new Instascan.Scanner({ video: document.getElementById('mainDigital') });
+            scanner.addListener('scan', function (content) {
+                console.log(content);
+            });
+            Instascan.Camera.getCameras().then(function (cameras) {
+                if (cameras.length > 0) {
+                scanner.start(cameras[0]);
+                } else {
+                console.error('No cameras found.');
+                }
+            }).catch(function (e) {
+                console.error(e);
+            });
         </script>
 
 	</body>

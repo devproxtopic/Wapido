@@ -16,9 +16,9 @@ class IndexController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function __invoke($slug, Request $request)
+    public function __invoke(Request $request)
     {
-        $owner = Owner::where('slug', $slug)->first();
+        $owner = Owner::where('slug', $request->slug)->first();
 
         if(! $owner){
             return abort(404);
@@ -30,6 +30,7 @@ class IndexController extends Controller
         $client = null;
         $order = null;
 
-        return view('index', compact('categories', 'clients', 'client', 'order','owner','promotions'));
+        $number_table = $request->table ? $request->table : null;
+        return view('index', compact('categories', 'clients', 'client', 'order','owner','promotions', 'number_table'));
     }
 }

@@ -10,7 +10,7 @@
 		<title>{{ env('APP_NAME') }}</title>
 
 		<!-- Fonts -->
-		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700|Roboto+Condensed:400,700' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700|Roboto+Condensed:400,700' rel='stylesheet' type='text/css'>
 		<link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet">
 
         <!-- Styles -->
@@ -74,10 +74,10 @@
             .button1 {border-radius: 8px;}
 
 
-           // h1 {
-             // margin: 0;
-             //display: inline;
-        //    }
+           h1 {
+             margin: 0;
+             display: inline;
+           }
             .button2 {
                 float: right;
                 margin-right: 40px;
@@ -104,10 +104,15 @@
                 Dirección: <strong>{{ $client->address }}</strong> <br>
                 Celular: <strong>{{ $client->phone }}</strong> <br>
                 Estatus: <strong>{{ $orderDB->status->name }}</strong> <br>
+                @if(! $orderDB->number_table)
                 Modalidad: <strong>@if($orderDB->apply_delivery == 1)Envío a Domicilio
                     @else Recoger en Tienda @endif</strong><br>
                 Tipo de Pago: <strong>@if($orderDB->payment == 1)Efectivo
-                    @else Tarjeta @endif</strong>
+                    @else Tarjeta @endif</strong><br>
+                @endif
+                @isset($orderDB->number_table)
+                    Número de Mesa: <strong>{{ $orderDB->number_table }}</strong>
+                @endisset
             </p>
 
             </div>

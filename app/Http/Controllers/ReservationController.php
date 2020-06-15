@@ -9,6 +9,7 @@ use App\Models\Owner;
 use App\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 
 class ReservationController extends WebController
 {
@@ -46,6 +47,21 @@ class ReservationController extends WebController
     public function store(Request $request)
     {
         $owner = Owner::where('slug', $this->slug)->first();
+
+        $date_29 = now()->day(29);
+        $date_04 = now()->day(04);
+
+        $validator = Validator::make($request->all(),[
+            'start_time' => 'required|after:'. $owner->opening_hours.'|before:'. $owner->closing_hours,
+            'date' => 'required|different:'. $date_29->format('Y-m-d').'|different:'. $date_04->format('Y-m-d').'|before:tomorrow|date_format:Y-m-d',
+        ]);
+
+        if($validator->fails()){
+            $request->session()->flash('message', 'No puede realizar una reservación en ese día a esa hora, por favor intente otra hora u otro día.');
+            $request->session()->flash('alert-type', 'info');
+            return redirect()->back();
+        }
+
         $client = Client::where('email', $request->email)->first();
 
         if(! $client){
@@ -64,7 +80,7 @@ class ReservationController extends WebController
         $reservation->type_table = $request->type_table;
         $reservation->date = $request->date;
         $reservation->start_time = $request->start_time;
-        $reservation->end_time = $request->end_time;
+        $reservation->memo = $request->memo;
 
         $reservation->save();
 

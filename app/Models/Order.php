@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     protected $fillable = [
-        'client_id', 'total_amount', 'status_id', 'apply_delivery', 'payment', 'owner_id'
+        'client_id', 'total_amount', 'status_id', 'apply_delivery', 'payment', 'owner_id', 'number_table'
     ];
 
     public function owner(){

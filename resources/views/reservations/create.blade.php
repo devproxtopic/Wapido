@@ -75,15 +75,13 @@
 
                 <label for="">Hora de Inicio *</label>
                 <input type="time" id="start_time" name="start_time" value="{{ old('start_time') }}" required placeholder="Hora de Inicio">
-                <label for="">Hora de Fin *</label>
-                <input type="time" id="end_time" name="end_time" value="{{ old('end_time') }}" required placeholder="Hora de Fin">
 
                 <label for="">Mesa *</label>
                 <select name="type_table" id="type_table" required>
                     <option value="">Seleccione una opción</option>
                     <option value="1">No Fumadores</option>
                     <option value="2">Con Niños</option>
-                    <option value="3">Cualquiera</option>
+                    <option value="3">Indistinto</option>
                 </select>
 
 				<span>Los campos marcados con * son obligatorios.</span>
@@ -102,14 +100,32 @@
 			<!--<h6>Comparti tu experiencia en: <a href="http://www.tripadvisor.es/Restaurant_Review-g294323-d1804509-Reviews-Facal-Montevideo_Montevideo_Department.html" target="_blank"><img src="img/trip-advisor.svg" alt=""></a> <a href="https://www.facebook.com/BarFacal" target="_blank"><i class="fa fa-facebook-official"></i></a></h6>-->
         </footer>
 
-        <div class="modal fade" id="myModal" tabindex="-1″ role="dialog" aria-labelledby="basicModal" aria-hidden="true">
-            <div class="modal-dialog">
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+            <div class="modal-dialog modal-notify modal-success">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1>Su reservación ha sido realizada con éxito</h1>
                     </div>
                     <div class="modal-body">
-                        <span>Este atento al correo de confirmación de la misma.</span>
+                        <p>Este atento al correo de confirmación de la misma.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" data-dismiss="modal" class="btn btn-danger">Cerrar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+            <div class="modal-dialog modal-notify modal-danger">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1>Su reservación no puede realizarse</h1>
+                    </div>
+                    <div class="modal-body">
+                        <p>Por favor introduzca una fecha diferente o una hora diferente. <br>
+                        Horario de atención: {{ $owner->opening_hours }} - {{ $owner->closing_hours }} <br>
+                        Gracias.</p>
                     </div>
                     <div class="modal-footer">
                         <a href="#" data-dismiss="modal" class="btn btn-danger">Cerrar</a>
@@ -124,7 +140,8 @@
             var type = "{{ session('alert-type') }}";
             switch(type){
                 case 'info':
-                    toastr.info("{{ session('message') }}");
+                    $('#errorModal').modal();
+                    //toastr.info("{{ session('message') }}");
                     break;
 
                 case 'warning':

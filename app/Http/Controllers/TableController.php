@@ -55,7 +55,7 @@ class TableController extends Controller
         $limit = $i + $request->quantity;
 
         for($i; $i < $limit; $i++){
-
+            \QrCode::format('png')->size(300)->generate(url($owner->slug . '?table=' . $i), 'storage/owners/' . $owner->id . '/tables/' . $i . '.png');
             $table = new Table();
             $table->owner_id = $owner->id;
             $table->number = $i;
@@ -126,6 +126,19 @@ class TableController extends Controller
 
         session()->flash('message', 'Mesa eliminada con éxito.');
         session()->flash('alert-type', 'success');
+
+        return redirect()->back();
+    }
+
+    public function downloadQr($slug, $id){
+        $table = Table::find($id);
+
+        if($table->qr){
+            return response()->download($table->qr);
+        }
+
+        session()->flash('message', 'Ha ocurrido un error.');
+        session()->flash('alert-type', 'error');
 
         return redirect()->back();
     }

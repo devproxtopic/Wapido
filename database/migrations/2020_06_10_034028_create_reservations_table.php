@@ -19,7 +19,7 @@ class CreateReservationsTable extends Migration
             $table->bigInteger('owner_id')->unsigned();
 
             $table->time('start_time');
-            $table->time('end_time');
+            $table->string('memo', 255)->nullable();
             $table->date('date');
             $table->boolean('confirmed')->default(0);
 

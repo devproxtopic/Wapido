@@ -11,7 +11,7 @@
 		<title>{{ env('APP_NAME') }}</title>
 
 		<!-- Fonts -->
-		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700|Roboto+Condensed:400,700' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700|Roboto+Condensed:400,700' rel='stylesheet' type='text/css'>
 		<link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet">
 
         <!-- Styles -->
@@ -38,6 +38,8 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <script type="text/javascript" src="{{ asset('js/restaurants.js') }}"></script>
+
+        <script type="text/javascript" src="{{ asset('js/jsQR.js') }}"></script>
     </head>
 
 	<body>
@@ -146,13 +148,13 @@
                     </li>
 					<li class="no--padd">
                     @isset($restaurant->reservations_enabled)
-                    <button onclick="window.open('{{ url('/' . $restaurant->slug . '/reservations/create') }}', 'reservations');" class="calc" type="button" id="reservation_button">RESERVACIONES</button>
+                    <button onclick="window.open('{{ url('/' . $restaurant->slug . '/reservations/create') }}', 'reservations');" class="calc button_restaurant" type="button" id="reservation_button">RESERVACIONES</button>
                     @endisset
                     @isset($restaurant->main_digital_enabled)
-                    <button onclick="window.open('{{ url('/' . $restaurant->slug . '/main_digital') }}', 'main_digital');" class="calc" type="button" id="main_digital_button">MENU DIGITAL</button>
+                    <button id="main_digital_button" onclick="window.open('{{ url('/' . $restaurant->slug . '/choose-table') }}');" class="calc button_restaurant" type="button">MENU DIGITAL</button>
                     @endisset
                     @isset($restaurant->order_enabled)
-                    <button onclick="window.open('{{ url('/' . $restaurant->slug) }}', 'orders');" class="calc" type="button" id="order_button">PEDIDOS</button>
+                    <button onclick="window.open('{{ url('/' . $restaurant->slug) }}', 'orders');" class="calc button_restaurant" type="button" id="order_button">PEDIDOS</button>
                     @endisset
                     </li>
 					<li>
@@ -178,7 +180,31 @@
         </section>
         @endforeach
 
-	</form>
+    </form>
+    {{-- <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+        <div class="modal-dialog modal-notify modal-success">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1>Por favor indique su número de mesa</h1>
+                </div>
+                <div class="modal-body">
+                    <a id="githubLink" href="https://github.com/cozmo/jsQR">View documentation on Github</a>
+                    <p>Pure JavaScript QR code decoding library.</p>
+                    <div id="loadingMessage">🎥 Unable to access video stream (please make sure you have a webcam enabled)</div>
+                    <canvas id="canvas" hidden></canvas>
+                    <div id="output" hidden>
+                        <div id="outputMessage">No QR code detected.</div>
+                        <div hidden><b>Data:</b> <span id="outputData"></span></div>
+                    </div>
+                    <span>Si el lector de QR no abre, por favor, seleccione un número de la lista de mesas.</span>
+
+                </div>
+                <div class="modal-footer">
+                    <a href="#" data-dismiss="modal" class="btn btn-danger">Cerrar</a>
+                </div>
+            </div>
+        </div>
+    </div> --}}
         <script src="{{ asset('js/ajax/locations.js') }}"></script>
 
 		<footer>
@@ -189,6 +215,105 @@
 			info@wapido.com</h5>
 			<!--<h6>Comparti tu experiencia en: <a href="http://www.tripadvisor.es/Restaurant_Review-g294323-d1804509-Reviews-Facal-Montevideo_Montevideo_Department.html" target="_blank"><img src="img/trip-advisor.svg" alt=""></a> <a href="https://www.facebook.com/BarFacal" target="_blank"><i class="fa fa-facebook-official"></i></a></h6>-->
         </footer>
+
+        {{-- <script>
+            var video = document.createElement("video");
+            var canvasElement = document.getElementById("canvas");
+            var canvas = canvasElement.getContext("2d");
+            var loadingMessage = document.getElementById("loadingMessage");
+            var outputContainer = document.getElementById("output");
+            var outputMessage = document.getElementById("outputMessage");
+            var outputData = document.getElementById("outputData");
+
+            function drawLine(begin, end, color) {
+            canvas.beginPath();
+            canvas.moveTo(begin.x, begin.y);
+            canvas.lineTo(end.x, end.y);
+            canvas.lineWidth = 4;
+            canvas.strokeStyle = color;
+            canvas.stroke();
+            }
+
+            // navigator.mediaDevices.getUserMedia({audio:true, video:true})
+            // .then(function(stream) {
+            //     myVideoStream = stream;
+            //     // display my local video to me
+            //     myVideo.srcObject = stream;
+            // })
+
+            var constraints = {
+                video: false,
+                audio: false
+            }
+            navigator.mediaDevices.getUserMedia(constraints).then(function success(stream) {
+                video: { facingMode: "environment" };
+                video.srcObject = stream;
+                video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
+                video.play();
+                requestAnimationFrame(tick);
+            }).catch(function(err) {
+                //log to console first
+                console.log(err); /* handle the error */
+                if (err.name == "NotFoundError" || err.name == "DevicesNotFoundError") {
+                    //required track is missing
+                } else if (err.name == "NotReadableError" || err.name == "TrackStartError") {
+                    //webcam or mic are already in use
+                } else if (err.name == "OverconstrainedError" || err.name == "ConstraintNotSatisfiedError") {
+                    //constraints can not be satisfied by avb. devices
+                } else if (err.name == "NotAllowedError" || err.name == "PermissionDeniedError") {
+                    //permission denied in browser
+                } else if (err.name == "TypeError" || err.name == "TypeError") {
+                    //empty constraints object
+                } else {
+                    //other errors
+                }
+            });
+
+
+            // // Use facingMode: environment to attemt to get the front camera on phones
+            // navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
+            // video.srcObject = stream;
+            // video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
+            // video.play();
+            // requestAnimationFrame(tick);
+            // }).catch(function(err) {
+            //     console.log(err);
+            // });
+
+            function tick() {
+            loadingMessage.innerText = "⌛ Loading video..."
+            if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                loadingMessage.hidden = true;
+                canvasElement.hidden = false;
+                outputContainer.hidden = false;
+
+                canvasElement.height = video.videoHeight;
+                canvasElement.width = video.videoWidth;
+                canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+                var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+                var code = jsQR(imageData.data, imageData.width, imageData.height, {
+                inversionAttempts: "dontInvert",
+                });
+                if (code) {
+                drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
+                drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
+                drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
+                drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
+                outputMessage.hidden = true;
+                outputData.parentElement.hidden = false;
+                outputData.innerText = code.data;
+                } else {
+                outputMessage.hidden = false;
+                outputData.parentElement.hidden = true;
+                }
+            }
+            requestAnimationFrame(tick);
+            }
+
+            function open_modal(){
+                $('#myModal').modal();
+            }
+        </script> --}}
 
 	</body>
 </html>

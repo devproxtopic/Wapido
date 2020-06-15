@@ -11,7 +11,9 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Owner;
 use App\Models\Status;
+use App\Notifications\NotifyKitchenOrder;
 use App\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -41,13 +43,14 @@ class OrdersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($slug)
+    public function create(Request $request)
     {
-        $owner = Owner::where('slug', $slug)->first();
+        $owner = Owner::where('slug', $request->slug)->first();
         $statuses = Status::orderBy('name')->get();
         $clients = Client::where('owner_id', $owner->id)->orderBy('fullname')->get();
+        $number_table = $request->table ? $request->table : null;
 
-        return view('orders.create', compact('statuses', 'clients', 'owner'));
+        return view('orders.create', compact('statuses', 'clients', 'owner', 'number_table'));
     }
 
     /**
@@ -59,17 +62,18 @@ class OrdersController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'total_amount' => 'required',
+            'total_amount' => 'required|numeric|min:1',
             'email' => 'required',
             'fullname' => 'required',
             'phone' => 'required',
-            'address' => 'required'
+            'address' => 'nullable'
         ], [
             'total_amount.required' => 'Debe comprar algo para realizar el pedido.',
+            'total_amount.numeric' => 'Debe comprar algo para realizar el pedido',
+            'total_amount.min' => 'Debe comprar algo para realizar el pedido',
             'email.required' => 'El email es requerido.',
             'fullname.required' => 'El nombre completo es requerido.',
-            'phone.required' => 'El teléfono es requerido.',
-            'address.required' => 'La dirección es requerido.'
+            'phone.required' => 'El teléfono es requerido.'
         ]);
 
         if ($validator->fails()) {
@@ -100,7 +104,8 @@ class OrdersController extends Controller
             'status_id' => 1,
             'apply_delivery' => $request->apply_delivery,
             'payment' => $request->payment,
-            'owner_id' => $owner->id
+            'owner_id' => $owner->id,
+            'number_table' => $request->number_table
         ]);
 
         if($request->quantity) {
@@ -113,13 +118,15 @@ class OrdersController extends Controller
 
                     $array_values = explode('-', $input);
 
-                    $orderDetail = OrderDetail::create([
-                        'order_id' => $order->id,
-                        'item_id' => $array_values[0],
-                        'quantity' => $value,
-                        'unit_price' => $array_values[2],
-                        'measure' => $array_values[1]
-                    ]);
+                    if($value){
+                        $orderDetail = OrderDetail::create([
+                            'order_id' => $order->id,
+                            'item_id' => $array_values[0],
+                            'quantity' => $value,
+                            'unit_price' => $array_values[2],
+                            'measure' => $array_values[1]
+                        ]);
+                    }
                 }
             }
         }
@@ -133,27 +140,43 @@ class OrdersController extends Controller
 
                 $array_values = explode('-', $input);
 
-                $orderDetail = OrderDetail::create([
-                    'order_id' => $order->id,
-                    'food_id' => $array_values[0],
-                    'quantity' => $value,
-                    'unit_price' => $array_values[1],
-                    'measure' => 1
-                ]);
+                if ($value) {
+                    $orderDetail = OrderDetail::create([
+                        'order_id' => $order->id,
+                        'food_id' => $array_values[0],
+                        'quantity' => $value,
+                        'unit_price' => $array_values[1],
+                        'measure' => 1
+                    ]);
+                }
             }
         }
 
         //Enviar Whatsapp con Twilio
         //$message = $this->sendMessage('Se ha creado un nuevo pedido, puede verlo en la siguiente url: ' . route('orders.show', $order->id) , $client->phone);
 
-        Mail::to($client->email)->send(new OrderClientMail($order));
-        Mail::to($owner->email)->send(new OrderOwnerMail($order));
+        if($request->number_table){
+            try{
+                foreach($owner->employees as $employee) {
+                    Notification::send($employee->user, new NotifyKitchenOrder($order));
+                }
+            }
+            catch(Exception $e){
+
+            }
+        }else{
+            try {
+                Mail::to($client->email)->send(new OrderClientMail($order));
+                Mail::to($owner->email)->send(new OrderOwnerMail($order));
+            } catch (Exception $e) {
+            }
+        }
 
         $request->session()->flash('message', $order->id);
 
         //Http::get("https://api.whatsapp.com/send?phone=" . env("TWILIO_NUMBER_DEMO") . "&text=Se%ha%creado%un%nuevo%pedido,%puede%verlo%en%la%siguiente%url:%" . route('orders.show', $order->id));
 
-        return redirect()->back();
+        return redirect()->back()->with('main', $request->main);
     }
 
     /**

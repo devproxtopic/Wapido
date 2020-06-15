@@ -69,12 +69,13 @@
         </div>
 
         <div class="form-group row">
-            <label for="end_time" class="col-md-4 col-form-label text-md-right">Hora de Finalización</label>
+            <label for="memo" class="col-md-4 col-form-label text-md-right">Notas</label>
 
             <div class="col-md-6">
-                <input id="end_time" type="text" readonly class="form-control @error('end_time') is-invalid @enderror" name="end_time" value="{{ $reservation->end_time }}" required autocomplete="end_time" autofocus>
+                <textarea required name="memo" class="form-control @error('memo') is-invalid @enderror"
+                id="memo" cols="30" rows="10">{{ old('memo') ?? $category->memo }}</textarea>
 
-                @error('end_time')
+                @error('memo')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>

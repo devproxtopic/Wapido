@@ -26,6 +26,11 @@ class HomeController extends Controller
     public function index()
     {
         $owners = Owner::where('user_id', Auth::id())->get();
+
+        if(Auth::user()->rol_id == 1){
+            $owners = Owner::paginate(10);
+        }
+
         return view('home', compact('owners'));
     }
 }

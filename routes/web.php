@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Owner;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -97,6 +98,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('/tables', 'TableController')->except('destroy');
         Route::get('/tables-delete/{id}', 'TableController@destroy')
         ->name('tables.destroy');
+        Route::get('/tables/{id}/download', 'TableController@downloadQr');
 
         Route::resource('/foods', 'FoodsController')->except('destroy');
         Route::get('/foods-delete/{id}', 'FoodsController@destroy')
@@ -119,6 +121,17 @@ Route::group(['middleware' => 'auth'], function () {
         ->name('reservations.destroy');
     });
 
+    Route::get('/home/owners/enable-orders/{id}', 'OwnersController@enableOrders')
+    ->name('owner.enable.orders');
+    Route::get('/home/owners/enable-reservations/{id}', 'OwnersController@enableReservation')
+    ->name('owner.enable.reservations');
+    Route::get('/home/owners/enable-main-digital/{id}', 'OwnersController@enableMainDigital')
+    ->name('owner.enable.main_digital');
+
+    Route::post('/home/owners/ubication-update/{id}', 'OwnersController@ubications')
+    ->name('owner.ubications');
+    Route::post('/home/owners/sliders-update/{id}', 'OwnersController@updateSliders')
+    ->name('update.sliders');
     Route::resource('/home/owners', 'OwnersController')->except('destroy', 'show');
     Route::get('/home/owners-delete/{id}', 'OwnersController@destroy')
     ->name('owners.destroy');
@@ -139,6 +152,11 @@ Route::group(['middleware' => 'web'], function () {
     ->name('reservations.create');
     Route::post('/{slug}/reservations', 'ReservationController@store')
     ->name('reservations.store');
+
+    Route::get('/{slug}/choose-table', function($slug){
+        $owner = Owner::where('slug', $slug)->first();
+        return view('read_qr', compact('owner'));
+    });
 
     // AJAX
 
