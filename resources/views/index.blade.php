@@ -286,7 +286,8 @@
                 </fieldset>
             @endif
 
-				<span>Los campos marcados con * son obligatorios.</span>
+                <label>Los campos marcados con * son obligatorios.</label>
+                <br>
                 <button type="submit" id="submit_button">REALIZAR PEDIDO</button>
 				<div id="result" class=""></div>
         </section>

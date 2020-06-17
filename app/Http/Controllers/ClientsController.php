@@ -112,8 +112,10 @@ class ClientsController extends Controller
      */
     public function update($slug, Request $request, $id)
     {
+        $client = Client::find($id);
+
         $validator = Validator::make($request->all(), [
-            'email' => 'required|string|email',
+            'email' => 'required|email|unique:clients,email,' . $client->id . ',id',
             'fullname' => 'required',
             'phone' => 'required',
             'address' => 'required'
@@ -134,8 +136,6 @@ class ClientsController extends Controller
                         ->withErrors($validator)
                         ->withInput();
         }
-
-        $client = Client::find($id);
 
         $client->update($request->all());
 

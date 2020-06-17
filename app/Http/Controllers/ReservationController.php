@@ -7,6 +7,7 @@ use App\Mail\OwnerReservationCreate;
 use App\Models\Client;
 use App\Models\Owner;
 use App\Reservation;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -51,15 +52,19 @@ class ReservationController extends WebController
         $date_29 = now()->day(29);
         $date_04 = now()->day(04);
 
-        $validator = Validator::make($request->all(),[
-            'start_time' => 'required|after:'. $owner->opening_hours.'|before:'. $owner->closing_hours,
-            'date' => 'required|different:'. $date_29->format('Y-m-d').'|different:'. $date_04->format('Y-m-d').'|before:tomorrow|date_format:Y-m-d',
+        $open_hours = Carbon::parse($owner->opening_hours)->format('H:i');
+        $close_hours = Carbon::parse($owner->closing_hours)->format('H:i');
+
+
+        $validator = Validator::make($request->all(), [
+            'start_time' => 'required|date_format:H:i|after:' . $open_hours . '|before:' . $close_hours,
+            'date' => 'required|different:' . $date_29->format('Y-m-d') . '|different:' . $date_04->format('Y-m-d') . '|after:today|date_format:Y-m-d',
         ]);
 
         if($validator->fails()){
             $request->session()->flash('message', 'No puede realizar una reservación en ese día a esa hora, por favor intente otra hora u otro día.');
             $request->session()->flash('alert-type', 'info');
-            return redirect()->back();
+            return redirect()->back()->withInput();
         }
 
         $client = Client::where('email', $request->email)->first();

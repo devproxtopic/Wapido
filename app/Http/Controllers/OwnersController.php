@@ -14,6 +14,7 @@ use App\Models\Promotion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class OwnersController extends Controller
@@ -90,7 +91,9 @@ class OwnersController extends Controller
     {
         $owner = Owner::find($id);
         session(['owner' => json_encode($owner)]);
-        return view('owners.show', compact('owner'));
+        $categories = CategoryOwner::orderBy('name')->get();
+
+        return view('owners.show', compact('owner', 'categories'));
     }
 
     /**
@@ -118,6 +121,29 @@ class OwnersController extends Controller
     public function update(Request $request, $id)
     {
         $owner = Owner::find($id);
+
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|unique:users,email,' . $owner->user->id . ',id',
+            'name' => 'required|string|unique:owners,name,' . $owner->id . ',id',
+            'opening_hours' => 'required',
+            'closing_hours' => 'required|after:opening_hours'
+        ],[
+            'email.required' => 'El correo es requerido.',
+            'email.email' => 'El correo no tiene un formato válido.',
+            'email.unique' => 'El correo ya fue registrado.',
+            'name.required' => 'El nombre es requerido.',
+            'name.string' => 'El nombre no tiene un formato válido.',
+            'name.unique' => 'Ya existe un negocio con ese nombre.',
+            'opening_hours.required' => 'La hora de apertura es requerida.',
+            'closing_hours.required' => 'La hora de cierre es requerida.',
+            'closing_hours.after' => 'La hora de cierre debe ser luego de la hora de apertura.'
+        ]);
+
+        if($validator->fails()){
+            $request->session()->flash('message', 'No se ha podido actualizar la información.');
+            $request->session()->flash('alert-type', 'error');
+            return redirect()->back()->withInput()->withErrors($validator);
+        }
 
         if ($request->hasfile('logo')) {
             if ($owner->logo) {

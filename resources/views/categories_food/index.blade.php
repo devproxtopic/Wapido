@@ -11,8 +11,8 @@
         <div class="card-header border-bottom">
           <h6 class="m-0">Listado</h6>
         </div>
-        <div class="card-body p-0 pb-3 text-center">
-          <table class="table mb-0">
+        <div style="overflow-x:auto;" class="card-body p-0 pb-3 text-center">
+          <table id="dataTable" class="table mb-0">
             <thead class="bg-light">
               <tr>
                 <th scope="col" class="border-0">#</th>

@@ -2,6 +2,27 @@
  * http://neat.bourbon.io
  * Copyright 2012-2014 thoughtbot, inc.
  * MIT License */
+ @font-face {
+     font-family: Poppins-Regular;
+     src: url('../../fonts/poppins/Poppins-Regular.ttf');
+ }
+
+ @font-face {
+     font-family: Poppins-Medium;
+     src: url('../../fonts/poppins/Poppins-Medium.ttf');
+ }
+
+ @font-face {
+     font-family: Poppins-Bold;
+     src: url('../../fonts/poppins/Poppins-Bold.ttf');
+ }
+
+ @font-face {
+     font-family: Poppins-SemiBold;
+     src: url('../../fonts/poppins/Poppins-SemiBold.ttf');
+ }
+
+
 html {
   box-sizing: border-box; }
 
@@ -11,7 +32,8 @@ html {
 /* ------------------------ COMMON ------------------------ */
 body {
   background-color: #ffde8c;
-  font-family: "Open Sans", sans-serif;
+  /**font-family: "Open Sans", sans-serif;**/
+  font-family: Poppins-Regular, sans-serif;
   font-weight: 400;
   color: #fff;
   font-size: 30px; }
@@ -1069,25 +1091,23 @@ article {
             width: 100%;
             justify-content: space-evenly;
             padding: 10px 20px;
+            flex-direction: row;
 
-            color: #FF5733;
+            color: #2e2e2e;
             text-transform: uppercase;
             position: relative;
         }
 
         .filters_restaurants select {
-
             border-radius: 36px;
-
             overflow: hidden;
-            border: 1px solid #cccccc;
-
+            margin: 10px 20px;
         }
 
         .select_filters_restaurants{
             width: 30%;
-            background: rgba(255, 255, 255, 0.87);
-            color: #FF5733;
+            background: #fff;
+            color: #2e2e2e;
             text-shadow: 0 1px 0 rgba(230, 200, 200, 0.4);
 
             border: 0px;
@@ -1132,6 +1152,30 @@ article {
             border-color: #f27609c5;
         }
 
+        .restaurant_header {
+            background-color: #000000;
+            background-image: url('../images/restaurant1.jpg');
+            background-position: center center;
+            background-repeat: no-repeat;
+           /** opacity: 0.8; **/
+            width: 100%;
+            height: auto;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+
+        .reservation_header {
+            background-color: #000000;
+            background-image: url('../images/reservation1.jpg');
+            background-position: center center;
+            background-repeat: no-repeat;
+           /** opacity: 0.8; **/
+            width: 100%;
+            height: auto;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+
 
 @media screen and (max-width: 500px) {
     article .item-list li h3 {
@@ -1153,8 +1197,34 @@ article {
     .filters_restaurants select {
 
         width: 100%;
-        margin: 5px;
+        background-color: #fff;
+        /* margin: 5px; */
 
+        border-radius: 0px;
+    }
+
+    #restaurants {
+        /* The file size of this background image is 93% smaller
+       to improve page load speed on mobile internet connections */
+        background-image: url('../images/restaurant1.jpg');
+        background-position: center center;
+        background-repeat: no-repeat;
+        width: 100%;
+        height: auto;
+        background-attachment: fixed;
+        background-size: cover;
+    }
+
+    #reservations {
+        /* The file size of this background image is 93% smaller
+       to improve page load speed on mobile internet connections */
+        background-image: url('../images/reservation1.jpg');
+        background-position: center center;
+        background-repeat: no-repeat;
+        width: 100%;
+        height: auto;
+        background-attachment: fixed;
+        background-size: cover;
     }
 }
 
@@ -1174,8 +1244,36 @@ article {
     .filters_restaurants select {
 
         width: 100%;
-        margin: 5px;
+        background-color: #fff;
+        /* margin: 5px; */
 
+        border-radius: 0px;
+    }
+
+    #restaurants {
+        /* The file size of this background image is 93% smaller
+       to improve page load speed on mobile internet connections */
+        background-image: url('../images/restaurant1.jpg');
+        background-position: center center;
+        background-repeat: no-repeat;
+       /** opacity: 0.8; **/
+        width: 100%;
+        height: auto;
+        background-attachment: fixed;
+        background-size: cover;
+    }
+
+    #reservations {
+        /* The file size of this background image is 93% smaller
+       to improve page load speed on mobile internet connections */
+        background-image: url('../images/reservation1.jpg');
+        background-position: center center;
+        background-repeat: no-repeat;
+       /** opacity: 0.8; **/
+        width: 100%;
+        height: auto;
+        background-attachment: fixed;
+        background-size: cover;
     }
 }
 @media screen and (max-width: 380px) {
@@ -1193,8 +1291,36 @@ article {
     .filters_restaurants select {
 
         width: 100%;
-        margin: 5px;
+        background-color: #fff;
+        /* margin: 5px; */
 
+        border-radius: 0px;
+    }
+
+    #restaurants {
+        /* The file size of this background image is 93% smaller
+       to improve page load speed on mobile internet connections */
+        background-image: url('../images/restaurant1.jpg');
+        background-position: center center;
+        background-repeat: no-repeat;
+       /** opacity: 0.8; **/
+        width: 100%;
+        height: auto;
+        background-attachment: fixed;
+        background-size: cover;
+    }
+
+    #reservations {
+        /* The file size of this background image is 93% smaller
+       to improve page load speed on mobile internet connections */
+        background-image: url('../images/reservation1.jpg');
+        background-position: center center;
+        background-repeat: no-repeat;
+       /** opacity: 0.8; **/
+        width: 100%;
+        height: auto;
+        background-attachment: fixed;
+        background-size: cover;
     }
 }
 @media screen and (max-width: 360px) {
@@ -1214,8 +1340,36 @@ article {
     .filters_restaurants select {
 
         width: 100%;
-        margin: 5px;
+        background-color: #fff;
+        /* margin: 5px; */
 
+        border-radius: 0px;
+    }
+
+    #restaurants {
+        /* The file size of this background image is 93% smaller
+       to improve page load speed on mobile internet connections */
+        background-image: url('../images/restaurant1.jpg');
+        background-position: center center;
+        background-repeat: no-repeat;
+       /** opacity: 0.8; **/
+        width: 100%;
+        height: auto;
+        background-attachment: fixed;
+        background-size: cover;
+    }
+
+    #reservations {
+        /* The file size of this background image is 93% smaller
+       to improve page load speed on mobile internet connections */
+        background-image: url('../images/reservation1.jpg');
+        background-position: center center;
+        background-repeat: no-repeat;
+       /** opacity: 0.8; **/
+        width: 100%;
+        height: auto;
+        background-attachment: fixed;
+        background-size: cover;
     }
 }
 @media screen and (max-width: 330px) {
@@ -1233,7 +1387,35 @@ article {
     .filters_restaurants select {
 
         width: 100%;
-        margin: 5px;
+        background-color: #fff;
+        /* margin: 5px; */
 
+        border-radius: 0px;
+    }
+
+    #restaurants {
+        /* The file size of this background image is 93% smaller
+       to improve page load speed on mobile internet connections */
+        background-image: url('../images/restaurant1.jpg');
+        background-position: center center;
+        background-repeat: no-repeat;
+       /** opacity: 0.8; **/
+        width: 100%;
+        height: auto;
+        background-attachment: fixed;
+        background-size: cover;
+    }
+
+    #reservations {
+        /* The file size of this background image is 93% smaller
+       to improve page load speed on mobile internet connections */
+        background-image: url('../images/reservation1.jpg');
+        background-position: center center;
+        background-repeat: no-repeat;
+       /** opacity: 0.8; **/
+        width: 100%;
+        height: auto;
+        background-attachment: fixed;
+        background-size: cover;
     }
 }

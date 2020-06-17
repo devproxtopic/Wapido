@@ -73,7 +73,7 @@
 
             <div class="col-md-6">
                 <textarea required name="memo" class="form-control @error('memo') is-invalid @enderror"
-                id="memo" cols="30" rows="10">{{ old('memo') ?? $category->memo }}</textarea>
+                id="memo" cols="30" rows="10">{{ old('memo') ?? $reservation->memo }}</textarea>
 
                 @error('memo')
                     <span class="invalid-feedback" role="alert">

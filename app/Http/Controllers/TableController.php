@@ -54,6 +54,12 @@ class TableController extends Controller
 
         $limit = $i + $request->quantity;
 
+        $micarpeta = 'storage/owners/' . $owner->id . '/tables/';
+
+        if (!file_exists($micarpeta)) {
+            mkdir($micarpeta, 0777, true);
+        }
+
         for($i; $i < $limit; $i++){
             \QrCode::format('png')->size(300)->generate(url($owner->slug . '?table=' . $i), 'storage/owners/' . $owner->id . '/tables/' . $i . '.png');
             $table = new Table();

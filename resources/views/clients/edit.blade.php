@@ -81,48 +81,4 @@
 @stop
 
 @section('scripts')
-<script>
-    $(document).ready(function(){
-        var measures = @json($measures);
-
-    if(measures){
-        for (let index = 0; index < measures.length; index++) {
-
-            var wrapper = $('.field_wrapper'); // Contenedor de campos
-            var fieldHTML = '<div class="form-group row">'+
-                    '<label for="measure" class="col-md-4 col-form-label text-md-right">Medida / Cantidad</label>'+
-                    '<div class="col-md-6">'+
-                    '<input type="text" class="form-control @error("measure") is-invalid @enderror" name="measure[]" required value="' + measures[index] + '">'+
-                    '</div>'+
-                    '<a href="javascript:void(0);" class="remove_button" title="Borrar"><i class="fa fa-trash"></i></div>';
-
-            $(wrapper).append(fieldHTML); // Añadimos el HTML
-
-        }
-    }
-
-
-        var maxField = 10; // Numero maximo de campos
-        var addButton = $('.add_button'); // Selector del boton de Insertar
-        var wrapper = $('.field_wrapper'); // Contenedor de campos
-        var fieldHTML = '<div class="form-group row">'+
-                    '<label for="measure" class="col-md-4 col-form-label text-md-right">Medida / Cantidad</label>'+
-                    '<div class="col-md-6">'+
-                    '<input type="text" class="form-control @error("measure") is-invalid @enderror" name="measure[]" required>'+
-                    '</div>'+
-                    '<a href="javascript:void(0);" class="remove_button" title="Borrar"><i class="fa fa-trash"></i></div>'; //New input field html
-        var x = 1; // Iniciamos el contador a 1
-        $(addButton).click(function(){ // Una vez que se haga clic en el boton
-            if(x < maxField){ //Comprobamos el maximo
-                x++; //Increment field counter
-                $(wrapper).append(fieldHTML); // Añadimos el HTML
-            }
-        });
-        $(wrapper).on('click', '.remove_button', function(e){ // Una vez se ha hecho clic en el boton de eliminar
-            e.preventDefault();
-            $(this).parent('div').remove(); //Eliminamos el div
-            x--; // Reducimos el contador a 1
-        });
-    });
-</script>
 @stop

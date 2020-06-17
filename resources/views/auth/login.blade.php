@@ -16,28 +16,18 @@
 						</center>
 					</span>
 
-					<div class="wrap-input100 validate-input" data-validate = "Debe ingresar un email valido: ex@abc.xyz">
+                    <div class="wrap-input100 validate-input @error('email') alert-validate @enderror"
+                        data-validate = "@error('email') {{ $message }} / @enderror Debe ingresar un email valido: ex@abc.xyz">
 						<span class="label-input100">Email</span>
 						<input class="input100" type="text" name="email" placeholder="Email@...">
                         <span class="focus-input100"></span>
-
-                        @error('email')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
 					</div>
 
-					<div class="wrap-input100 validate-input" data-validate = "La contraseña es requerida">
+                    <div class="wrap-input100 validate-input @error('password') alert-validate @enderror"
+                        data-validate = "@error('password') {{ $message }} / @enderror La contraseña es requerida">
 						<span class="label-input100">Contraseña</span>
 						<input class="input100" type="password" name="password" placeholder="*************">
                         <span class="focus-input100"></span>
-
-                        @error('password')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
 					</div>
 
 					<div class="flex-m w-full p-b-33">

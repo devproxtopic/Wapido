@@ -46,6 +46,10 @@ class Owner extends Model
         return $this->hasMany('App\Models\Table')->orderBy('number');
     }
 
+    public function user(){
+        return $this->belongsTo('App\User');
+    }
+
     /**
      * SCOPES
      */

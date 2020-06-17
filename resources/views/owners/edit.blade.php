@@ -39,7 +39,7 @@
                         <div class="carousel-inner">
                             @foreach($sliders as $key => $slider)
                             <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
-                                <img src="{{ url($slider) }}" height="500px" class="d-block w-100"  alt="...">
+                                <img src="{{ ($slider) ? url($slider) : '#'}}" height="500px" class="d-block w-100"  alt="...">
                             </div>
                             @endforeach
                         </div>
@@ -73,7 +73,7 @@
                 </div>
                 @endisset
             </div>
-            <div class="card-body d-flex py-0">
+    <div class="card-body d-flex py-0">
             <form id="updateOwner" method="POST" action="{{ route('owners.update', $owner->id) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
@@ -124,7 +124,7 @@
                 @enderror
         </div>
     </div>
-            <div class="card-footer border-top">
+            {{-- <div class="card-footer border-top">
                 <div class="row">
                     <div class="form-group mb-0">
                         <div class="col-md-6 offset-md-4">
@@ -132,7 +132,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
     </form>
         </div>
@@ -201,7 +201,7 @@
                         </select>
                     </div>
                     <div class="form-group mb-0">
-                        <button form="ubicationUpdate" type="submit" class="btn btn-accent">Guardar</button>
+                        <button form="ubicationUpdate" type="submit" class="btn btn-accent">Guardar Ubicación</button>
                         <a href="{{ url('home') }}" class="btn btn-primary">Volver</a>
                     </div>
                 </form>
@@ -218,12 +218,10 @@
                 <h6 class="m-0">Datos del Negocio</h6>
             </div>
             <div class="card-body d-flex flex-column">
-                <form id="ownerDataUpdate" method="post" action="{{ route('owners.update', $owner->id) }}">
-                    @csrf
-                    @method('PUT')
                     <div class="form-group">
                         <label for="category_owner_id" class="col-md-6 col-form-label text-md-left">Categoría</label>
-                        <select form="ownerDataUpdate" required class="form-control @error('category_owner_id') is-invalid @enderror" name="category_owner_id" id="category_owner_id">
+                        <select form="updateOwner" required class="form-control @error('category_owner_id') is-invalid @enderror"
+                        name="category_owner_id" id="category_owner_id">
                             <option value="0">Seleccione una opción</option>
                             @foreach($categories as $category)
                                 <option @if($owner->category_owner_id == $category->id) selected @endif value="{{ $category->id }}">
@@ -231,32 +229,29 @@
                                 </option>
                             @endforeach
                         </select>
+                        @error('category_owner_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                     <div class="form-group">
                         <label for="opening_hours" class="col-md-6 col-form-label text-md-left">Hora de Apertura</label>
-                        <input form="ownerDataUpdate" id="opening_hours" type="time"
+                        <input form="updateOwner" id="opening_hours" type="time"
                         class="form-control @error('opening_hours') is-invalid @enderror" name="opening_hours"
-                        value="{{ $owner->opening_hours ?? old('opening_hours') }}" required autocomplete="phone" autofocus>
+                        value="{{ $owner->opening_hours ?? old('opening_hours') }}" required autocomplete="opening_hours" autofocus>
+                        @error('opening_hours') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                     <div class="form-group">
                         <label for="closing_hours" class="col-md-6 col-form-label text-md-left">Hora de Cierre</label>
-                        <input form="ownerDataUpdate" id="closing_hours" type="time"
+                        <input form="updateOwner" id="closing_hours" type="time"
                         class="form-control @error('closing_hours') is-invalid @enderror" name="closing_hours"
-                        value="{{ $owner->closing_hours ?? old('closing_hours') }}" required autocomplete="phone" autofocus>
+                        value="{{ $owner->closing_hours ?? old('closing_hours') }}" required autocomplete="closing_hours" autofocus>
+                        @error('closing_hours') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                     <div class="form-group">
                         <label for="description" class="col-md-6 col-form-label text-md-left">Descripción</label>
                             <textarea form="updateOwner" name="description" class="form-control @error('description') is-invalid @enderror"
                             id="description" cols="30" rows="10">{{ old('description') ?? $owner->description }}</textarea>
-
-                            @error('description')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
                     </div>
                     <div class="form-group mb-0">
-                        <button form="ownerDataUpdate" type="submit" class="btn btn-accent">Guardar</button>
+                        <button form="updateOwner" type="submit" class="btn btn-accent">Guardar Datos Generales y del Negocio</button>
                         <a href="{{ url('home') }}" class="btn btn-primary">Volver</a>
                     </div>
                 </form>

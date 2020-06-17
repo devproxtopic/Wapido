@@ -40,13 +40,11 @@
 
 	</head>
 
-	<body>
+	<body id="reservations">
         <input type="hidden" name="message" id="message"
             @if(session("message")) value="{{ session("message") }}" @endif>
         <input type="hidden" id="url_base" value="{{ url('') }}">
-        <div id="fixed-bg"></div>
-        <br>
-        <div >
+        <div class="reservation_header">
             <center>
 				<div>
                     <img src="{{ asset('img/wapido_logo2.png') }}" width="30%">

@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Crear Mesas')
+@section('title', 'Crear Comida')
 @section('display_create', 'display:none;')
 
 @section('content')

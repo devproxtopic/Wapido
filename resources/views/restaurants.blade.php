@@ -42,35 +42,28 @@
         <script type="text/javascript" src="{{ asset('js/jsQR.js') }}"></script>
     </head>
 
-	<body>
+	<body id="restaurants">
         <input type="hidden" name="message" id="message"
             @if(session("message")) value="{{ session("message") }}" @endif>
         <input type="hidden" id="url_base" value="{{ url('') }}">
-        <div id="fixed-bg"></div>
-        <br>
-        <div >
+        <div class="restaurant_header">
             <center>
 				<div>
                     <img src="{{ asset('img/wapido_logo2.png') }}" width="30%">
                 </div>
             </center>
-        </div>
 
     <form action="{{ url('/restaurants') }}" method="POST">
         @csrf
 
         <div class="filters_restaurants">
-            <input type="hidden" name="reqCity" id="reqCity" value="{{ $city_id }}">
-            <input type="hidden" name="reqState" id="reqState" value="{{ $state_id }}">
-            <input type="hidden" name="reqLocation" id="reqLocation" value="{{ $location_id }}">
-
-            <select style="border: 2px solid #FB2D01;" class="select_filters_restaurants" name="country_id" id="country_id">
+            <select class="select_filters_restaurants" name="country_id" id="country_id">
                 <option value="">Seleccione un País</option>
                 @foreach ($countries as $country)
                 <option @if($country_id == $country->id) selected @endif value="{{ $country->id }}">{{ $country->name }}</option>
                 @endforeach
             </select>
-            <select style="border: 2px solid #FB2D01;" disabled class="select_filters_restaurants" name="state_id" id="state_id">
+            <select disabled class="select_filters_restaurants" name="state_id" id="state_id">
                 <option value="">Seleccione un Estado</option>
                 @if($country_id)
                 @foreach (\App\Models\Country::find($country_id)->states as $state)
@@ -79,22 +72,20 @@
                 @endif
                 {{-- SE LLENA CON AJAX --}}
             </select>
-        </div>
 
-        <div class="filters_restaurants">
-            <select style="border: 2px solid #FB2D01;" disabled class="select_filters_restaurants" name="city_id" id="city_id">
+            <select disabled class="select_filters_restaurants" name="city_id" id="city_id">
                 <option value="">Seleccione una Ciudad</option>
-                @if($city_id)
-                @foreach (\App\Models\City::find($city_id)->state->cities as $city)
+                @if($country_id && $state_id)
+                @foreach (\App\Models\Country::find($country_id)->states->find($state_id)->cities as $city)
                 <option @if($city_id == $city->id) selected @endif value="{{ $city->id }}">{{ $city->name }}</option>
                 @endforeach
                 @endif
                 {{-- SE LLENA CON AJAX --}}
             </select>
-            <select style="border: 2px solid #FB2D01;" disabled class="select_filters_restaurants" name="location_id" id="location_id">
+            <select disabled class="select_filters_restaurants" name="location_id" id="location_id">
                 <option value="">Seleccione una Localidad</option>
-                @if($location_id)
-                @foreach (\App\Models\Location::find($location_id)->city->locations as $location)
+                @if($country_id && $state_id && $city_id)
+                @foreach (\App\Models\Country::find($country_id)->states->find($state_id)->cities->find($city_id)->locations as $location)
                 <option @if($location_id == $location->id) selected @endif value="{{ $location->id }}">{{ $location->name }}</option>
                 @endforeach
                 @endif
@@ -103,7 +94,7 @@
         </div>
 
         <div class="filters_restaurants">
-            <select style="border: 2px solid #000;" class="form-control select_filters_restaurants" name="category_food_id" id="category_food_id">
+            <select class="form-control select_filters_restaurants" name="category_food_id" id="category_food_id">
                 <option value="">Seleccione un Tipo de Comida</option>
                 @foreach ($categories_food as $category_food)
                 <option @if($category_food_id == $category_food->id) selected @endif value="{{ $category_food->id }}">{{ $category_food->name }}</option>
@@ -117,6 +108,7 @@
             <button onclick="location.href=location.href" type="reset" id="reset_button">RESETEAR BUSQUEDA</button>
             </div>
 		</section>
+        </div>
 
         @foreach($restaurants as $restaurant)
         <section id="{{ $restaurant->name }}">
