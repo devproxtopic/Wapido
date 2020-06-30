@@ -91,37 +91,31 @@
                 @endif
                 {{-- SE LLENA CON AJAX --}}
             </select>
-        </div>
 
-        <div class="filters_restaurants">
-            <select class="form-control select_filters_restaurants" name="category_food_id" id="category_food_id">
+            <select class="select_filters_restaurants" name="category_food_id" id="category_food_id">
                 <option value="">Seleccione un Tipo de Comida</option>
                 @foreach ($categories_food as $category_food)
                 <option @if($category_food_id == $category_food->id) selected @endif value="{{ $category_food->id }}">{{ $category_food->name }}</option>
                 @endforeach
             </select>
-        </div>
 
-        <section class="form">
-            <div id="result" class="">
-            <button type="submit" id="submit_button">REALIZAR BUSQUEDA</button>
-            <button onclick="location.href=location.href" type="reset" id="reset_button">RESETEAR BUSQUEDA</button>
+            <div class="buttons_restaurants">
+                <button type="submit" id="submit_button">REALIZAR BUSQUEDA</button>
+                <a href="{{ url('/restaurants') }}" id="reset_button_restaurant">RESETEAR BUSQUEDA</a>
             </div>
-		</section>
         </div>
 
         @foreach($restaurants as $restaurant)
         <section id="{{ $restaurant->name }}">
 			<article>
 				<div class="article-item">
-					<div class="circle-item"><img src="{{ asset($restaurant->logo) }}" alt="{{ $restaurant->name }}"></div>
-                    <h2>{{ $restaurant->name }}</h2>
+					<div class="circle-item white--color"><img src="{{ asset($restaurant->logo) }}"></div>
 				</div>
 				<div class="pre-info">
-					<span><i class="fa fa-star"></i></span>
 					<p>{{ $restaurant->description }}</p>
 				</div>
-				<ul class="item-list">
+				<ul class="item-list restaurants">
+                    <h2>{{ $restaurant->name }}</h2>
                     <li class="labels-containers">
                         <label for=""></label>
 					</li>

@@ -40,7 +40,7 @@
 
 	</head>
 
-	<body id="reservations">
+    <body id="reservations">
         <input type="hidden" name="message" id="message"
             @if(session("message")) value="{{ session("message") }}" @endif>
         <input type="hidden" id="url_base" value="{{ url('') }}">

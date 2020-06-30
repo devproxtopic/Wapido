@@ -14,7 +14,9 @@ class CategoryClass
     public function update($id, $categoryData): Category
     {
         $category = Category::find($id);
-        return $category->update($categoryData);
+        $category->update($categoryData);
+
+        return $category;
     }
 
     public function destroy($id)

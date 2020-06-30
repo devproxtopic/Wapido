@@ -41,13 +41,13 @@
         <script type="text/javascript" src="{{ asset('js/instascan.min.js') }}"></script>
     </head>
 
-	<body>
+	<body @if($owner->slug == 'jose-cuervo-1800') class="owner_cuervo" @endif>
         <input type="hidden" name="message" id="message"
             @if(session("message")) value="{{ session("message") }}" @endif>
         <input type="hidden" id="url_base" value="{{ url('') }}">
 			<header>
 			    <center>
-                    <div style="max-width: 1000px;" >
+                    <div style="max-width: 1000px;">
                         <img src="{{ isset($owner) ? asset($owner->logo) : '' }}" width="25%" class="logo-owner">
                         <br>
                         <a style="width:180px;" href="{{ isset($categories[0]) ? '#'.$categories[0]->name : '#' }}" class="calc">¡Vamos!</a>
@@ -116,12 +116,12 @@
         <section id="{{ $category->name }}">
 			<article>
 				<div class="article-item">
-					<div class="circle-item"><img src="{{ asset('storage/' . $category->img) }}" alt="{{ $category->name }}"></div>
+					<div class="circle-item {{ $owner->slug == 'jose-cuervo-1800' ? "white--color" : '' }}"><img src="{{ asset('storage/' . $category->img) }}" alt="{{ $category->name }}"></div>
                     <h2>{{ $category->name }}</h2>
 				</div>
 				<div class="pre-info">
-					<span><i class="fa fa-star"></i></span>
-					<p>{{ $category->description }}</p>
+					{{-- <span><i class="fa fa-star"></i></span> --}}
+					{{-- <p>{{ $category->description }}</p> --}}
 				</div>
 				<ul class="item-list">
 					<li class="labels-containers">
@@ -139,7 +139,7 @@
                         @if($prices)
                         @for($i=0;$i<count($prices);$i++)
                         <div class="circle-input circles-{{ $category->id }}">
-                            <input
+                            <input @if($owner->slug == 'jose-cuervo-1800') style="color: #000;" @endif
                             maxlength="2" data-price="{{ $prices[$i]['price'] }}" type="text" data-item="{{ $item->id }}"
                             placeholder="0" class="icecream-flav" data-quantity="{{ $prices[$i]['quantity'] }}"
                             id="quantity-{{ $category->id }}-{{ $item->id }}-{{ $prices[$i]['quantity'] }}"
@@ -406,22 +406,6 @@
                 orderExists(order, client);
             }
         });
-        </script>
-
-        <script type="text/javascript">
-            let scanner = new Instascan.Scanner({ video: document.getElementById('mainDigital') });
-            scanner.addListener('scan', function (content) {
-                console.log(content);
-            });
-            Instascan.Camera.getCameras().then(function (cameras) {
-                if (cameras.length > 0) {
-                scanner.start(cameras[0]);
-                } else {
-                console.error('No cameras found.');
-                }
-            }).catch(function (e) {
-                console.error(e);
-            });
         </script>
 
 	</body>
