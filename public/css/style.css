@@ -51,10 +51,6 @@
         z-index: -1;
         }
 
-        .owner_cuervo #fixed-bg {
-            background-color: #000;
-        }
-
         header {
         height: auto;
         width: 100%;
@@ -272,10 +268,6 @@
         line-height: 40px;
     }
 
-    .owner_cuervo .numbers {
-        background: #f2f2f2;
-    }
-
     .title-qty {
     font-size: 60%;
     margin-top: 30px;
@@ -295,10 +287,6 @@
     position: relative;
     text-align: left;
     color: #cc9a4b;
-    }
-
-    .owner_cuervo .first-list {
-        background: #fff;
     }
 
     .first-list:before {
@@ -351,14 +339,6 @@
         border-left: 20px solid transparent;
         border-right: 20px solid transparent;
         margin-left: -20px;
-        }
-
-        .owner_cuervo .first-list.final:before {
-            border-bottom: 20px solid #fff;
-        }
-
-        .owner_cuervo .first-list.final:after {
-            border-top: 20px solid #fff;
         }
 
         .first-list.final .price {
@@ -450,6 +430,10 @@
             margin: 15px auto;
             line-height: 95px;
         }
+        .globo article .article-item .circle-item {
+            background: #785750;
+        }
+
             article .article-item .circle-item.white--color img {
             width: 80%;
             }
@@ -509,11 +493,6 @@
         color :#2e2e2e;
     }
 
-    .owner_cuervo  .item-list {
-        background: #fff;
-        color: #2e2e2e;
-    }
-
     article .item-list.restaurants h2 {
         font-weight: 700;
         color: #e83113;
@@ -531,12 +510,11 @@
         border-bottom: 20px solid transparent;
         margin-left: -20px;
         }
+
         article .item-list.restaurants:before {
             border-right: 20px solid #fff;
         }
-        .owner_cuervo article .item-list:before {
-            border-right: 20px solid #fff;
-        }
+
         article .item-list li {
         margin-bottom: 15px;
         padding: 8px 70px 8px 10px;
@@ -570,7 +548,7 @@
         article .item-list li p {
             font-size: 50%;
             color: #ffffff;
-            text-align: left;
+            /* text-align: left; */
         }
             article .item-list.restaurants li p {
                 font-size: 50%;
@@ -578,11 +556,6 @@
                 text-align: left;
             }
 
-            .owner_cuervo article .item-list li p {
-                font-size: 50%;
-                color: #2e2e2e;
-                text-align: left;
-            }
         article .item-list li label {
             height: 20px;
             width: 48px;
@@ -654,6 +627,12 @@
             position: relative;
             font-size: 65%;
             }
+
+            article .item-list li .number-input input {
+                top: -3px;
+                position: relative;
+                font-size: 65%;
+            }
         article .item-list li.labels-containers {
             overflow: hidden;
             height: auto;
@@ -664,9 +643,7 @@
         article .item-list.restaurants li.labels-containers {
             color: #2e2e2e;
         }
-        .owner_cuervo article .item-list li.labels-containers {
-            color: #2e2e2e;
-        }
+
             article .item-list li.labels-containers h3 {
             display: inline-block;
             vertical-align: middle;
@@ -676,9 +653,6 @@
             color: #2e2e2e;
         }
 
-        .owner_cuervo article .item-list li.labels-containers h3 {
-            color: #2e2e2e;
-        }
             article .item-list li.labels-containers label {
             position: relative;
             right: 0;
@@ -690,9 +664,6 @@
                 color: #2e2e2e;
             }
 
-            .owner_cuervo article .item-list li.labels-containers label {
-                color: #2e2e2e;
-            }
             article .item-list li.labels-containers label.media--unit {
                 width: 48px;
                 margin-left: 0;
@@ -709,11 +680,18 @@
             display: inline-block;
             }
             article .item-list li.list--icecream .circle-input {
-            position: relative;
-            top: 0;
-            right: 0;
-            margin-top: 0;
-            float: right;
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-top: 0;
+                float: right;
+            }
+            article .item-list li.list--icecream .number-input {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-top: 0;
+                float: right;
             }
             article .item-list li.list--icecream .circle-input.half--input {
                 height: 40px;
@@ -768,13 +746,6 @@
             margin-bottom: 0;
         }
 
-        .owner_cuervo article .item-list li:last-child {
-            border-bottom-left-radius: 10px;
-            border-bottom-right-radius: 10px;
-            padding: 15px;
-            background: #f2f2f2;
-            margin-bottom: 0;
-        }
         article .item-list li .box-detail {
             text-align: inherit;
             display: inline-block;
@@ -1224,6 +1195,93 @@
                 animation-duration: 1.5s;
             }
 
+            input[type="number"] {
+                -webkit-appearance: textfield;
+                -moz-appearance: textfield;
+                appearance: textfield;
+            }
+
+            input[type=number]::-webkit-inner-spin-button,
+            input[type=number]::-webkit-outer-spin-button {
+                -webkit-appearance: none;
+            }
+
+            .number-input {
+                border: 2px solid #e83113;
+                display: inline-flex;
+                border-radius: 30px;
+                padding-left: 10px;
+                padding-right: 10px;
+                /* height: 48px;
+                width: 48px; */
+                position: absolute;
+                top: 50%;
+                right: 15px;
+                margin-top: -24px;
+                /* padding: 0;
+                display: block; */
+            }
+
+            .globo .number-input {
+                border: 2px solid #fff;
+            }
+
+            .number-input,
+            .number-input * {
+                box-sizing: border-box;
+            }
+
+            .number-input button {
+                outline: none;
+                -webkit-appearance: none;
+                background-color: transparent;
+                border: none;
+                align-items: center;
+                justify-content: center;
+                width: 1.5rem;
+                height: 1.5rem;
+                cursor: pointer;
+                margin: auto;
+                position: relative;
+            }
+
+            .number-input button:before,
+            .number-input button:after {
+                display: inline-block;
+                position: absolute;
+                content: '';
+                width: 1rem;
+                height: 2px;
+                background-color: #e83113;
+                transform: translate(-50%, -50%);
+            }
+
+            .globo .number-input button:before,
+            .globo .number-input button:after {
+                background-color: #fff;
+            }
+
+            .number-input button.plus:after {
+                transform: translate(-50%, -50%) rotate(90deg);
+            }
+
+            .number-input input[type=number] {
+                font-family: sans-serif;
+                max-width: 3rem;
+                padding: .5rem;
+                /* border: solid #e83113; */
+                border-width: 0 2px;
+                font-size: 1.5rem;
+                height: 3rem;
+                font-weight: bold;
+                text-align: center;
+                color: #e83113;
+            }
+
+            .globo .number-input input[type=number] {
+                color: #fff;
+            }
+
             /* Para restaurantes */
             .filters_restaurants {
                 display: flex;
@@ -1386,10 +1444,6 @@
             border-bottom: 20px solid #fff;
         }
 
-        .owner_cuervo article .item-list:before {
-            border-bottom: 20px solid #fff;
-        }
-
         article .pre-info {
             margin-bottom: 25px;
             text-align: center;
@@ -1470,11 +1524,18 @@
             border-top-left-radius: 20px;
             border-top-right-radius: 20px;
         }
+
+        .number-input input[type=number] {
+            max-width: 2rem;
+            font-size: 1rem;
+            height: 2rem;
+        }
     }
 
     @media screen and (max-width: 500px) {
         article .item-list li h3 {
-            font-size: 50%;
+            /* font-size: 50%; */
+            max-width: 6rem;
         }
 
         article .item-list li p {
@@ -1549,6 +1610,12 @@
         .filters_restaurants select:first-child {
             border-top-left-radius: 20px;
             border-top-right-radius: 20px;
+        }
+
+        .number-input input[type=number] {
+            max-width: 2rem;
+            font-size: 1rem;
+            height: 2rem;
         }
     }
 
@@ -1711,7 +1778,8 @@
 
     @media screen and (max-width: 360px) {
     article .item-list li.list--icecream .circle-input.half--input {
-        margin: 5px 7px 0 0; }
+        margin: 5px 7px 0 0;
+    }
 
     article .item-list li.labels-containers label {
         margin-left: 2px; }

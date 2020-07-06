@@ -29,6 +29,8 @@ class CreateOwnersTable extends Migration
             $table->boolean('order_enabled')->nullable();
             $table->boolean('main_digital_enabled')->nullable();
             $table->boolean('reservations_enabled')->nullable();
+
+            $table->string('theme', 255);
             $table->timestamps();
         });
     }

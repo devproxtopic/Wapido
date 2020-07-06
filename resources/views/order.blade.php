@@ -99,7 +99,7 @@
             <div class="col-sm-6 offset-sm-2">
                 <h3>Información del pedido</h3>
                 <p style="font-size: 15px; color: #000;">Orden #: <strong>{{ $orderDB->id }}</strong><br>
-                <strong>{{ $orderDB->created_at->format('d/m/Y H:m:s') }}</strong><br>
+                Fecha: <strong>{{ $orderDB->created_at->format('d/m/Y H:m:s') }}</strong><br>
                 Email: <strong>{{ $client->email }}</strong><br>
                 Dirección: <strong>{{ $client->address }}</strong> <br>
                 Celular: <strong>{{ $client->phone }}</strong> <br>
@@ -141,7 +141,7 @@
                         <th>Producto</th>
                         @if($array_measures)
                             @foreach ($array_measures as $measure)
-                            <th>{{ $measure . ' ' . $category->unit->name }}</th>
+                            <th>{{ $measure . ' ' . (($category->unit) ? $category->unit->symbol : '') }}</th>
                             @endforeach
                         @else
                             <th>Cantidad</th>

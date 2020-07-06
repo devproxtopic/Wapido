@@ -9,7 +9,7 @@ class Owner extends Model
     protected $fillable = [
         'name', 'email', 'phone', 'description', 'slug', 'user_id', 'closing_hours',
         'opening_hours', 'category_owner_id', 'days_not_reservation', 'order_enabled',
-        'main_digital_enabled', 'reservations_enabled',
+        'main_digital_enabled', 'reservations_enabled', 'theme',
         'country_id', 'state_id', 'city_id', 'location_id'
     ];
 

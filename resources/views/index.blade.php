@@ -17,7 +17,8 @@
         <!-- Styles -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 		<link href="{{ asset('css/reset.css') }}" rel="stylesheet">
-		<link href="{{ asset('css/style.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/themes.css') }}" rel="stylesheet">
 		<link href="{{ asset('css/superslides.css') }}" rel="stylesheet">
 		<link href="{{ asset('css/jquery.timepicker.css') }}" rel="stylesheet" type="text/css" />
 		<link href="{{ asset('css/bootstrap-datepicker.css') }}" rel="stylesheet" type="text/css"  />
@@ -37,16 +38,14 @@
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
-        <script type="text/javascript" src="{{ asset('js/instascan.min.js') }}"></script>
     </head>
 
-	<body @if($owner->slug == 'jose-cuervo-1800') class="owner_cuervo" @endif>
+	<body class="{{ $owner->theme ? $owner->theme : '' }}">
         <input type="hidden" name="message" id="message"
             @if(session("message")) value="{{ session("message") }}" @endif>
         <input type="hidden" id="url_base" value="{{ url('') }}">
 			<header>
-			    <center>
+                <center>
                     <div style="max-width: 1000px;">
                         <img src="{{ isset($owner) ? asset($owner->logo) : '' }}" width="25%" class="logo-owner">
                         <br>
@@ -117,7 +116,7 @@
 			<article>
 				<div class="article-item">
 					<div class="circle-item {{ $owner->slug == 'jose-cuervo-1800' ? "white--color" : '' }}"><img src="{{ asset('storage/' . $category->img) }}" alt="{{ $category->name }}"></div>
-                    <h2>{{ $category->name }}</h2>
+                    <h2 @if($owner->slug == 'coca-cola-femsa') style="color:#000" @endif>{{ $category->name }}</h2>
 				</div>
 				<div class="pre-info">
 					{{-- <span><i class="fa fa-star"></i></span> --}}
@@ -126,7 +125,7 @@
 				<ul class="item-list">
 					<li class="labels-containers">
                         @foreach ($category->measures($category->id) as $measure)
-                            <label for="">{{ $measure . ' ' . $category->unit->symbol }}</label>
+                            <label for="">{{ $measure . ' ' . (($category->unit) ? $category->unit->symbol : '') }}</label>
                         @endforeach
 					</li>
                     @foreach($category->items as $item)
@@ -138,13 +137,33 @@
                         @endphp
                         @if($prices)
                         @for($i=0;$i<count($prices);$i++)
-                        <div class="circle-input circles-{{ $category->id }}">
-                            <input @if($owner->slug == 'jose-cuervo-1800') style="color: #000;" @endif
-                            maxlength="2" data-price="{{ $prices[$i]['price'] }}" type="text" data-item="{{ $item->id }}"
+                        <div class="number-input circles-{{ $category->id }}">
+                            <button type="button" onclick="stepDownNumbers('{{ $category->id }}-{{ $item->id }}-{{ $prices[$i]['quantity'] }}');" ></button>
+                        {{-- <button type="button" onclick="this.parentNode.querySelector('#quantity-{{ $category->id }}-{{ $item->id }}-{{ $prices[$i]['quantity'] }}').stepDown();" ></button> --}}
+                        <input @if($owner->slug == 'jose-cuervo-1800' || $owner->slug == 'coca-cola-femsa') style="color: #000;" @endif
+                            maxlength="2" data-price="{{ $prices[$i]['price'] }}" min="0" type="number" data-item="{{ $item->id }}"
                             placeholder="0" class="icecream-flav" data-quantity="{{ $prices[$i]['quantity'] }}"
                             id="quantity-{{ $category->id }}-{{ $item->id }}-{{ $prices[$i]['quantity'] }}"
                             name="quantity[{{ $item->id }}-{{ $prices[$i]['quantity'] }}-{{ $prices[$i]['price'] }}]">
+                        {{-- <button type="button" onclick="this.parentNode.querySelector('#quantity-{{ $category->id }}-{{ $item->id }}-{{ $prices[$i]['quantity'] }}').stepUp();" class="plus"></button> --}}
+                            <button type="button" onclick="stepUpNumbers('{{ $category->id }}-{{ $item->id }}-{{ $prices[$i]['quantity'] }}');" class="plus"></button>
                         </div>
+                        {{-- <div class="circle-input circles-{{ $category->id }}">
+
+                        {{-- <span class='number-wrapper'>
+                            <input @if($owner->slug == 'jose-cuervo-1800' || $owner->slug == 'coca-cola-femsa') style="color: #000;" @endif
+                            maxlength="2" data-price="{{ $prices[$i]['price'] }}" min="0" type="number" data-item="{{ $item->id }}"
+                            value="0" class="icecream-flav" data-quantity="{{ $prices[$i]['quantity'] }}"
+                            id="quantity-{{ $category->id }}-{{ $item->id }}-{{ $prices[$i]['quantity'] }}"
+                            name="quantity[{{ $item->id }}-{{ $prices[$i]['quantity'] }}-{{ $prices[$i]['price'] }}]">
+                            {{-- <div class="buttons-control-input">
+                                <div class="inc button">+</div>
+                                <div class="dec button">-</div>
+                            </div> --}}
+                            {{-- <div id="inc-button" class="spinner-button">+</div>
+                            <div id="dec-button" class="spinner-button">-</div> --}}
+                        {{-- </span>
+                        </div> --}}
                         @endfor
                         @endif
 					</li>
@@ -194,13 +213,21 @@
                     <li class="list--icecream list-food-{{ $arrayFood[0]->category->id }}">
                         <img class="circle-item-light" width="15%" src="{{ asset('storage/' . $item->picture) }}">
                         <h3>{{ $item->name }}</h3>
-                        <div class="circle-input circles-food-{{ $arrayFood[0]->category->id }}">
-                            <input
-                            maxlength="2" data-price="{{ $item->price }}" type="text" data-item="{{ $item->id }}"
+                        <div class="number-input circles-food-{{ $arrayFood[0]->category->id }}">
+                        <button type="button" onclick="this.parentNode.querySelector('#quantity-food-{{ $arrayFood[0]->category->id }}-{{ $item->id }}-1').stepDown();" ></button>
+                        <input maxlength="2" data-price="{{ $item->price }}" type="number" data-item="{{ $item->id }}"
                             placeholder="0" class="icecream-flav" data-quantity="1"
                             id="quantity-food-{{ $arrayFood[0]->category->id }}-{{ $item->id }}-1"
                             name="quantity_food[{{ $item->id }}-{{ $item->price }}]">
+                        <button type="button" onclick="this.parentNode.querySelector('#quantity-food-{{ $arrayFood[0]->category->id }}-{{ $item->id }}-1').stepUp();" class="plus"></button>
                         </div>
+                        {{-- <div class="circle-input circles-food-{{ $arrayFood[0]->category->id }}">
+                            <input
+                            maxlength="2" data-price="{{ $item->price }}" type="number" data-item="{{ $item->id }}"
+                            placeholder="0" class="icecream-flav" data-quantity="1"
+                            id="quantity-food-{{ $arrayFood[0]->category->id }}-{{ $item->id }}-1"
+                            name="quantity_food[{{ $item->id }}-{{ $item->price }}]">
+                        </div> --}}
 					</li>
                     @endforeach
 					<li class="no--padd">
@@ -241,7 +268,7 @@
                 @endforeach
             </ul>
             <input type="hidden" name="total_amount" id="total_amount">
-			<h4>TOTAL: $ <span class="total-price"></span> <br></h4>
+			<h4 @if($owner->slug == 'coca-cola-femsa') style="color:#000" @endif>TOTAL: $ <span class="total-price"></span> <br></h4>
 
 			<!-- <a href="form.html" class="confirm-button">CONFIRMAR</a> -->
 		</section>
@@ -288,7 +315,7 @@
 
                 <label>Los campos marcados con * son obligatorios.</label>
                 <br>
-                <button type="submit" id="submit_button">REALIZAR PEDIDO</button>
+                <button @if($owner->slug == 'coca-cola-femsa') style="background-color:#000" @endif type="submit" id="submit_button">REALIZAR PEDIDO</button>
 				<div id="result" class=""></div>
         </section>
     </form>
@@ -338,7 +365,7 @@
         <div id="floatMenu">
             @isset($owner->reservations_enabled)
             <ul class="menu1">
-               <li><a href="{{ url('/' . $owner->slug . '/reservations/create') }}">RESERVACIONES</a></li>
+                <li><a href="{{ url('/' . $owner->slug . '/reservations/create') }}">RESERVACIONES</a></li>
             </ul>
             @endisset
             @isset($owner->main_digital_enabled)
@@ -406,6 +433,20 @@
                 orderExists(order, client);
             }
         });
+        </script>
+
+        <script>
+            function stepDownNumbers(id){
+                var element = 'quantity-'+id;
+                document.getElementById(element).stepDown();
+                console.log(element);
+            }
+
+            function stepUpNumbers(id){
+                var element = 'quantity-'+id;
+                console.log(element);
+                document.getElementById(element).stepUp();
+            }
         </script>
 
 	</body>

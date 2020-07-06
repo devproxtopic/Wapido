@@ -74,6 +74,30 @@
                                         @error('closing_hours') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                     </div>
                                 </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <label for="theme" class="col-md-6 col-form-label text-md-left">Tema</label>
+                                        <select class="form-control @error('theme') is-invalid @enderror"
+                                        name="theme" id="theme">
+                                            <option value="0">Seleccione una opción</option>
+                                            <option @if($owner->theme == '') selected @endif value="">Sin Tema (Tema por Defecto)</option>
+                                            <option @if($owner->theme == 'dark') selected @endif value="dark">Tema Oscuro</option>
+                                            <option @if($owner->theme == 'dark globo') selected @endif value="dark globo">Tema Oscuro Globo</option>
+                                            <option @if($owner->theme == 'dark red') selected @endif value="dark red">Tema Oscuro Rojo</option>
+                                            <option @if($owner->theme == 'purple') selected @endif value="purple">Tema Purpura</option>
+                                            <option @if($owner->theme == 'orange') selected @endif value="orange">Tema Naranja</option>
+                                            <option @if($owner->theme == 'gray') selected @endif value="gray">Tema Gris</option>
+                                            <option @if($owner->theme == 'rose') selected @endif value="rose">Tema Rosado</option>
+                                            <option @if($owner->theme == 'blue') selected @endif value="blue">Tema Azul</option>
+                                            <option @if($owner->theme == 'green') selected @endif value="green">Tema Verde</option>
+                                            <option @if($owner->theme == 'sunset') selected @endif value="sunset">Tema Atardecer</option>
+                                            <option @if($owner->theme == 'simple') selected @endif value="simple">Tema Simple</option>
+                                            <option @if($owner->theme == 'yellow') selected @endif value="yellow">Tema Amarillo</option>
+                                            <option @if($owner->theme == 'dawn') selected @endif value="dawn">Tema Amanecer</option>
+                                        </select>
+                                        @error('theme') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="form-group mb-0">
                                         <div class="col-md-6 offset-md-4">
@@ -86,79 +110,9 @@
                     </div>
                 </li>
             </ul>
-            {{-- <div class="card-body d-flex py-0">
-                    <form method="POST" action="{{ route('owners.update', $owner->id) }}" enctype="multipart/form-data">
-                @csrf
-                @method('PUT')
-                <div class="form-group">
-
-
-
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-
-
-
-
-                        @error('email')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                </div>
-
-                <div class="form-group">
-                </div>
-
-                <div class="form-group">
-
-
-                        @error('phone')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                </div>
-
-                <div class="form-group">
-                    <label for="logo" class="col-md-6 col-form-label text-md-left">Logo</label>
-                        <input @if(! $owner) required @endif id="logo" type="file" class="form-control @error('logo') is-invalid @enderror"
-                        @isset($owner->logo) vale="{{ \File::get($owner->logo) }}" @endisset
-                        name="logo" autofocus>
-
-                        @error('logo')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                </div>
-
-                <div class="form-group">
-
-                            </div>
-                            <div class="form-group">
-
-                            </div>
-                            <div class="form-group">
-
-                            </div>
-                            <div class="form-group">
-                                <label for="description" class="col-md-6 col-form-label text-md-left">Descripción</label>
-                                    <textarea name="description" class="form-control @error('description') is-invalid @enderror"
-                                    id="description" cols="30" rows="10">{{ old('description') ?? $owner->description }}</textarea>
-
-                                    @error('description')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                            </div>
-            </div> --}}
-            {{--  --}}
         </div>
     </div>
- </div>
+</div>
 @stop
 
 @section('scripts')
