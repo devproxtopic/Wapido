@@ -20,6 +20,8 @@ class CreateTablesTable extends Migration
             $table->string('ubication', 255);
             $table->boolean('reserved')->default(0);
             $table->string('qr', 255);
+
+            $table->integer('type');
             $table->timestamps();
         });
     }

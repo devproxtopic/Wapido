@@ -66,6 +66,7 @@ class TableController extends Controller
             $table->owner_id = $owner->id;
             $table->number = $i;
             $table->ubication = $request->ubication;
+            $table->type = $request->type;
             $table->qr = "storage/owners/" . $owner->id . "/tables/" . $i . '.png';
             $table->save();
         }
@@ -112,6 +113,7 @@ class TableController extends Controller
     {
         $table = Table::find($id);
         $table->ubication = $request->ubication;
+        $table->type = $request->type;
         $table->save();
 
         $request->session()->flash('message', 'Mesa actualizada con éxito.');
