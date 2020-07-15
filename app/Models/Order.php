@@ -26,4 +26,30 @@ class Order extends Model
     public function details(){
         return $this->hasMany('App\Models\OrderDetail');
     }
+
+    /**
+     * Scopes
+     */
+
+    public function scopeGetDateCreated($query, $reqDateCreated)
+    {
+        return $reqDateCreated ? $query->whereDate('created_at', $reqDateCreated) : $query;
+    }
+
+    public function scopeGetClient($query, $reqClient)
+    {
+        if ($reqClient) {
+            $query->whereHas('client', function ($q) use ($reqClient) {
+                $q->where('fullname', 'like', "%$reqClient%")
+                ->orWhere('phone', 'like', "%$reqClient%");
+            });
+        }
+
+        return $query;
+    }
+
+    public function scopeGetStatus($query, $reqStatus)
+    {
+        return $reqStatus ? $query->where('status_id', $reqStatus) : $query;
+    }
 }

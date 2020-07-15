@@ -138,7 +138,7 @@
                         @if($prices)
                         @for($i=0;$i<count($prices);$i++)
                         <div class="number-input circles-{{ $category->id }}">
-                            <button type="button" onclick="stepDownNumbers('{{ $category->id }}-{{ $item->id }}-{{ $prices[$i]['quantity'] }}');" ></button>
+                            <button type="button" onclick="stepDownNumbers('{{ $category->id }}-{{ $item->id }}-{{ $prices[$i]['quantity'] }}', {{ $category->id }});" ></button>
                         {{-- <button type="button" onclick="this.parentNode.querySelector('#quantity-{{ $category->id }}-{{ $item->id }}-{{ $prices[$i]['quantity'] }}').stepDown();" ></button> --}}
                         <input @if($owner->slug == 'jose-cuervo-1800' || $owner->slug == 'coca-cola-femsa') style="color: #000;" @endif
                             maxlength="2" data-price="{{ $prices[$i]['price'] }}" min="0" type="number" data-item="{{ $item->id }}"
@@ -146,7 +146,7 @@
                             id="quantity-{{ $category->id }}-{{ $item->id }}-{{ $prices[$i]['quantity'] }}"
                             name="quantity[{{ $item->id }}-{{ $prices[$i]['quantity'] }}-{{ $prices[$i]['price'] }}]">
                         {{-- <button type="button" onclick="this.parentNode.querySelector('#quantity-{{ $category->id }}-{{ $item->id }}-{{ $prices[$i]['quantity'] }}').stepUp();" class="plus"></button> --}}
-                            <button type="button" onclick="stepUpNumbers('{{ $category->id }}-{{ $item->id }}-{{ $prices[$i]['quantity'] }}');" class="plus"></button>
+                            <button type="button" onclick="stepUpNumbers('{{ $category->id }}-{{ $item->id }}-{{ $prices[$i]['quantity'] }}', {{ $category->id }});" class="plus"></button>
                         </div>
                         {{-- <div class="circle-input circles-{{ $category->id }}">
 
@@ -214,12 +214,12 @@
                         <img class="circle-item-light" width="15%" src="{{ asset('storage/' . $item->picture) }}">
                         <h3>{{ $item->name }}</h3>
                         <div class="number-input circles-food-{{ $arrayFood[0]->category->id }}">
-                        <button type="button" onclick="this.parentNode.querySelector('#quantity-food-{{ $arrayFood[0]->category->id }}-{{ $item->id }}-1').stepDown();" ></button>
+                        <button type="button" onclick="this.parentNode.querySelector('#quantity-food-{{ $arrayFood[0]->category->id }}-{{ $item->id }}-1').stepDown();subtotalCalculationFood({{ $arrayFood[0]->category->id }});" ></button>
                         <input maxlength="2" data-price="{{ $item->price }}" type="number" data-item="{{ $item->id }}"
                             placeholder="0" class="icecream-flav" data-quantity="1"
                             id="quantity-food-{{ $arrayFood[0]->category->id }}-{{ $item->id }}-1"
                             name="quantity_food[{{ $item->id }}-{{ $item->price }}]">
-                        <button type="button" onclick="this.parentNode.querySelector('#quantity-food-{{ $arrayFood[0]->category->id }}-{{ $item->id }}-1').stepUp();" class="plus"></button>
+                        <button type="button" onclick="this.parentNode.querySelector('#quantity-food-{{ $arrayFood[0]->category->id }}-{{ $item->id }}-1').stepUp();subtotalCalculationFood({{ $arrayFood[0]->category->id }});" class="plus"></button>
                         </div>
                         {{-- <div class="circle-input circles-food-{{ $arrayFood[0]->category->id }}">
                             <input
@@ -436,16 +436,18 @@
         </script>
 
         <script>
-            function stepDownNumbers(id){
+            function stepDownNumbers(id, category_id){
                 var element = 'quantity-'+id;
                 document.getElementById(element).stepDown();
-                console.log(element);
+                // console.log(element);
+                subtotalCalculation(category_id);
             }
 
-            function stepUpNumbers(id){
+            function stepUpNumbers(id, category_id){
                 var element = 'quantity-'+id;
-                console.log(element);
+                // console.log(element);
                 document.getElementById(element).stepUp();
+                subtotalCalculation(category_id);
             }
         </script>
 

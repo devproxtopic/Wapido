@@ -16,8 +16,8 @@
                 <h6 class="m-0">Sliders</h6>
             </div>
             <div class="card-body pt-0">
-                    <form id="formSliders" method="POST" action="{{ route('update.sliders', $owner->id) }}" enctype="multipart/form-data" class="col-md-12">
-                    @csrf
+                <form id="formSliders" method="POST" action="{{ route('update.sliders', $owner->id) }}" enctype="multipart/form-data" class="col-md-12">
+                @csrf
                 <div class="row border-bottom py-2 bg-light">
                     <div class="col-12 col-sm-6">
                         <div class="input-group input-group-sm my-auto ml-auto mr-auto ml-sm-auto mr-sm-0" style="max-width: 350px;">

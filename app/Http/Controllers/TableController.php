@@ -109,7 +109,7 @@ class TableController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($slug, Request $request, $id)
     {
         $table = Table::find($id);
         $table->ubication = $request->ubication;

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Owner;
 use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -16,7 +17,7 @@ class StatusController extends Controller
      */
     public function index($slug)
     {
-        $owner = json_decode(session()->get('owner'));
+        $owner = Owner::where('slug', $slug)->first();
         $status = Status::paginate(25);
         return view('status.index', compact('status', 'owner'));
     }
@@ -28,7 +29,7 @@ class StatusController extends Controller
      */
     public function create($slug)
     {
-        $owner = json_decode(session()->get('owner'));
+        $owner = Owner::where('slug', $slug)->first();
         return view('status.create', compact('owner'));
     }
 
@@ -57,7 +58,7 @@ class StatusController extends Controller
         $request->session()->flash('message', 'Estatus creado exitosamente.');
         $request->session()->flash('alert-type', 'success');
 
-        return redirect()->action('StatusController@index');
+        return redirect('owners/' . $request->slug . '/status');
     }
 
     /**
@@ -79,7 +80,7 @@ class StatusController extends Controller
      */
     public function edit($slug, $id)
     {
-        $owner = json_decode(session()->get('owner'));
+        $owner = Owner::where('slug', $slug)->first();
         $status = Status::find($id);
         return view('status.edit', compact('status', 'owner'));
     }

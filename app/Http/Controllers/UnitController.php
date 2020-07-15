@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Owner;
 use App\Models\Unit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -16,7 +17,7 @@ class UnitController extends Controller
      */
     public function index($slug)
     {
-        $owner = json_decode(session()->get('owner'));
+        $owner = Owner::where('slug', $slug)->first();
         $units = Unit::paginate(25);
         return view('units.index', compact('units','owner'));
     }
@@ -28,7 +29,7 @@ class UnitController extends Controller
      */
     public function create($slug)
     {
-        $owner = json_decode(session()->get('owner'));
+        $owner = Owner::where('slug', $slug)->first();
         return view('units.create', compact('owner'));
     }
 
@@ -62,7 +63,7 @@ class UnitController extends Controller
         $request->session()->flash('message', 'Unidad creada con éxito.');
         $request->session()->flash('alert-type', 'success');
 
-        return redirect()->action('UnitController@index');
+        return redirect('owners/' . $request->slug . '/units');
     }
 
     /**
@@ -84,7 +85,7 @@ class UnitController extends Controller
      */
     public function edit($slug, $id)
     {
-        $owner = json_decode(session()->get('owner'));
+        $owner = Owner::where('slug', $slug)->first();
         $unit = Unit::find($id);
         return view('units.edit', compact('unit', 'owner'));
     }

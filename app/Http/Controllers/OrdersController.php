@@ -29,13 +29,21 @@ class OrdersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($slug)
+    public function index(Request $request)
     {
-        $owner = Owner::where('slug', $slug)->first();
+        $owner = Owner::where('slug', $request->slug)->first();
         $orders = Order::where('owner_id', $owner->id)
+        ->getStatus($request->status_filter)
+        ->getClient($request->client_filter)
+        ->getDateCreated($request->date_created_filter)
         ->paginate(15);
 
-        return view('orders.index', compact('orders', 'owner'));
+        $status_filter = $request->status_filter;
+        $client_filter = $request->client_filter;
+        $date_created_filter = $request->date_created_filter;
+
+        return view('orders.index', compact('orders', 'owner', 'date_created_filter',
+            'status_filter', 'client_filter'));
     }
 
     /**

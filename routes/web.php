@@ -61,7 +61,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/clients-delete/{id}', 'ClientsController@destroy')
             ->name('clients.destroy');
 
-        Route::resource('/orders', 'OrdersController')->except('destroy','store','show');
+        Route::match(['GET', 'POST'], '/orders', 'OrdersController@index')->name('orders.index');
+        Route::resource('/orders', 'OrdersController')->except('destroy','store','show','index');
         Route::get('/orders-delete/{id}', 'OrdersController@destroy')
             ->name('orders.destroy');
 
@@ -119,6 +120,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('/reservations', 'ReservationController')->except('destroy','create','store');
         Route::get('/reservations-delete/{id}', 'ReservationController@destroy')
         ->name('reservations.destroy');
+
+        Route::get('/stats', 'StatsController@index')->name('stats.index');
     });
 
     Route::get('/home/owners/enable-orders/{id}', 'OwnersController@enableOrders')
