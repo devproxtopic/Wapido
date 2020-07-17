@@ -13,7 +13,8 @@
             <label for="client_id" class="col-md-4 col-form-label text-md-right">Cliente</label>
 
             <div class="col-md-6">
-                <input id="client_id" type="text" readonly class="form-control @error('client_id') is-invalid @enderror" name="client_id" value="{{ $order->client->fullname . ' | ' . $order->client->phone }}" required autocomplete="client_id" autofocus>
+                <input id="client_id" type="text" readonly class="form-control @error('client_id') is-invalid @enderror"
+                value="{{ $order->client->fullname . ' | ' . $order->client->phone }}" required autocomplete="client_id" autofocus>
 
                 @error('client_id')
                     <span class="invalid-feedback" role="alert">
@@ -37,6 +38,23 @@
                 </select>
 
                 @error('status_id')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+        </div>
+
+        <div class="form-group row confirm_date">
+            <label for="confirm_date" class="col-md-4 col-form-label text-md-right">Fecha de Entrega</label>
+
+            <div class="col-md-6">
+                <input id="confirm_date" type="date"
+                class="form-control @error('confirm_date') is-invalid @enderror"
+                name="confirm_date" value="{{ isset($order->confirm_date) ? $order->confirm_date->format('d-m-Y') : now()->format('d-m-Y') }}"
+                autocomplete="confirm_date" autofocus>
+
+                @error('confirm_date')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -102,4 +120,22 @@
         </div>
     </form>
 </div>
+@stop
+
+@section('scripts')
+    <script>
+        $(document).ready(function() {
+            if($('#status_id').val() != 5){
+                $('.confirm_date').hide();
+            }
+
+            $('#status_id').change(function(){
+                if($(this).val() == 5){
+                    $('.confirm_date').show();
+                } else {
+                    $('.confirm_date').hide();
+                }
+            });
+        });
+    </script>
 @stop

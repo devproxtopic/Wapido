@@ -14,18 +14,31 @@ class StatsController extends Controller
     {
         $owner = Owner::where('slug', $request->slug)->first();
 
-        $orders_year = Order::whereYear('created_at', now()->format('Y'))->get();
-        $orders_month = Order::whereYear('created_at', now()->format('Y'))->whereMonth('created_at', now()->format('m'))->get();
-        $orders_day = Order::whereYear('created_at', now()->format('Y'))->whereMonth('created_at', now()->format('m'))->whereDay('created_at', now()->format('d'))->get();
-        $orders_fifteen = Order::whereYear('created_at', now()->format('Y'))->whereBetween('created_at', [now()->subDay(15)->format('d'), now()->format('d')])->get();
-        $orders_last_month = Order::whereYear('created_at', now()->format('Y'))->whereMonth('created_at', now()->subMonth(1)->format('m'))->get();
+        $orders_year = Order::whereYear('created_at', now()->format('Y'))
+        ->where('owner_id', $owner->id)->get();
+        $orders_month = Order::whereYear('created_at', now()->format('Y'))
+        ->whereMonth('created_at', now()->format('m'))->where('owner_id', $owner->id)->get();
+        $orders_month_id = $orders_month->pluck('id');
+
+        $orders_day = Order::whereYear('created_at', now()->format('Y'))
+        ->whereMonth('created_at', now()->format('m'))
+        ->whereDay('created_at', now()->format('d'))
+        ->where('owner_id', $owner->id)->get();
+        $orders_day_id = $orders_day->pluck('id');
+
+        $orders_fifteen = Order::whereYear('created_at', now()->format('Y'))
+        ->whereBetween('created_at', [now()->subDay(15)->format('d'), now()->format('d')])
+        ->where('owner_id', $owner->id)->get();
+        $orders_last_month = Order::whereYear('created_at', now()->format('Y'))
+        ->whereMonth('created_at', now()->subMonth(1)->format('m'))
+        ->where('owner_id', $owner->id)->get();
 
         $orders_items_month_bd = OrderDetail::whereYear('created_at', now()->format('Y'))
             ->whereMonth('created_at', now()->format('m'))
-
+            ->whereIn('order_id', $orders_month_id)
             ->get()->groupBy('item_id');
 
-        $orders_items_month = [0];
+        $orders_items_month = [];
         $orders_items_month_label = [];
 
         foreach($orders_items_month_bd as $item => $oim){
@@ -41,9 +54,10 @@ class StatsController extends Controller
         $orders_items_day_bd = OrderDetail::whereYear('created_at', now()->format('Y'))
             ->whereMonth('created_at', now()->format('m'))
             ->whereDay('created_at', now()->format('d'))
-
+            ->whereIn('order_id', $orders_day_id)
             ->get()->groupBy('item_id');
-        $orders_items_day = [0];
+
+        $orders_items_day = [];
         $orders_items_day_label = [];
 
         foreach ($orders_items_day_bd as $item => $oid) {

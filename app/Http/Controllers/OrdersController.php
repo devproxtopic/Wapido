@@ -248,16 +248,16 @@ class OrdersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($slug, Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'client_id' => 'required',
             'status_id' => 'required',
-            'total_amount' => 'required'
+            'total_amount' => 'required',
+            'confirm_date' => 'before:'.now()
         ], [
-            'client_id.required' => 'El cliente es requerido.',
             'status_id.required' => 'El estatus es requerido.',
-            'total_amount.required' => 'El total de venta es requerido.'
+            'total_amount.required' => 'El total de venta es requerido.',
+            'confirm.date' => 'Fecha no válida'
         ]);
 
         if ($validator->fails()) {
@@ -273,7 +273,7 @@ class OrdersController extends Controller
         $request->session()->flash('message', 'Pedido actualizado exitosamente');
         $request->session()->flash('alert-type', 'success');
 
-        return redirect()->back();
+        return redirect('/owners/' . $slug . '/orders');
     }
 
     /**

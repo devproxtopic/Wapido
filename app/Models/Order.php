@@ -7,7 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     protected $fillable = [
-        'client_id', 'total_amount', 'status_id', 'apply_delivery', 'payment', 'owner_id', 'number_table'
+        'client_id', 'total_amount', 'status_id', 'apply_delivery',
+        'payment', 'owner_id', 'number_table', 'confirm_date'
+    ];
+
+    protected $dates = [
+        'confirm_date'
     ];
 
     public function owner(){

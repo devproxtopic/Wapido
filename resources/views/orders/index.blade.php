@@ -75,11 +75,15 @@
                 <tr>
                     <td>{{ $order->id }}</td>
                     <td>{{ $order->client->fullname }}</td>
-                    <td>{{ $order->status->name }}</td>
+                    <td>{{ $order->status->name }} <br>
+                        {{ isset($order->confirm_date) ? $order->confirm_date->format('d-m-Y') : ''}}
+                    </td>
                     <td>{{ number_format($order->total_amount, 2) }}</td>
                     <td>{{ $order->created_at->format('d-m-Y H:i') }}</td>
                     <td>
+                        @if(! isset($order->confirm_date))
                         <a href="{{ url('owners/'. $owner->slug . '/orders/' . $order->id. '/edit') }}" title="Editar"><i class="fa fa-edit"></i></a>
+                        @endif
                     </td>
                 </tr>
                 @endforeach
