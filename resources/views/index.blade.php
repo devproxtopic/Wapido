@@ -80,6 +80,8 @@
     <form action="{{ route('orders.store', $owner->slug) }}" method="POST">
         @csrf
         <input type="hidden" id="_token" value="{{ csrf_token() }}">
+        <input type="hidden" id="slug" value="{{ $owner->slug }}">
+
         <input type="hidden" name="number_table" value="{{ $number_table }}">
         @if(count($promotions) > 0)
         <section>
@@ -290,12 +292,14 @@
                 </fieldset>
             @endif
 
-                <label for="">Mesa *</label>
-                <select name="branch_id" id="branch_id" required>
+                <label for="">Código Postal *</label>
+                <input type="text" id="zipcode" name="zipcode" value="{{ old('zipcode') }}" required placeholder="Código Postal">
+                <br>
+                <label for="">Sucursal *</label>
+                <select class="form-control" name="branch_id" id="branch_id" required>
                     {{-- SE LLENA CON AJAX--}}
                 </select>
-                <label for="">Código Postal *</label>
-                <input type="text" id="zipcode" name="zipcode" value="{{ old('zipcode') }}" required placeholder="Nombre">
+                <br>
 				<label for="">Mail *</label>
 				<input type="text" id="email" name="email" value="{{ old('email') }}" required placeholder="Email">
 				<label for="">Nombre Completo *</label>
@@ -456,6 +460,5 @@
                 subtotalCalculation(category_id);
             }
         </script>
-
 	</body>
 </html>

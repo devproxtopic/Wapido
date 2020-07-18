@@ -21,12 +21,12 @@ $(document).ready(function() {
             type:'get',
             dataType: 'json',
             success: function(response) {
-               $("#state_id").html('');
-               $("#state_id").attr('disabled', false);
-               $("#state_id").append('<option value="">Seleccione una opción</option>');
-               $.each(response, function (key, value) {
-                   $("#state_id").append('<option value="' + value.id + '">' + value.name + '</option>');
-               });
+                $("#state_id").html('');
+                $("#state_id").attr('disabled', false);
+                $("#state_id").append('<option value="">Seleccione una opción</option>');
+                $.each(response, function (key, value) {
+                    $("#state_id").append('<option value="' + value.id + '">' + value.name + '</option>');
+                });
             }
         });
     });

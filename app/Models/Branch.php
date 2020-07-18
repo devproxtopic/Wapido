@@ -15,4 +15,19 @@ class Branch extends Model
     {
         return $this->hasMany('App\Models\BranchZipCode');
     }
+
+    /**
+     * SCOPES
+     */
+
+    public function scopeGetByZipcode($query, $reqZipcode)
+    {
+        if ($reqZipcode) {
+            $query->whereHas('zipcodes', function ($q) use ($reqZipcode) {
+                $q->where('zipcode', 'like', "%$reqZipcode%");
+            });
+        }
+
+        return $query;
+    }
 }

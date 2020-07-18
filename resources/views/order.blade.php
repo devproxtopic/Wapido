@@ -113,6 +113,9 @@
                 @isset($orderDB->number_table)
                     Número de Mesa: <strong>{{ $orderDB->number_table }}</strong>
                 @endisset
+                @isset($orderDB->branch_id)
+                    Sucursal: <strong>{{ $orderDB->branch->name }}</strong>
+                @endisset
             </p>
 
             </div>

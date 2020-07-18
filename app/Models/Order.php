@@ -8,7 +8,7 @@ class Order extends Model
 {
     protected $fillable = [
         'client_id', 'total_amount', 'status_id', 'apply_delivery',
-        'payment', 'owner_id', 'number_table', 'confirm_date'
+        'payment', 'owner_id', 'number_table', 'confirm_date', 'branch_id'
     ];
 
     protected $dates = [

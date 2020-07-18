@@ -113,7 +113,8 @@ class OrdersController extends Controller
             'apply_delivery' => $request->apply_delivery,
             'payment' => $request->payment,
             'owner_id' => $owner->id,
-            'number_table' => $request->number_table
+            'number_table' => $request->number_table,
+            'branch_id' => $request->branch_id
         ]);
 
         if($request->quantity) {

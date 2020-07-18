@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Branch;
 use App\Models\Owner;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
@@ -178,5 +179,13 @@ Route::group(['middleware' => 'web'], function () {
     });
     Route::get('/ajax/locations/{city_id}', function ($city_id) {
         return response(App\Models\Location::where('city_id', $city_id)->get());
+    });
+    Route::get('{slug}/ajax/branches/{value}', function($slug, $value){
+        $owner = Owner::where('slug', $slug)->first();
+        $zipcode = ($value == 'todos') ? '' : $value;
+
+        $branches = Branch::where('owner_id', $owner->id)->getByZipcode($zipcode)->get();
+
+        return response($branches);
     });
 });

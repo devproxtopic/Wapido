@@ -107,6 +107,58 @@ $(document).ready(function () {
         });
     });
 
+    $("#zipcode").on("keyup", function () {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            url: baseUrl + '/' + $('#slug').val() + '/ajax/branches/' + $(this).val(),
+            type: 'get',
+            dataType: 'json',
+            success: function (response) {
+                $("#branch_id").html('');
+                $("#branch_id").attr('disabled', false);
+                $("#branch_id").append('<option value="">Seleccione una opción</option>');
+                $.each(response, function (key, value) {
+                    $("#branch_id").append('<option value="' + value.id + '">' + value.name + '</option>');
+                });
+            }
+        });
+    });
+
+    $('input[name=apply_delivery]').on('change', function () {
+        if ($('input[name=apply_delivery]:checked').val() == 1) {
+            $('#zipcode').attr('readonly', false);
+        }
+
+        if ($('input[name=apply_delivery]:checked').val() == 0) {
+            $('#zipcode').attr('readonly', true);
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                url: baseUrl + '/' + $('#slug').val() + '/ajax/branches/todos',
+                type: 'get',
+                dataType: 'json',
+                success: function (response) {
+                    $("#branch_id").html('');
+                    $("#branch_id").attr('disabled', false);
+                    $("#branch_id").append('<option value="">Seleccione una opción</option>');
+                    $.each(response, function (key, value) {
+                        $("#branch_id").append('<option value="' + value.id + '">' + value.name + '</option>');
+                    });
+                }
+            });
+        }
+    });
+
     showSlidesPromotions();
 
     totalAmountOrder();
