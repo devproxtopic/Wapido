@@ -122,6 +122,10 @@ Route::group(['middleware' => 'auth'], function () {
         ->name('reservations.destroy');
 
         Route::get('/stats', 'StatsController@index')->name('stats.index');
+
+        Route::resource('/branches', 'BranchesController')->except('destroy');
+        Route::get('/branches-delete/{id}', 'BranchesController@destroy')
+        ->name('branches.destroy');
     });
 
     Route::get('/home/owners/enable-orders/{id}', 'OwnersController@enableOrders')

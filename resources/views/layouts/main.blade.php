@@ -21,6 +21,12 @@
             <span>Estadísticas</span>
             </a>
         </li>
+        <li class="nav-item {{ (request()->segment(3) == 'branches') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ url('owners/'.$owner->slug.'/branches') }}">
+            <i class="fa fa-edit"></i>
+            <span>Sucursales</span>
+            </a>
+        </li>
         <li class="nav-item {{ (request()->segment(3) == 'promotions') ? 'active' : '' }}">
             <a class="nav-link" href="{{ url('owners/'.$owner->slug.'/promotions') }}">
             <i class="fa fa-star"></i>

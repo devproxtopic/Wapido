@@ -42,6 +42,25 @@ class CategoryFoodController extends WebController
      */
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string',
+            'file' => 'required|mimes:jpeg,jpg,png',
+        ], [
+            'name.required' => 'EL nombre es requerido.',
+            'name.string' => 'El nombre no tiene un formato válido.',
+            'file.required' => 'El archivo de imagen es requerido.',
+            'file.mimes' => 'El archivo debe estar en fomato .jpg o .png',
+        ]);
+
+        if ($validator->fails()) {
+            $request->session()->flash('message', 'Ha ocurrido un error.');
+            $request->session()->flash('alert-type', 'error');
+
+            return back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
         $owner = Owner::where('slug', $request->slug)->first();
 
         $category_food = CategoryFood::create([
