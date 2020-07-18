@@ -15,4 +15,9 @@ class Reservation extends Model
     {
         return $this->belongsTo('App\Models\Client');
     }
+
+    public function branch()
+    {
+        return $this->belongsTo('App\Models\Branch');
+    }
 }

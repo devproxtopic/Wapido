@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\ClientReservationCreate;
 use App\Mail\OwnerReservationCreate;
+use App\Models\Branch;
 use App\Models\Client;
 use App\Models\Owner;
 use App\Reservation;
@@ -36,7 +37,8 @@ class ReservationController extends WebController
     public function create()
     {
         $owner = Owner::where('slug', $this->slug)->first();
-        return view('reservations.create', compact('owner'));
+        $branches = Branch::where('owner_id', $owner->id)->get();
+        return view('reservations.create', compact('owner', 'branches'));
     }
 
     /**
@@ -86,7 +88,7 @@ class ReservationController extends WebController
         $reservation->date = $request->date;
         $reservation->start_time = $request->start_time;
         $reservation->memo = $request->memo;
-
+        $reservation->branch_id = $request->branch_id;
         $reservation->save();
 
         Mail::to($client->email)->send(new ClientReservationCreate($reservation));

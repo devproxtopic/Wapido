@@ -196,8 +196,10 @@
                     <table style="margin:0 auto;" cellspacing="0" cellpadding="0" class="force-width-80">
                         <tr>
                                 <td style="font-size:16px; font-weight: 600; color:#6f6f6f; text-align:center;" class="mobile-spacing">
-                                    Hola {{ $reservation->client->fullname }}, tu reservación para {{ $reservation->owner->name }} el día {{ $reservation->date->format('d-m-Y') }} de
-                                    {{ $reservation->start_time }} a {{ $reservation->end_time }} ha sido confirmada.
+                                    Hola {{ $reservation->client->fullname }}, tu reservación para {{ $reservation->owner->name }}
+                                    en la sucursal {{ $reservation->branch ? $reservation->branch->name : 'Sin Información' }}
+                                    el día {{ $reservation->date->format('d-m-Y') }} a las
+                                    {{ $reservation->start_time }} ha sido confirmada.
                                     <br>
                                     Muchas Gracias.<br>
                                     Le esperamos.

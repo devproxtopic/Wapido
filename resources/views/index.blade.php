@@ -290,6 +290,12 @@
                 </fieldset>
             @endif
 
+                <label for="">Mesa *</label>
+                <select name="branch_id" id="branch_id" required>
+                    {{-- SE LLENA CON AJAX--}}
+                </select>
+                <label for="">Código Postal *</label>
+                <input type="text" id="zipcode" name="zipcode" value="{{ old('zipcode') }}" required placeholder="Nombre">
 				<label for="">Mail *</label>
 				<input type="text" id="email" name="email" value="{{ old('email') }}" required placeholder="Email">
 				<label for="">Nombre Completo *</label>

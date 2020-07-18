@@ -196,7 +196,9 @@
                     <table style="margin:0 auto;" cellspacing="0" cellpadding="0" class="force-width-80">
                         <tr>
                                 <td style="font-size:16px; font-weight: 600; color:#6f6f6f; text-align:center;" class="mobile-spacing">
-                                    Hola {{ $reservation->client->fullname }}, tu reservación a {{ $reservation->owner->name }} ha sido realizada con éxito.
+                                    Hola {{ $reservation->client->fullname }}, tu reservación a {{ $reservation->owner->name }}
+                                    en la sucursal {{ $reservation->branch ? $reservation->branch->name : 'Sin Información' }}
+                                    ha sido realizada con éxito.
                                     <br>
                                     En poco tiempo te contactaran para confirmar la reservación.<br>
                                     Muchas gracias, le esperamos.

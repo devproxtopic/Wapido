@@ -75,11 +75,19 @@
                 <input type="time" id="start_time" name="start_time" value="{{ old('start_time') }}" required placeholder="Hora de Inicio">
 
                 <label for="">Mesa *</label>
-                <select name="type_table" id="type_table" required>
+                <select class="form-control" name="type_table" id="type_table" required>
                     <option value="">Seleccione una opción</option>
                     <option value="1">No Fumadores</option>
                     <option value="2">Con Niños</option>
                     <option value="3">Indistinto</option>
+                </select>
+                <br>
+                <label for="">Sucursal *</label>
+                <select class="form-control" name="branch_id" id="branch_id" required>
+                    <option value="">Seleccione una opción</option>
+                    @foreach ($branches as $branch)
+                        <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                    @endforeach
                 </select>
 
 				<span>Los campos marcados con * son obligatorios.</span>
