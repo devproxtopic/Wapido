@@ -33,7 +33,7 @@
                 <tr>
                     <td>{{ $category->id }}</td>
                     <td>{{ $category->name }}</td>
-                    <td>{{ $category->unit->name }}</td>
+                    <td>{{ $category->unit ? $category->unit->name : '' }}</td>
                     <td>
                         @for($i=0;$i<count($measures);$i++)
                             {{ $measures[$i] }} <br>

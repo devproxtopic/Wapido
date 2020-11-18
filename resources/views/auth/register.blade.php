@@ -13,6 +13,11 @@
                 Registro de Negocios
                 </center>
             </span>
+            @error('username')
+                <span role="alert">
+                    <strong>Nombre de empresa ya registrado</strong>
+                </span>
+            @enderror
 
             <div class="container">
 

@@ -33,7 +33,7 @@
                 <tr>
                     <td>{{ $item->id }}</td>
                     <td>{{ $item->name }}</td>
-                    <td>{{ $item->category->name }}</td>
+                    <td>{{ $item->category ? $item->category->name : '' }}</td>
                     <td>
                         @if($prices)
                         @for($i=0;$i<count($prices);$i++)

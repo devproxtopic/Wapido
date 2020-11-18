@@ -163,13 +163,13 @@
                         <label for="state_id" class="col-md-6 col-form-label text-md-left">Estado</label>
                         <select form="ubicationUpdate" required class="form-control @error('state_id') is-invalid @enderror" name="state_id" id="state_id">
                             <option value="0">Seleccione una opción</option>
-                            @isset($owner->country_id)
+                            @if($owner->country_id && $countries->find($owner->country_id))
                             @foreach($countries->find($owner->country_id)->states as $state)
                                 <option @if($owner->state_id == $state->id) selected @endif value="{{ $state->id }}">
                                 {{ $state->name }}
                                 </option>
                             @endforeach
-                            @endisset
+                            @endif
 
                             {{-- SE LLENA CON AJAX--}}
                         </select>
@@ -178,26 +178,26 @@
                         <label for="city_id" class="col-md-6 col-form-label text-md-left">Ciudad</label>
                         <select form="ubicationUpdate" required class="form-control @error('city_id') is-invalid @enderror" name="city_id" id="city_id">
                             <option value="0">Seleccione una opción</option>
-                            @isset($owner->state_id)
+                            @if($owner->state_id && $countries->find($owner->country_id))
                             @foreach($countries->find($owner->country_id)->states->find($owner->state_id)->cities as $city)
                                 <option @if($owner->city_id == $city->id) selected @endif value="{{ $city->id }}">
                                 {{ $city->name }}
                                 </option>
                             @endforeach
-                            @endisset
+                            @endif
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="location_id" class="col-md-6 col-form-label text-md-left">Zona</label>
                         <select form="ubicationUpdate" required class="form-control @error('location_id') is-invalid @enderror" name="location_id" id="location_id">
                             <option value="0">Seleccione una opción</option>
-                            @isset($owner->city_id)
+                            @if($owner->city_id && $countries->find($owner->country_id))
                             @foreach($countries->find($owner->country_id)->states->find($owner->state_id)->cities->find($owner->city_id)->locations as $location)
                                 <option @if($owner->location_id == $location->id) selected @endif value="{{ $location->id }}">
                                 {{ $location->name }}
                                 </option>
                             @endforeach
-                            @endisset
+                            @endif
                         </select>
                     </div>
                     <div class="form-group mb-0">

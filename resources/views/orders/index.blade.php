@@ -74,7 +74,7 @@
 
                 <tr>
                     <td>{{ $order->id }}</td>
-                    <td>{{ $order->client->fullname }}</td>
+                    <td>{{ $order->client ? $order->client->fullname : '' }}</td>
                     <td>{{ $order->status->name }} <br>
                         {{ isset($order->confirm_date) ? $order->confirm_date->format('d-m-Y') : ''}}
                     </td>

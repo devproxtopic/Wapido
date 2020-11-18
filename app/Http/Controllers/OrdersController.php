@@ -36,6 +36,7 @@ class OrdersController extends Controller
         ->getStatus($request->status_filter)
         ->getClient($request->client_filter)
         ->getDateCreated($request->date_created_filter)
+        ->has('client')
         ->paginate(15);
 
         $status_filter = $request->status_filter;
