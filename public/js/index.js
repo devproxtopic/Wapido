@@ -8,6 +8,8 @@ function totalAmountOrder() {
         }
     });
 
+    console.log(subtotales);
+
     total.text(subtotales);
     $('#total_amount').val(subtotales);
 }
@@ -265,4 +267,18 @@ function subtotalCalculationFood(category_id){
     }
 
     totalAmountOrder();
+}
+
+function stepDownNumbers(id, category_id){
+    var element = 'quantity-'+id;
+    document.getElementById(element).stepDown();
+    // console.log(element);
+    subtotalCalculation(category_id);
+}
+
+function stepUpNumbers(id, category_id){
+    var element = 'quantity-'+id;
+    // console.log(element);
+    document.getElementById(element).stepUp();
+    subtotalCalculation(category_id);
 }
